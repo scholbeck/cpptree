@@ -1,0 +1,66 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <armadillo>
+#include <getopt.h>
+#include <iostream>
+#include "class_arguments.h"
+#include "class_tree.h"
+#include "class_node.h"
+#include "class_optimizer.h"
+
+
+void processArguments(int argc, char** argv, Arguments *arguments)
+{
+    const char* const short_opts = "f:h";
+    const option long_opts[] = {
+            {"filename", required_argument, nullptr, 'f'},
+            {"help", no_argument, nullptr, 'h'},
+            {nullptr, no_argument, nullptr, 0}
+    };
+	
+    while (true)
+    {
+        const int opt = getopt_long(argc, argv, short_opts, long_opts, nullptr);
+
+        if (-1 == opt)
+            break;
+
+        switch (opt)
+        {
+        case 'f':
+            arguments->setFilename(std::string(optarg));
+            break;
+        case 'h': // -h or --help
+        case '?': // Unrecognized option
+        default:
+            // PrintHelp();
+            break;
+        }
+    }
+}
+
+int main(int argc, char *argv[]) {
+
+	Arguments arguments;	
+	processArguments(argc, argv, &arguments);
+	arma::mat data;
+	data.load(arguments.getFilename());
+	  
+	Tree tree = Tree(data);
+	Node n1 = Node(0, &data);
+	Node n2 = Node(00, &data);
+	Node n3 = Node(01, &data);
+	n1.setChildLeft(&n2);
+	n1.setChildRight(&n3);
+	
+	n3.getData()->print();
+  
+	ExhaustiveSearch optim = ExhaustiveSearch(&data);
+	
+	
+	n3.split(1, 10, optim);
+	
+	return EXIT_SUCCESS;
+}
+
+
