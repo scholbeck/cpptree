@@ -9,7 +9,7 @@
 
 
 
-Optimizer::Optimizer(arma::mat* data) {
+Optimizer::Optimizer(Data* data) {
   
 	this->data = data;
 }
@@ -20,4 +20,7 @@ void Optimizer::optimize() {\
 }
 
 void ExhaustiveSearch::optimize() {
+}
+
+void RandomSearch::optimize() {
 }

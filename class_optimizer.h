@@ -6,15 +6,23 @@
 class Optimizer {
 	
   public:
-    Optimizer(arma::mat* data);
+    Optimizer(Data* data);
     
-    arma::mat* data;
+    Data* data;
 	void optimize();
     
 };
 
 
 class ExhaustiveSearch: public Optimizer {
+	public:
+		using Optimizer::Optimizer;
+		using Optimizer::optimize;
+		virtual void optimize();
+};
+
+
+class RandomSearch: public Optimizer {
 	public:
 		using Optimizer::Optimizer;
 		using Optimizer::optimize;

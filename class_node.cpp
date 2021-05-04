@@ -8,9 +8,9 @@
 
 
 
-Node::Node(int id, arma::mat* data) {
-  
-	this->data = data;
+Node::Node(int id, Tree* tree) {
+	
+	this->tree = tree;
 	this->id = id;
 	this->child_left = NULL;
 	this->child_right = NULL;
@@ -36,8 +36,8 @@ void Node::setChildRight(Node* child_node) {
 	child_right = child_node;
 }
 
-arma::mat* Node::getData() {
-	return data;
+Data* Node::getData() {
+	return tree->getData();
 }
 
 

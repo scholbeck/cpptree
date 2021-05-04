@@ -1,18 +1,18 @@
 #ifndef TREE_H
 #define TREE_H
 
-#include <armadillo>
+#include "class_data.h"
 #include "class_node.h"
 
 class Tree {
   
   public:
-    Tree(arma::mat data);
+    Tree(Data* data);
     
-    arma::mat data;
+    Data* data;
     Node* root;
     
-    arma::mat getData();
+    Data* getData();
     void setRoot(Node* root);
 };
 

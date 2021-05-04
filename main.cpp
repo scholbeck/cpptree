@@ -4,6 +4,7 @@
 #include <getopt.h>
 #include <iostream>
 #include "class_arguments.h"
+#include "class_data.h"
 #include "class_tree.h"
 #include "class_node.h"
 #include "class_optimizer.h"
@@ -43,20 +44,22 @@ int main(int argc, char *argv[]) {
 
 	Arguments arguments;	
 	processArguments(argc, argv, &arguments);
-	arma::mat data;
+	arma::mat mat = arma::mat();
+	Data data = Data(&mat);
 	data.load(arguments.getFilename());
-	  
-	Tree tree = Tree(data);
-	Node n1 = Node(0, &data);
-	Node n2 = Node(00, &data);
-	Node n3 = Node(01, &data);
+	data.print();
+	
+	Tree tree = Tree(&data);
+	
+	Node n1 = Node(0, &tree);
+	Node n2 = Node(00, &tree);
+	Node n3 = Node(01, &tree);
 	n1.setChildLeft(&n2);
 	n1.setChildRight(&n3);
 	
 	n3.getData()->print();
   
 	ExhaustiveSearch optim = ExhaustiveSearch(&data);
-	
 	
 	n3.split(1, 10, optim);
 	
