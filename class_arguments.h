@@ -10,9 +10,17 @@ class Arguments {
     Arguments();
     
     std::string filename;
+    ssize_t max_splits;
+    ssize_t min_node_size;
     
-    void setFilename(std::string);
     std::string getFilename();
+    void setFilename(std::string);
+	
+	ssize_t getMaxSplits();
+	void setMaxSplits(ssize_t max_splits);
+	
+	ssize_t getMinNodeSize();
+	void setMinNodeSize(ssize_t min_node_size);
 };
 
 

@@ -10,46 +10,72 @@
 #include "class_optimizer.h"
 
 
-void processArguments(int argc, char** argv, Arguments *arguments)
+int processArguments(int argc, char** argv, Arguments *arguments)
 {
-    const char* const short_opts = "f:h";
-    const option long_opts[] = {
-            {"filename", required_argument, nullptr, 'f'},
-            {"help", no_argument, nullptr, 'h'},
-            {nullptr, no_argument, nullptr, 0}
+	const option long_opts[] = {
+            {"filename", required_argument, nullptr, 1000},
+            {"maxsplit", required_argument, nullptr, 1100},
+            {"minsize", required_argument, nullptr, 1200},
+            {"help", no_argument, nullptr, 1300}
     };
 	
     while (true)
     {
-        const int opt = getopt_long(argc, argv, short_opts, long_opts, nullptr);
+        const int opt = getopt_long(argc, argv, "", long_opts, nullptr);
 
         if (-1 == opt)
             break;
 
         switch (opt)
         {
-        case 'f':
+        case 1000:
             arguments->setFilename(std::string(optarg));
             break;
-        case 'h': // -h or --help
+        case 1100:
+            arguments->setMaxSplits((ssize_t) atol(optarg));
+            break;
+        case 1200:
+            arguments->setMinNodeSize((ssize_t) atol(optarg));
+            break;
+        case 1300:
         case '?': // Unrecognized option
         default:
             // PrintHelp();
             break;
         }
     }
+    
+    if (arguments->getFilename() == "") {
+		printf("Filename not specified.\n");
+		return -1;
+    }
+    if (arguments->getMinNodeSize() == 0) {
+		printf("Minimum node size not specified.\n");
+		return -1;
+    }
+    if (arguments->getMaxSplits() == 0) {
+		printf("Maximum split number not specified.\n");
+		return -1;
+    }
+    
+    return 0;
+    
 }
 
 int main(int argc, char *argv[]) {
 
-	Arguments arguments;	
-	processArguments(argc, argv, &arguments);
+	Arguments arguments;
+	int arg_status = 0;
+	if ((arg_status = processArguments(argc, argv, &arguments)) == -1) {
+		return EXIT_FAILURE;
+	}
 	arma::mat mat = arma::mat();
 	Data data = Data(&mat);
 	data.load(arguments.getFilename());
 	data.print();
 	
-	Tree tree = Tree(&data);
+	
+	Tree tree = Tree(&data, arguments.getMaxSplits(), arguments.getMinNodeSize());
 	
 	Node n1 = Node(0, &tree);
 	Node n2 = Node(00, &tree);
@@ -62,7 +88,7 @@ int main(int argc, char *argv[]) {
 	ExhaustiveSearch optim_exhaust = ExhaustiveSearch(&data);
 	RandomSearch optim_rand = RandomSearch(&data);
 	
-	n3.split(1, 10, optim_rand);
+	n3.split(optim_rand);
 	
 	return EXIT_SUCCESS;
 }

@@ -22,8 +22,10 @@ class Node {
     
     int getId();
     Data* getData();
-    void split(int target_index, int min_node_size, Optimizer optimizer);
+    
+    void split(Optimizer optimizer);
     void addChild(Node* child);
+    
 };
 
 

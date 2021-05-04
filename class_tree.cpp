@@ -7,13 +7,23 @@
 #include "class_tree.h"
 #include "class_node.h"
 
-Tree::Tree(Data* data) {
+Tree::Tree(Data* data, ssize_t max_splits, ssize_t min_node_size) {
 	this->data = data;
 	this->root = NULL;
+	this->max_splits = max_splits;
+	this->min_node_size = min_node_size;
 }
 
 Data* Tree::getData() {
 	return this->data;
+}
+
+ssize_t Tree::getMinNodeSize() {
+	return this->min_node_size;
+}
+
+ssize_t Tree::getMaxSplits() {
+	return this->max_splits;
 }
 
 void Tree::setRoot(Node* root) {

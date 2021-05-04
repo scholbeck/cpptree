@@ -29,6 +29,6 @@ void Node::addChild(Node* child) {
 	this->child_cnt++;
 }
 
-void Node::split(int target_index, int min_node_size, Optimizer optimizer) {
+void Node::split(Optimizer optimizer) {
 	optimizer.optimize();
 }
