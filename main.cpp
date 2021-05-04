@@ -54,14 +54,15 @@ int main(int argc, char *argv[]) {
 	Node n1 = Node(0, &tree);
 	Node n2 = Node(00, &tree);
 	Node n3 = Node(01, &tree);
-	n1.setChildLeft(&n2);
-	n1.setChildRight(&n3);
 	
+	n1.addChild(&n2);
+	n1.addChild(&n3);
 	n3.getData()->print();
   
-	ExhaustiveSearch optim = ExhaustiveSearch(&data);
+	ExhaustiveSearch optim_exhaust = ExhaustiveSearch(&data);
+	RandomSearch optim_rand = RandomSearch(&data);
 	
-	n3.split(1, 10, optim);
+	n3.split(1, 10, optim_rand);
 	
 	return EXIT_SUCCESS;
 }

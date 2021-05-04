@@ -16,17 +16,14 @@ class Node {
     
     Tree* tree;
     int id;
-    Node* child_left;
-    Node* child_right;
+    ssize_t child_cnt;
+    std::vector<Node*> children;
+    bool is_leaf;
     
     int getId();
-    void setChildLeft(Node* child_node);
-    Node* getChildLeft();
-    void setChildRight(Node* child_node);
-    Node* getChildRight();
     Data* getData();
     void split(int target_index, int min_node_size, Optimizer optimizer);
-    
+    void addChild(Node* child);
 };
 
 

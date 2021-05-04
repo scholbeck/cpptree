@@ -12,34 +12,22 @@ Node::Node(int id, Tree* tree) {
 	
 	this->tree = tree;
 	this->id = id;
-	this->child_left = NULL;
-	this->child_right = NULL;
+	this->child_cnt = 0;
+	this->is_leaf = false;
 }
 
 int Node::getId() {
 	return id;
 }
 
-Node* Node::getChildLeft() {
-	return child_left;
-}
-
-Node* Node::getChildRight() {
-	return child_right;
-}
-
-void Node::setChildLeft(Node* child_node) {
-	child_left = child_node;
-}
-
-void Node::setChildRight(Node* child_node) {
-	child_right = child_node;
-}
-
 Data* Node::getData() {
 	return tree->getData();
 }
 
+void Node::addChild(Node* child) {
+	children.push_back(child);
+	this->child_cnt++;
+}
 
 void Node::split(int target_index, int min_node_size, Optimizer optimizer) {
 	optimizer.optimize();

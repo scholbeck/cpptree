@@ -8,16 +8,20 @@
 #include "class_node.h"
 
 Tree::Tree(Data* data) {
-  
-  this->data = data;
-  this->root = NULL;
+	this->data = data;
+	this->root = NULL;
 }
 
 Data* Tree::getData() {
-  return this->data;
+	return this->data;
 }
 
 void Tree::setRoot(Node* root) {
 	this->root = root;
+}
+
+void Tree::addNode(Node* node) {
+	nodes.push_back(node);
+	this->node_cnt++;
 }
 

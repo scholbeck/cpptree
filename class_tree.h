@@ -11,9 +11,13 @@ class Tree {
     
     Data* data;
     Node* root;
+    std::vector<Node*> nodes;
+    ssize_t node_cnt;
+    ssize_t leafnode_cnt;
     
     Data* getData();
     void setRoot(Node* root);
+    void addNode(Node* node);
 };
 
 

@@ -8,13 +8,12 @@
 #include "class_optimizer.h"
 
 
-
 Optimizer::Optimizer(Data* data) {
   
 	this->data = data;
 }
 
-void Optimizer::optimize() {\
+void Optimizer::optimize() {
 	// placeholder
 	// function overloaded by inheritance
 }

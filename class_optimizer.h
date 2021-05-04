@@ -13,7 +13,6 @@ class Optimizer {
     
 };
 
-
 class ExhaustiveSearch: public Optimizer {
 	public:
 		using Optimizer::Optimizer;
@@ -21,14 +20,11 @@ class ExhaustiveSearch: public Optimizer {
 		virtual void optimize();
 };
 
-
 class RandomSearch: public Optimizer {
 	public:
 		using Optimizer::Optimizer;
 		using Optimizer::optimize;
 		virtual void optimize();
 };
-
-
 
 #endif 
