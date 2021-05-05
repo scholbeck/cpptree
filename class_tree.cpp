@@ -7,7 +7,7 @@
 #include "class_tree.h"
 #include "class_node.h"
 
-Tree::Tree(Data* data, ssize_t max_splits, ssize_t min_node_size) {
+Tree::Tree(Data* data, size_t max_splits, size_t min_node_size) {
 	this->data = data;
 	this->root = NULL;
 	this->max_splits = max_splits;
@@ -18,12 +18,20 @@ Data* Tree::getData() {
 	return this->data;
 }
 
-ssize_t Tree::getMinNodeSize() {
+size_t Tree::getMinNodeSize() {
 	return this->min_node_size;
 }
 
-ssize_t Tree::getMaxSplits() {
+size_t Tree::getMaxSplits() {
 	return this->max_splits;
+}
+
+Objective Tree::getObjective() {
+	return this->objective;
+}
+
+size_t Tree::getTargetIndex() {
+	return this->target_index;
 }
 
 void Tree::setRoot(Node* root) {
@@ -31,7 +39,7 @@ void Tree::setRoot(Node* root) {
 }
 
 void Tree::addNode(Node* node) {
-	nodes.push_back(node);
+	(this->nodes).push_back(node);
 	this->node_cnt++;
 }
 

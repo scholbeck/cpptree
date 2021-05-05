@@ -6,20 +6,28 @@
 #include "class_tree.h"
 #include "class_node.h"
 #include "class_optimizer.h"
+#include "class_split.h"
 
 
-Optimizer::Optimizer(Data* data) {
-  
-	this->data = data;
+Optimizer::Optimizer() {
+
 }
 
-void Optimizer::optimize() {
+Split Optimizer::optimize(Data* data, Objective objective) {
 	// placeholder
-	// function overloaded by inheritance
+	// method overloaded by inheritance
+	Split split = Split();
+	return split;
 }
 
-void ExhaustiveSearch::optimize() {
+Split OptimizerExhaustiveSearch::optimize(Data* data, Objective objective) {
+	
+	Split split = Split();
+	
+	return split;
 }
 
-void RandomSearch::optimize() {
+Split OptimizerRandomSearch::optimize(Data* data, Objective objective) {
+	Split split = Split();
+	return split;
 }

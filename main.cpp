@@ -10,6 +10,10 @@
 #include "class_optimizer.h"
 
 
+void printHelp() {
+	printf("Required arguments: filename, maxsplit, minsize.\n");
+}
+
 int processArguments(int argc, char** argv, Arguments *arguments)
 {
 	const option long_opts[] = {
@@ -40,7 +44,7 @@ int processArguments(int argc, char** argv, Arguments *arguments)
         case 1300:
         case '?': // Unrecognized option
         default:
-            // PrintHelp();
+            printHelp();
             break;
         }
     }
@@ -70,10 +74,9 @@ int main(int argc, char *argv[]) {
 		return EXIT_FAILURE;
 	}
 	arma::mat mat = arma::mat();
-	Data data = Data(&mat);
+	Data data = Data(&mat, 5);
 	data.load(arguments.getFilename());
 	data.print();
-	
 	
 	Tree tree = Tree(&data, arguments.getMaxSplits(), arguments.getMinNodeSize());
 	
@@ -85,8 +88,8 @@ int main(int argc, char *argv[]) {
 	n1.addChild(&n3);
 	n3.getData()->print();
   
-	ExhaustiveSearch optim_exhaust = ExhaustiveSearch(&data);
-	RandomSearch optim_rand = RandomSearch(&data);
+	OptimizerExhaustiveSearch optim_exhaust = OptimizerExhaustiveSearch();
+	OptimizerRandomSearch optim_rand = OptimizerRandomSearch();
 	
 	n3.split(optim_rand);
 	

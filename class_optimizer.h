@@ -1,30 +1,32 @@
 #ifndef OPTIMIZER_H
 #define OPTIMIZER_H
 
-#include <armadillo>
+#include "class_data.h"
+#include "class_objective.h"
+#include "class_split.h"
+
 
 class Optimizer {
 	
   public:
-    Optimizer(Data* data);
+    Optimizer();
     
-    Data* data;
-	void optimize();
+	Split optimize(Data* data, Objective objective);
     
 };
 
-class ExhaustiveSearch: public Optimizer {
+class OptimizerExhaustiveSearch: public Optimizer {
 	public:
 		using Optimizer::Optimizer;
 		using Optimizer::optimize;
-		virtual void optimize();
+		virtual Split optimize(Data* data, Objective objective);
 };
 
-class RandomSearch: public Optimizer {
+class OptimizerRandomSearch: public Optimizer {
 	public:
 		using Optimizer::Optimizer;
 		using Optimizer::optimize;
-		virtual void optimize();
+		virtual Split optimize(Data* data, Objective objective);
 };
 
 #endif 

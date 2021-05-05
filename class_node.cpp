@@ -5,6 +5,7 @@
 #include <iostream>
 #include "class_tree.h"
 #include "class_node.h"
+#include "class_optimizer.h"
 
 
 
@@ -30,5 +31,5 @@ void Node::addChild(Node* child) {
 }
 
 void Node::split(Optimizer optimizer) {
-	optimizer.optimize();
+	optimizer.optimize((this->tree)->getData(), (this->tree)->getObjective());
 }

@@ -1,17 +1,30 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "class_objective.h"
+#include "class_model.h"
+#include <cmath>
+
 
 Objective::Objective() {
 	
 }
 
-double Objective::compute(Data* data, ssize_t target_index) {
+double Objective::compute(Data* data, Model model) {
 	// placeholder
 	// function overloaded by inheritance
 	return 0;
 }
 
-double ObjectiveMSE::compute(Data* data, ssize_t target_index) {
-	return 0;
+double ObjectiveSSE::compute(Data* data, Model model) {
+	
+	std::vector<double> predictions = model.predict(data);
+	std::vector<double> target_observed = data->getColumn(data->getTargetIndex());
+	
+	int n = predictions.size();
+	double cumsum = 0;
+	for (int i = 0; i < n; i++) {
+		cumsum += pow((predictions[i] - target_observed[i]), 2);
+	}
+		
+	return cumsum;
 }

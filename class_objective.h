@@ -3,20 +3,21 @@
 
 #include "class_objective.h"
 #include "class_data.h"
+#include "class_model.h"
 
 class Objective {
   
   public:
     Objective();
-    double compute(Data* data, ssize_t target_index);
+    double compute(Data* data, Model model);
     
 };
 
-class ObjectiveMSE: public Objective {
+class ObjectiveSSE: public Objective {
 	public:
 		using Objective::Objective;
 		using Objective::compute;
-		virtual double compute(Data* data, ssize_t target_index);
+		virtual double compute(Data* data, Model model);
 };
 
 
