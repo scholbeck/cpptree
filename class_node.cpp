@@ -31,5 +31,5 @@ void Node::addChild(Node* child) {
 }
 
 void Node::split(Optimizer optimizer) {
-	optimizer.optimize((this->tree)->getData(), (this->tree)->getObjective());
+	optimizer.optimize((this->tree)->getData(), (this->tree)->max_children, (this->tree)->getObjective());
 }

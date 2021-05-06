@@ -13,21 +13,35 @@ Optimizer::Optimizer() {
 
 }
 
-Split Optimizer::optimize(Data* data, Objective objective) {
+Split Optimizer::optimize(Data* data, size_t max_splits, Objective objective) {
 	// placeholder
 	// method overloaded by inheritance
 	Split split = Split();
 	return split;
 }
 
-Split OptimizerExhaustiveSearch::optimize(Data* data, Objective objective) {
+Split OptimizerExhaustiveSearch::optimize(Data* data, size_t max_children, Objective objective) {
 	
+	int n_features = data->getNCols();
+	int n_obs = data->getNRows();
 	Split split = Split();
+	std::vector<Data*> splitted_data;
 	
+	for (int j = 0; j < n_features; j++) {
+		split.setFeatureIndex(j);
+		for (int k = 0; k < (max_children - 1); k++) {
+			int i;
+			for (i = (split.getSplitpoints().back() + 1); i < n_obs; i++) {
+				split.addSplitpoint(i);
+				break;
+			}
+		}
+		split.clearObject();
+	}	
 	return split;
 }
 
-Split OptimizerRandomSearch::optimize(Data* data, Objective objective) {
+Split OptimizerRandomSearch::optimize(Data* data, size_t max_splits, Objective objective) {
 	Split split = Split();
 	return split;
 }

@@ -7,14 +7,14 @@
 class Tree {
   
   public:
-    Tree(Data* data, size_t max_splits, size_t min_node_size);
+    Tree(Data* data, size_t max_children, size_t min_node_size);
     
     Data* data;
     Node* root;
     std::vector<Node*> nodes;
     size_t node_cnt;
     size_t leafnode_cnt;
-    size_t max_splits;
+    size_t max_children;
     size_t min_node_size;
     size_t target_index;
     Objective objective;
@@ -22,7 +22,7 @@ class Tree {
     Data* getData();
     Objective getObjective();
     size_t getMinNodeSize();
-    size_t getMaxSplits();
+    size_t getMaxChildren();
     size_t getTargetIndex();
     void setRoot(Node* root);
     void addNode(Node* node);

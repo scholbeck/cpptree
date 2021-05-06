@@ -1,8 +1,11 @@
 #ifndef DATA_H
 #define DATA_H
 
-#include <vector>
 #include <armadillo>
+#include <vector>
+#include "class_split.h"
+
+class Split; // forward declaration due to circular dependency
 
 class Data {
   
@@ -27,7 +30,8 @@ class Data {
     double colMean(size_t j);
     void load(std::string filename);
     void print();
-    
+    std::vector<Data*> splitBinary(size_t feature_index);
+    std::vector<Data*> split(Split split);
     
 };
 

@@ -2,6 +2,7 @@
 #define SPLIT_H
 
 #include <vector>
+#include "class_data.h"
 
 class Split {
   
