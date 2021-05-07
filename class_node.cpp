@@ -25,6 +25,7 @@ Data* Node::getData() {
 	return tree->getData();
 }
 
+
 void Node::addChild(Node* child) {
 	children.push_back(child);
 	this->child_cnt++;

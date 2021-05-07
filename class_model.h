@@ -8,18 +8,23 @@
 class Model {
   
   public:
-    Model(Data* training_data);
+    Model(Data training_data);
     
-    Data* training_data;
+    Data training_data;
     
-    std::vector<double> predict(Data* data);
+    void train();
+    std::vector<double> predict(Data data);
 };
 
 class ModelConstant: public Model {
 	public:
 		using Model::Model;
+		using Model::train;
+		virtual void train();
 		using Model::predict;
-		virtual std::vector<double> predict(Data* data);
+		virtual std::vector<double> predict(Data data);
+		
+		double mean_prediction;
 };
 
 class ModelLinearRegression: public Model {

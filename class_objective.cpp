@@ -9,21 +9,25 @@ Objective::Objective() {
 	
 }
 
-double Objective::compute(Data* data, Model model) {
+double Objective::compute(Data data, Model model) {
 	// placeholder
 	// function overloaded by inheritance
 	return 0;
 }
 
-double ObjectiveSSE::compute(Data* data, Model model) {
+double ObjectiveSSE::compute(Data data, Model model) {
 	
 	std::vector<double> predictions = model.predict(data);
-	std::vector<double> target_observed = data->col(data->getTargetIndex());
+	std::vector<double> target_observed = data.col(data.getTargetIndex());
 	
 	int n = predictions.size();
+	int n2 = target_observed.size();
+	printf("Predictions size %d target size %d\n", n, n2);
+	
 	double cumsum = 0;
 	for (int i = 0; i < n; i++) {
 		cumsum += pow((predictions[i] - target_observed[i]), 2);
+		printf("cumsum %f", cumsum);
 	}
 		
 	return cumsum;

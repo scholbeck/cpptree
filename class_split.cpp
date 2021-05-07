@@ -3,32 +3,29 @@
 #include "class_split.h"
 
 Split::Split() {
-	this->split_cnt = -1;
-	this->feature_index = -1;
+	this->split_cnt = 0;
+	this->feature_index = 0;
 }
 
-void Split::addSplitpoint(size_t split) {
-	
-	(this->splitpoints).push_back(split);
+void Split::addSplitValue(double value) {
+	(this->split_values).push_back(value);
 	this->split_cnt++;
 }
 
-std::vector<size_t> Split::getSplitpoints() {
-	
-	return this->splitpoints;
+std::vector<double> Split::getSplitValues() {
+	return this->split_values;
 }
 
-void Split::setFeatureIndex(ssize_t feature_index) {
+void Split::setFeatureIndex(lluint feature_index) {
 	this->feature_index = feature_index;
 }
 
-ssize_t Split::getSplitFeatureIndex() {
+lluint Split::getSplitFeatureIndex() {
 	return this->feature_index;
 }
 
-
 void Split::clearObject() {
-	this->split_cnt = -1;
-	this->feature_index = -1;
-	this->splitpoints.clear();
+	this->split_cnt = 0;
+	this->feature_index = 0;
+	this->split_values.clear();
 }

@@ -4,19 +4,22 @@
 #include <vector>
 #include "class_data.h"
 
+using lluint = long long unsigned int;
+
+
 class Split {
   
   public:
     Split();
     
-    ssize_t feature_index;
-    ssize_t split_cnt;
-    std::vector<size_t> splitpoints;
+    lluint feature_index;
+    lluint split_cnt;
+    std::vector<double> split_values;
     
-    ssize_t getSplitFeatureIndex();
-	void setFeatureIndex(ssize_t feature_index);
-    std::vector<size_t> getSplitpoints();
-    void addSplitpoint(size_t splitpoint);
+    lluint getSplitFeatureIndex();
+	void setFeatureIndex(lluint feature_index);
+    std::vector<double> getSplitValues();
+    void addSplitValue(double splitpoint);
     void clearObject();
 };
 

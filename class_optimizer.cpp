@@ -25,19 +25,20 @@ Split OptimizerExhaustiveSearch::optimize(Data* data, int max_children, Objectiv
 	int n_features = data->ncols();
 	int n_obs = data->nrows();
 	Split split = Split();
-	std::vector<Data*> splitted_data;
-	
+	std::vector<Data> splitted_data;
+	/*
 	for (int j = 0; j < n_features; j++) {
 		split.setFeatureIndex(j);
 		for (int k = 0; k < (max_children - 1); k++) {
 			int i;
 			for (i = (split.getSplitpoints().back() + 1); i < n_obs; i++) {
-				split.addSplitpoint(i);
+				split.addSplitValue();
 				break;
 			}
 		}
 		split.clearObject();
-	}	
+	}
+	*/	
 	return split;
 }
 

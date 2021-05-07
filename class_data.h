@@ -12,15 +12,16 @@ using lluint = long long unsigned int;
 class Data {
   
   public:
-    Data(arma::mat* mat, lluint target_index);
+    Data(arma::mat mat, lluint target_index);
     
-    arma::mat* data;
+    arma::mat data;
     lluint target_index;
     lluint n_rows;
     lluint n_cols;
     
     void load(std::string filename); // read data from disc
-    arma::mat* getData();
+    arma::mat getData();
+    void setData(arma::mat mat);
     void print();
     lluint getTargetIndex();
     double elem(lluint row_index, lluint col_index);
@@ -31,10 +32,10 @@ class Data {
     double rowMean(lluint row_index);
     double colMean(lluint col_index);
 
-    //std::vector<Data*> splitBinary(int feature_index);
-    //std::vector<Data*> split(Split split);
+    std::vector<Data> splitBinary(lluint row_index, lluint col_index);
+    std::vector<Data> split(Split split);
     
-	Data* subset(std::vector<lluint> row_id_vec, std::vector<lluint> col_id_vec);
+	Data subset(std::vector<lluint> row_id_vec, std::vector<lluint> col_id_vec);
     
 };
 

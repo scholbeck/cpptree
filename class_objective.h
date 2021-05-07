@@ -9,7 +9,7 @@ class Objective {
   
   public:
     Objective();
-    double compute(Data* data, Model model);
+    double compute(Data data, Model model);
     
 };
 
@@ -17,7 +17,7 @@ class ObjectiveSSE: public Objective {
 	public:
 		using Objective::Objective;
 		using Objective::compute;
-		virtual double compute(Data* data, Model model);
+		virtual double compute(Data data, Model model);
 };
 
 

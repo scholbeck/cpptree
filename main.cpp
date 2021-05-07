@@ -7,6 +7,8 @@
 #include "class_data.h"
 #include "class_tree.h"
 #include "class_node.h"
+#include "class_model.h"
+#include "class_objective.h"
 #include "class_optimizer.h"
 
 
@@ -74,9 +76,9 @@ int main(int argc, char *argv[]) {
 		return EXIT_FAILURE;
 	}
 	arma::mat mat = arma::mat();
-	Data data = Data(&mat, 5);
+	Data data = Data(mat, 4);
 	data.load(arguments.getFilename());
-	data.print();
+	// data.print();
 	
 	Tree tree = Tree(&data, arguments.getMaxSplits(), arguments.getMinNodeSize());
 	
@@ -86,24 +88,33 @@ int main(int argc, char *argv[]) {
 	
 	n1.addChild(&n2);
 	n1.addChild(&n3);
-	n3.getData()->print();
+	//n3.getData()->print();
   
 	OptimizerExhaustiveSearch optim_exhaust = OptimizerExhaustiveSearch();
 	OptimizerRandomSearch optim_rand = OptimizerRandomSearch();
 	
 	std::vector<Node*> child_nodes;
 	Split s = Split();
-	s.setFeatureIndex(3);
-	s.addSplitpoint(10);
+	s.setFeatureIndex(1);
+	s.addSplitValue(1);
+	s.addSplitValue(2);
+	s.addSplitValue(3);
 	
-	std::vector<lluint> rows = {1, 2, 3};
+	std::vector<lluint> rows = {1, 50, 10, 3};
 	std::vector<lluint> cols = {1, 2, 4};
 	
-	Data* subset = NULL;
-	subset = data.subset(rows, cols);
-	subset->print();
-	//data.split(s);
+	Data subset = data.subset(rows, cols);
 	
+	std::vector<Data> data_subsets = data.split(s);
+	
+	//printf("%f", data.elem(10, 1));
+	ModelConstant mod = ModelConstant(data);
+	mod.train();
+	//data_subsets[2].print();
+	ObjectiveSSE objective = ObjectiveSSE();
+	std::vector<double> preds = mod.predict(data);
+	double obj_value = objective.compute(data, mod);
+	printf("preds size %ld", preds.size());
 	// child_nodes = n3.split(optim_exhaust);
 	
 	return EXIT_SUCCESS;
