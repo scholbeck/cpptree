@@ -7,31 +7,34 @@
 
 class Split; // forward declaration due to circular dependency
 
+using lluint = long long unsigned int;
+
 class Data {
   
   public:
-    Data(arma::mat* mat, size_t target_index);
+    Data(arma::mat* mat, lluint target_index);
     
     arma::mat* data;
-    size_t target_index;
-    size_t nrows;
-    size_t ncols;
+    lluint target_index;
+    lluint n_rows;
+    lluint n_cols;
     
+    void load(std::string filename); // read data from disc
     arma::mat* getData();
-    void setData(arma::mat* data);
-    size_t getTargetIndex();
-    
-    double getElement(size_t i, size_t j);
-    double getNRows();
-    double getNCols();
-    std::vector<double> getRow(size_t i);
-    std::vector<double> getColumn(size_t j);
-    double rowMean(size_t i);
-    double colMean(size_t j);
-    void load(std::string filename);
     void print();
-    std::vector<Data*> splitBinary(size_t feature_index);
-    std::vector<Data*> split(Split split);
+    lluint getTargetIndex();
+    double elem(lluint row_index, lluint col_index);
+    lluint nrows();
+    lluint ncols();
+	std::vector<double> row(lluint i);
+	std::vector<double> col(lluint j);
+    double rowMean(lluint row_index);
+    double colMean(lluint col_index);
+
+    //std::vector<Data*> splitBinary(int feature_index);
+    //std::vector<Data*> split(Split split);
+    
+	Data* subset(std::vector<lluint> row_id_vec, std::vector<lluint> col_id_vec);
     
 };
 

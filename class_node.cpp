@@ -8,10 +8,10 @@
 #include "class_optimizer.h"
 
 
-
-Node::Node(int id, Tree* tree) {
+Node::Node(int id, Data* data, Tree* tree) {
 	
 	this->tree = tree;
+	this->data = data;
 	this->id = id;
 	this->child_cnt = 0;
 	this->is_leaf = false;
@@ -30,6 +30,20 @@ void Node::addChild(Node* child) {
 	this->child_cnt++;
 }
 
-void Node::split(Optimizer optimizer) {
-	optimizer.optimize((this->tree)->getData(), (this->tree)->max_children, (this->tree)->getObjective());
+std::vector<Node*> Node::split(Optimizer optimizer) {
+	std::vector<Data*> data_splitted;
+	std::vector<Node*> child_nodes;
+	Split s;
+	s = optimizer.optimize((this->tree)->getData(), (this->tree)->max_children, (this->tree)->getObjective());
+	
+	/*
+	data_splitted = (this->getData())->split(s);
+	int n_children = data_splitted.size();
+	
+	for (int i = 0; i < n_children; i++) {
+		Node* n = new Node(001, data_splitted[i], this->tree);
+		child_nodes.push_back(n);
+	}
+	*/
+	return child_nodes;
 }

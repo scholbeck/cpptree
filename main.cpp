@@ -80,9 +80,9 @@ int main(int argc, char *argv[]) {
 	
 	Tree tree = Tree(&data, arguments.getMaxSplits(), arguments.getMinNodeSize());
 	
-	Node n1 = Node(0, &tree);
-	Node n2 = Node(00, &tree);
-	Node n3 = Node(01, &tree);
+	Node n1 = Node(0, &data, &tree);
+	Node n2 = Node(00, &data, &tree);
+	Node n3 = Node(01, &data, &tree);
 	
 	n1.addChild(&n2);
 	n1.addChild(&n3);
@@ -91,7 +91,20 @@ int main(int argc, char *argv[]) {
 	OptimizerExhaustiveSearch optim_exhaust = OptimizerExhaustiveSearch();
 	OptimizerRandomSearch optim_rand = OptimizerRandomSearch();
 	
-	n3.split(optim_rand);
+	std::vector<Node*> child_nodes;
+	Split s = Split();
+	s.setFeatureIndex(3);
+	s.addSplitpoint(10);
+	
+	std::vector<lluint> rows = {1, 2, 3};
+	std::vector<lluint> cols = {1, 2, 4};
+	
+	Data* subset = NULL;
+	subset = data.subset(rows, cols);
+	subset->print();
+	//data.split(s);
+	
+	// child_nodes = n3.split(optim_exhaust);
 	
 	return EXIT_SUCCESS;
 }

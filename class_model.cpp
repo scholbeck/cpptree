@@ -17,7 +17,7 @@ std::vector<double> Model::predict(Data* data) {
 std::vector<double> ModelConstant::predict(Data* data) {
   
 	double mean = data->colMean(data->getTargetIndex());
-	int n = data->getNRows();
+	int n = data->nrows();
 	std::vector<double> predictions;
 	
 	for (int i = 0; i < n; i++) {

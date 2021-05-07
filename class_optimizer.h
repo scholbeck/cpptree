@@ -11,7 +11,7 @@ class Optimizer {
   public:
     Optimizer();
     
-	Split optimize(Data* data, size_t max_children, Objective objective);
+	Split optimize(Data* data, int max_children, Objective objective);
     
 };
 
@@ -19,14 +19,14 @@ class OptimizerExhaustiveSearch: public Optimizer {
 	public:
 		using Optimizer::Optimizer;
 		using Optimizer::optimize;
-		virtual Split optimize(Data* data, size_t max_children, Objective objective);
+		virtual Split optimize(Data* data, int max_children, Objective objective);
 };
 
 class OptimizerRandomSearch: public Optimizer {
 	public:
 		using Optimizer::Optimizer;
 		using Optimizer::optimize;
-		virtual Split optimize(Data* data, size_t max_children, Objective objective);
+		virtual Split optimize(Data* data, int max_children, Objective objective);
 };
 
 #endif 

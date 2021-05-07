@@ -7,10 +7,12 @@
 #include "class_split.h"
 #include <vector>
 
-Data::Data(arma::mat* mat, size_t target_index) {
+
+
+Data::Data(arma::mat* mat, lluint target_index) {
   this->data = mat;
-  this->nrows = mat->n_rows;
-  this->ncols = mat->n_cols;
+  this->n_rows = mat->n_rows;
+  this->n_cols = mat->n_cols;
   this->target_index = target_index;
 }
 
@@ -18,33 +20,29 @@ arma::mat* Data::getData() {
   return this->data;
 }
 
-void Data::setData(arma::mat* data) {
-	this->data = data;
+double Data::elem(lluint row_index, lluint col_index) {
+	return (this->data)->at(row_index, col_index);
 }
 
-double Data::getElement(size_t i, size_t j) {
-	return (this->data)->at(i, j);
+lluint Data::nrows() {
+	return this->n_rows;
 }
 
-double Data::getNRows() {
-	return this->nrows;
+lluint Data::ncols() {
+	return this->n_cols;
 }
 
-double Data::getNCols() {
-	return this->ncols;
-}
-
-std::vector<double> Data::getColumn(size_t j) {
-	std::vector<double> stdvec = arma::conv_to<std::vector<double>>::from((this->data)->col(j));
-	return stdvec;
-}
-
-std::vector<double> Data::getRow(size_t i) {
+std::vector<double> Data::row(lluint i) {
 	std::vector<double> stdvec = arma::conv_to<std::vector<double>>::from((this->data)->row(i));
 	return stdvec;
 }
 
-size_t Data::getTargetIndex() {
+std::vector<double> Data::col(lluint j) {
+	std::vector<double> stdvec = arma::conv_to<std::vector<double>>::from((this->data)->col(j));
+	return stdvec;
+}
+
+lluint Data::getTargetIndex() {
 	return this->target_index;
 }
 
@@ -56,34 +54,60 @@ void Data::print() {
 	(this->data)->print();
 }
 
-double Data::rowMean(size_t i) {
-	return arma::mean((this->data)->row(i));
+double Data::rowMean(lluint row_index) {
+	return arma::mean((this->data)->row(row_index));
 }
 
-double Data::colMean(size_t j) {
-	return arma::mean((this->data)->col(j));
+double Data::colMean(lluint col_index) {
+	return arma::mean((this->data)->col(col_index));
 }
 
-std::vector<Data*> Data::splitBinary(size_t feature_index) {
+Data* Data::subset(std::vector<lluint> rows, std::vector<lluint> cols) {
+	
+	arma::uvec arma_rows = arma::uvec(rows);
+	arma::uvec arma_cols = arma::uvec(cols);	
+	
+	arma::mat subset_mat = (this->getData())->submat(arma_rows, arma_cols);
+	
+	Data* data_subset = new Data(&subset_mat, this->getTargetIndex());
+	return data_subset;
+}
+
+
+/*
+std::vector<Data*> Data::splitBinary(int feature_index, int row_index) {
+	std::vector<int> indices_left;
+	std::vector<int> indices_right;
 	std::vector<Data*> data_partitioned;
+	int n_rows = (this->getData())->getNRows();
+	double element;
+	double split_point = this->getElement(row_index, feature_index);
 	
-	arma::mat* matrix_left = new arma::mat((this->data)->cols(0, feature_index));
-	arma::mat* matrix_right = new arma::mat((this->data)->cols(feature_index + 1, this->getNCols()));
 	
-	Data* data_left = new Data(matrix_left, this->getTargetIndex());
-	Data* data_right = new Data(matrix_right, this->getTargetIndex());
+	for (int i = 0; i < n_rows; i++) {
+		element = this->getElement(i, feature_index);
+		if (element <= split_point) {
+			indices_left.push_back(i);
+		} else {
+			indices_right.push_back(i);
+		}
+	}
 	
-	data_partitioned.push_back(data_left);
-	data_partitioned.push_back(data_right);
+	std::vector<int> col_vector = initSizeTVector(0, feature_index);
+	Data* subset_left = this->subset(indices_left, col_vector);
+	Data* subset_right = this->subset(indices_right, col_vector);
+	
+	data_partitioned.push_back(subset_left);
+	data_partitioned.push_back(subset_right);
 	
 	return data_partitioned;
 }
 
 std::vector<Data*> Data::split(Split split) {
 	
-	std::vector<size_t> splitpoints = split.getSplitpoints();
+	std::vector<int> splitpoints = split.getSplitpoints();
 	int n_splits = splitpoints.size();
-	ssize_t feature = split.getSplitFeatureIndex();
+	sint feature = split.getSplitFeatureIndex();
 	std::vector<Data*> split_multiway;
 	std::vector<Data*> split_binary;
 	
@@ -97,3 +121,6 @@ std::vector<Data*> Data::split(Split split) {
 	
 	return split_multiway;
 }
+* 
+*
+* */
