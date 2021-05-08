@@ -6,6 +6,7 @@
 #include "class_tree.h"
 #include "class_node.h"
 #include "class_optimizer.h"
+#include "class_model.h"
 
 
 Node::Node(int id, Data* data, Tree* tree) {
@@ -31,11 +32,14 @@ void Node::addChild(Node* child) {
 	this->child_cnt++;
 }
 
-std::vector<Node*> Node::split(Optimizer optimizer) {
+std::vector<Node*> Node::split() {
 	std::vector<Data*> data_splitted;
 	std::vector<Node*> child_nodes;
 	Split s;
-	s = optimizer.optimize((this->tree)->getData(), (this->tree)->max_children, (this->tree)->getObjective());
+	Optimizer opt;
+	ModelAverage mod = ModelAverage(this->getData());
+	
+	s = opt.optimize((this->tree)->getData(), (this->tree)->getObjective(), &mod);
 	
 	/*
 	data_splitted = (this->getData())->split(s);

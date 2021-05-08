@@ -24,7 +24,7 @@ class Node {
     int getId();
     Data* getData();
     
-    std::vector<Node*> split(Optimizer optimizer);
+    std::vector<Node*> split();
     void addChild(Node* child);
     
 };

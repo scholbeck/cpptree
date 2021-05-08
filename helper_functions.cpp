@@ -12,6 +12,25 @@ std::vector<lluint> initVectorLLUINT(lluint start, lluint end) {
 	return vec;
 }
 
+void printVectorLLUINT(std::vector<lluint> vec) {
+	
+	lluint n = vec.size();
+	printf("Printing vector:\n");
+	for (lluint i = 0; i < n; i++) {
+		printf("%lld ", vec[i]);
+	}
+	printf("\n");
+}
+
+void printVectorInt(std::vector<int> vec) {
+	
+	int n = vec.size();
+	printf("Printing vector:\n");
+	for (int i = 0; i < n; i++) {
+		printf("%d ", vec[i]);
+	}
+	printf("\n");
+}
 
 double mean(std::vector<double> vec) {
 	

@@ -76,7 +76,9 @@ int main(int argc, char *argv[]) {
 		return EXIT_FAILURE;
 	}
 	arma::mat mat = arma::mat();
-	Data data = Data(mat, 4);
+	Data data;
+	data.setData(mat);
+	data.setTargetIndex(4);
 	data.load(arguments.getFilename());
 	// data.print();
 	
@@ -89,10 +91,7 @@ int main(int argc, char *argv[]) {
 	n1.addChild(&n2);
 	n1.addChild(&n3);
 	//n3.getData()->print();
-  
-	OptimizerExhaustiveSearch optim_exhaust = OptimizerExhaustiveSearch();
-	OptimizerRandomSearch optim_rand = OptimizerRandomSearch();
-	
+ 
 	std::vector<Node*> child_nodes;
 	Split s = Split();
 	s.setFeatureIndex(1);
@@ -108,13 +107,16 @@ int main(int argc, char *argv[]) {
 	std::vector<Data> data_subsets = data.split(s);
 	
 	//printf("%f", data.elem(10, 1));
-	ModelConstant mod = ModelConstant(data);
+	ModelAverage mod = ModelAverage(&data);
 	mod.train();
 	//data_subsets[2].print();
-	ObjectiveSSE objective = ObjectiveSSE();
-	std::vector<double> preds = mod.predict(data);
-	double obj_value = objective.compute(data, mod);
-	printf("preds size %ld", preds.size());
+	ObjectiveSSE obj = ObjectiveSSE();
+	std::vector<double> preds = mod.predict(&data);
+	double obj_value = obj.compute(&data, &mod);
+	
+	Optimizer optim;
+	Split sp = optim.exhaustiveSearch(&data, &obj, &mod);
+	printf("Split feature %lld; split value %f", sp.getSplitFeatureIndex(), sp.getSplitValues()[0]);
 	// child_nodes = n3.split(optim_exhaust);
 	
 	return EXIT_SUCCESS;

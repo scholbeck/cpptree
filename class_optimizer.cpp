@@ -7,42 +7,49 @@
 #include "class_node.h"
 #include "class_optimizer.h"
 #include "class_split.h"
+#include "helper_functions.h"
 
 
 Optimizer::Optimizer() {
 
 }
 
-Split Optimizer::optimize(Data* data, int max_splits, Objective objective) {
-	// placeholder
-	// method overloaded by inheritance
-	Split split = Split();
-	return split;
+Split Optimizer::optimize(Data* data, Objective* obj, Model* mod) {
+	
+	Split s;
+	return s;
+	
+	// if (method == exhaustive search) {} ....
 }
 
-Split OptimizerExhaustiveSearch::optimize(Data* data, int max_children, Objective objective) {
-	
-	int n_features = data->ncols();
-	int n_obs = data->nrows();
-	Split split = Split();
+Split Optimizer::exhaustiveSearch(Data* data, Objective* obj, Model* mod) {
+	// only implemented for binary splits
+	lluint n_features = data->ncols();
+	lluint n_obs = data->nrows();
+	Split current_split = Split();
+	Split best_split = Split();
 	std::vector<Data> splitted_data;
-	/*
-	for (int j = 0; j < n_features; j++) {
-		split.setFeatureIndex(j);
-		for (int k = 0; k < (max_children - 1); k++) {
-			int i;
-			for (i = (split.getSplitpoints().back() + 1); i < n_obs; i++) {
-				split.addSplitValue();
-				break;
+	double best_obj_val = obj->compute(data, mod);
+	double current_obj_val = best_obj_val;
+	double obj_child_left, obj_child_right;
+	
+	for (lluint col; col < data->ncols(); col++) {
+		current_split.setFeatureIndex(col);
+		for (lluint row = 0; row < n_obs; row++) {
+			current_split.addSplitValue(data->elem(row, col));
+			splitted_data = data->split(current_split);
+			
+			obj_child_left = obj->compute(&splitted_data[0], mod);
+			obj_child_right = obj->compute(&splitted_data[1], mod);
+			current_obj_val = obj_child_left + obj_child_left; 
+			
+			if (current_obj_val < best_obj_val) {
+				best_obj_val = current_obj_val;
+				best_split = current_split;
+			} else {
+				current_split.clearObject();
 			}
 		}
-		split.clearObject();
 	}
-	*/	
-	return split;
-}
-
-Split OptimizerRandomSearch::optimize(Data* data, int max_splits, Objective objective) {
-	Split split = Split();
-	return split;
+	return best_split;
 }

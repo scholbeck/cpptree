@@ -8,17 +8,20 @@
 #include "helper_functions.h"
 #include <vector>
 
-Data::Data(arma::mat mat, lluint target_index) {
-	this->data = mat;
-	this->target_index = target_index;
-}
-
-arma::mat Data::getData() {
-	return this->data;
+Data::Data() {
+	
 }
 
 void Data::setData(arma::mat mat) {
 	this->data = mat;
+}
+
+void Data::setTargetIndex(lluint target) {
+	this->target_index = target;
+}
+
+arma::mat Data::getData() {
+	return this->data;
 }
 
 double Data::elem(lluint row_index, lluint col_index) {
@@ -68,7 +71,9 @@ Data Data::subset(std::vector<lluint> rows, std::vector<lluint> cols) {
 	arma::uvec arma_cols = arma::uvec(cols);	
 	
 	arma::mat subset_mat = (this->getData()).submat(arma_rows, arma_cols);
-	Data subset_data = Data(subset_mat, this->getTargetIndex());
+	Data subset_data;
+	subset_data.setData(subset_mat);
+	subset_data.setTargetIndex(this->getTargetIndex());
 	
 	return subset_data;
 }

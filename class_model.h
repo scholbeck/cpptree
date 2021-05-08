@@ -1,35 +1,30 @@
 #ifndef MODEL_H
 #define MODEL_H
 
-#include "class_model.h"
 #include "class_data.h"
-
 
 class Model {
   
-  public:
-    Model(Data training_data);
+	public:
+		Data* training_data;
     
-    Data training_data;
-    
-    void train();
-    std::vector<double> predict(Data data);
+		Model(Data* train);
+		virtual void train() = 0;
+		virtual std::vector<double> predict(Data* data) = 0;
 };
 
-class ModelConstant: public Model {
+class ModelAverage: public Model {
 	public:
-		using Model::Model;
-		using Model::train;
-		virtual void train();
-		using Model::predict;
-		virtual std::vector<double> predict(Data data);
-		
 		double mean_prediction;
+		
+		ModelAverage(Data* train);
+		void train();
+		std::vector<double> predict(Data* data);
 };
 
 class ModelLinearRegression: public Model {
 	public:
-		using Model::predict;
+		//using Model::predict;
 };
 
 

@@ -7,7 +7,7 @@
 #include "class_tree.h"
 #include "class_node.h"
 
-Tree::Tree(Data* data, size_t max_children, size_t min_node_size) {
+Tree::Tree(Data* data, uint max_children, uint min_node_size) {
 	this->data = data;
 	this->root = NULL;
 	this->max_children = max_children;
@@ -18,19 +18,19 @@ Data* Tree::getData() {
 	return this->data;
 }
 
-size_t Tree::getMinNodeSize() {
+uint Tree::getMinNodeSize() {
 	return this->min_node_size;
 }
 
-size_t Tree::getMaxChildren() {
+uint Tree::getMaxChildren() {
 	return this->max_children;
 }
 
-Objective Tree::getObjective() {
-	return this->objective;
+Objective* Tree::getObjective() {
+	return this->getObjective();
 }
 
-size_t Tree::getTargetIndex() {
+uint Tree::getTargetIndex() {
 	return this->target_index;
 }
 

@@ -1,32 +1,26 @@
 
-#include "class_model.h"
 #include "class_data.h"
+#include "class_model.h"
 
 
-Model::Model(Data training_data):training_data(training_data) {
-  this->training_data = training_data;
+
+Model::Model(Data* train) {
+	
+	this->training_data = train;
 }
 
-void Model::train() {
-	// placeholder
-	// method overloaded by inheritance
+ModelAverage::ModelAverage(Data* train) : Model(train) {
+	//
 }
 
-std::vector<double> Model::predict(Data data) {
-	// placeholder
-	// method overloaded by inheritance
-	std::vector<double> predictions;
-	return predictions;
+void ModelAverage::train() {
+	this->mean_prediction = (this->training_data)->colMean((this->training_data)->getTargetIndex());
 }
 
-void ModelConstant::train() {
-	this->mean_prediction = (this->training_data).colMean((this->training_data).getTargetIndex());
-}
-
-std::vector<double> ModelConstant::predict(Data data) {
+std::vector<double> ModelAverage::predict(Data* data) {
   
 	std::vector<double> predictions;
-	int n = data.nrows();
+	int n = data->nrows();
 	
 	for (int i = 0; i < n; i++) {
 		predictions.push_back(this->mean_prediction);
@@ -35,3 +29,4 @@ std::vector<double> ModelConstant::predict(Data data) {
 	return predictions;
   
 }
+
