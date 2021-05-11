@@ -1,17 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <armadillo>
 #include <getopt.h>
 #include <iostream>
-#include "class_arguments.h"
 #include "class_data.h"
-#include "class_tree.h"
-#include "class_node.h"
-#include "class_model.h"
-#include "class_objective.h"
-#include "class_optimizer.h"
+#include "class_arguments.h"
+#include "class_split.h"
 
 
+/*
 void printHelp() {
 	printf("Required arguments: filename, maxsplit, minsize.\n");
 }
@@ -68,38 +64,38 @@ int processArguments(int argc, char** argv, Arguments *arguments)
     
 }
 
+*/
 int main(int argc, char *argv[]) {
 
+	/*
 	Arguments arguments;
 	int arg_status = 0;
 	if ((arg_status = processArguments(argc, argv, &arguments)) == -1) {
 		return EXIT_FAILURE;
 	}
-	arma::mat mat = arma::mat();
+	*/
 	Data data;
-	data.setData(mat);
-	data.setTargetIndex(4);
-	data.load(arguments.getFilename());
-	// data.print();
+	data.setTargetIndex(0);
+	data.initRandom(50, 5);
+	std::deque<lluint> r = {0, 1, 5};
+	std::deque<lluint> c = {0, 1, 4};
 	
-	Tree tree = Tree(&data, arguments.getMaxSplits(), arguments.getMinNodeSize());
+	Data subset;
+	subset = data.subset(r, c);
 	
-	Node n1 = Node(0, &data, &tree);
-	Node n2 = Node(00, &data, &tree);
-	Node n3 = Node(01, &data, &tree);
-	
-	n1.addChild(&n2);
-	n1.addChild(&n3);
- 
-	ModelAverage mod = ModelAverage(&data);
-	mod.train();
-	ObjectiveSSE obj = ObjectiveSSE();
-	Optimizer optim;
-	
-	
-	Split sp = optim.exhaustiveSearch(&data, &obj, &mod);
-	sp.print();
-	//child_nodes = n3.split(optim_exhaust);
+	Split s = Split();
+	s.addSplitValue(data.elem(0, 3));
+	s.addSplitValue(data.elem(10, 3));
+	s.addSplitValue(data.elem(20, 3));
+	s.addSplitValue(data.elem(30, 3));
+
+	s.setFeatureIndex(1);
+	std::vector<Data> part2 = data.split(s);
+	int n_splits = part2.size();
+	for (int i = 0; i < n_splits; i++) {
+		part2[i].summary();
+	}
+
 	
 	return EXIT_SUCCESS;
 }

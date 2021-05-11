@@ -1,43 +1,48 @@
 #ifndef DATA_H
 #define DATA_H
 
-#include <armadillo>
+#include <string>
+#include <stdlib.h>
+#include <deque>
 #include <vector>
 #include "class_split.h"
 
-class Split; // forward declaration due to circular dependency
-
 using lluint = long long unsigned int;
+class Split;
 
 class Data {
   
 	public:
 		Data();
     
-		arma::mat data;
+		std::deque<std::deque<double>> rows; // each row is a vector containg all col values
 		lluint target_index;
-		lluint n_rows;
-		lluint n_cols;
 		
 		void load(std::string filename); // read data from disc
-		arma::mat getData();
-		void setData(arma::mat mat);
+		
 		void setTargetIndex(lluint target);
+		void addRow(std::deque<double> row);
+		void addCol(std::deque<double> col);
 		void print();
 		lluint getTargetIndex();
 		double elem(lluint row_index, lluint col_index);
 		lluint nrows();
 		lluint ncols();
-		std::vector<double> row(lluint i);
-		std::vector<double> col(lluint j);
-		double rowMean(lluint row_index);
-		double colMean(lluint col_index);
-
+		std::deque<double> row(lluint i);
+		std::deque<double> col(lluint j);
+		void init(lluint n_rows, lluint n_cols);
+		void initRandom(lluint n_rows, lluint n_cols);
+		void summary();		
+		Data subset(std::deque<lluint> rows, std::deque<lluint> cols);
 		std::vector<Data> splitBinary(double split_value, lluint col_index);
 		std::vector<Data> split(Split split);
+
+		/*
+		std::deque<Data> splitBinary(double split_value, lluint col_index);
+		std::deque<Data> split(Split split);
 		
-		Data subset(std::vector<lluint> row_id_vec, std::vector<lluint> col_id_vec);
-		
+		Data subset(std::deque<lluint> row_id_vec, std::deque<lluint> col_id_vec);
+		*/
 };
 
 

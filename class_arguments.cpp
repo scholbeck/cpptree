@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <armadillo>
 #include <getopt.h>
 #include <iostream>
 #include "class_arguments.h"

@@ -1,86 +1,131 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <armadillo>
 #include <getopt.h>
 #include <iostream>
 #include "class_data.h"
-#include "class_split.h"
-#include "helper_functions.h"
-#include <vector>
+#include <deque>
+#include <ctime>
+#include <algorithm>
 
 Data::Data() {
 	
 }
 
-void Data::setData(arma::mat mat) {
-	this->data = mat;
+lluint Data::getTargetIndex() {
+	return this->target_index;
 }
-
 void Data::setTargetIndex(lluint target) {
 	this->target_index = target;
 }
 
-arma::mat Data::getData() {
-	return this->data;
+void Data::addRow(std::deque<double> row) {
+	// check dimensions before appending row
+	rows.push_back(row);
+}
+void Data::addCol(std::deque<double> col) {
+	// check dimensions before appending col
+	lluint n_rows = this->nrows();
+	for (lluint i = 0; i < n_rows; i++) {
+		rows[i].push_back(col[i]);
+	}
 }
 
 double Data::elem(lluint row_index, lluint col_index) {
-	return (this->data)(row_index, col_index);
+	return (this->row(row_index))[col_index];
 }
 
 lluint Data::nrows() {
-	return this->getData().n_rows;
+	return this->rows.size();
 }
 
 lluint Data::ncols() {
-	return this->getData().n_cols;
+	return this->row(0).size();
 }
 
-std::vector<double> Data::row(lluint i) {
-	std::vector<double> stdvec = arma::conv_to<std::vector<double>>::from((this->data).row(i));
-	return stdvec;
+std::deque<double> Data::row(lluint i) {
+	return this->rows[i];
 }
 
-std::vector<double> Data::col(lluint j) {
-	std::vector<double> stdvec = arma::conv_to<std::vector<double>>::from((this->data).col(j));
-	return stdvec;
+std::deque<double> Data::col(lluint j) {
+	std::deque<double> c;
+	lluint n_rows = this->nrows();
+	for (lluint i = 0; i < n_rows; i++) {
+		c.push_back(this->row(j)[i]);
+	}
+	return c;
 }
 
-lluint Data::getTargetIndex() {
-	return this->target_index;
+void Data::init(lluint n_rows, lluint n_cols) {
+	std::deque<std::deque<double>> vec(n_rows, std::deque<double>(n_cols));
+	this->rows = vec;
 }
 
-void Data::load(std::string filename) {
-	(this->data).load(filename);
+void Data::initRandom(lluint n_rows, lluint n_cols) {
+	this->init(n_rows, n_cols);
+	
+	for (lluint i = 0; i < n_rows; i++) {
+		for (lluint j = 0; j < n_cols; j++) {
+			(this->rows[i])[j] = std::rand();
+		}
+	}
 }
 
 void Data::print() {
-	(this->data).print();
+	lluint n_rows = this->nrows();
+	lluint n_cols = this->ncols();
+	printf("\n");
+	for (lluint i = 0; i < n_rows; i++) {
+		for (lluint j = 0; j < n_cols; j++) {
+			printf("%f ", (this->rows[i])[j]);
+		}
+	printf("\n");
+	}
 }
 
-double Data::rowMean(lluint row_index) {
-	return arma::mean((this->data).row(row_index));
+void Data::summary() {
+	this->print();
+	printf("\nObject summary:\nData frame of dimension %lld x %lld\n", this->nrows(), this->ncols());
 }
 
-double Data::colMean(lluint col_index) {
-	return arma::mean((this->data).col(col_index));
-}
+Data Data::subset(std::deque<lluint> rows, std::deque<lluint> cols) {
 
-Data Data::subset(std::vector<lluint> rows, std::vector<lluint> cols) {
-	arma::uvec arma_rows = arma::uvec(rows);
-	arma::uvec arma_cols = arma::uvec(cols);	
+	std::sort(cols.begin(), cols.end());
+	Data subset;
+	lluint n_rows = rows.size();
+	lluint n_cols = cols.size();
+	std::deque<double> subset_row;
+	std::deque<double> subset_row_col;
+	lluint row_temp, col_temp;
+	std::deque<lluint> cols_cpy;
+	for (lluint i = 0; i < n_rows; i++) {
+		row_temp = rows.front();
+		rows.pop_front();
+		subset_row = this->row(row_temp);
+		cols_cpy = cols;
+		for (lluint j = 0; j < n_cols; j++) {
+			col_temp = cols_cpy.front();
+			cols_cpy.pop_front();
+			subset_row_col.push_back(subset_row[col_temp]);
+		}
+		subset.addRow(subset_row_col);
+		subset_row_col.clear();
+	}
 	
-	arma::mat subset_mat = (this->getData()).submat(arma_rows, arma_cols);
-	Data subset_data;
-	subset_data.setData(subset_mat);
-	subset_data.setTargetIndex(this->getTargetIndex());
-	
-	return subset_data;
+	return subset;
+}
+
+
+std::deque<lluint> initDequeSeq(lluint from, lluint to) {
+	std::deque<lluint> seq;
+	for (lluint i = from; i < to; i++) {
+		seq.push_back(i);
+	}
+	return seq;
 }
 
 std::vector<Data> Data::splitBinary(double split_value, lluint col_index) {
-	std::vector<lluint> rows_left;
-	std::vector<lluint> rows_right;
+	std::deque<lluint> rows_left;
+	std::deque<lluint> rows_right;
 	std::vector<Data> data_partitioned;
 	
 	double element;
@@ -95,7 +140,7 @@ std::vector<Data> Data::splitBinary(double split_value, lluint col_index) {
 		}
 	}
 	
-	std::vector<lluint> cols = initVectorLLUINT(0, (this->ncols()) - 1); // init vector from 0 to highest column index
+	std::deque<lluint> cols = initDequeSeq(0, this->ncols()); // init deque from 0 to highest column index
 	Data subset_left = this->subset(rows_left, cols);
 	Data subset_right = this->subset(rows_right, cols);
 	data_partitioned.push_back(subset_left);
@@ -108,18 +153,21 @@ std::vector<Data> Data::splitBinary(double split_value, lluint col_index) {
 std::vector<Data> Data::split(Split split) {
 	
 	std::vector<double> split_values = split.getSplitValues();
+	std::sort(split_values.begin(), split_values.end());
 	int n_splits = split_values.size();
 	lluint feature = split.getSplitFeatureIndex();
 	std::vector<Data> split_multiway;
 	std::vector<Data> split_binary;
 	split_binary = this->splitBinary(split_values[0], feature);
-	split_multiway.insert(split_multiway.end(), split_binary.begin(), split_binary.end());
+	split_multiway.push_back(split_binary[0]);
+	split_multiway.push_back(split_binary[1]);
 	
 	for (int i = 1; i < n_splits; i++) {
-		split_binary = (split_binary[1]).splitBinary(split_values[i], feature);
-		split_multiway.insert(split_multiway.end(), split_binary.begin(), split_binary.end());
+		split_binary = (split_binary[1]).splitBinary(split_values[i], feature); // split last element in two
+		split_multiway.pop_back(); // remove last element which was split in two
+		split_multiway.push_back(split_binary[0]); // add resulting splits
+		split_multiway.push_back(split_binary[1]);
 	}
 	
 	return split_multiway;
 }
-
