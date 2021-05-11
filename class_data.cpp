@@ -78,18 +78,17 @@ Data Data::subset(std::vector<lluint> rows, std::vector<lluint> cols) {
 	return subset_data;
 }
 
-std::vector<Data> Data::splitBinary(lluint row_index, lluint col_index) {
+std::vector<Data> Data::splitBinary(double split_value, lluint col_index) {
 	std::vector<lluint> rows_left;
 	std::vector<lluint> rows_right;
 	std::vector<Data> data_partitioned;
 	
 	double element;
-	double split_point = this->elem(row_index, col_index);
 	lluint n_elements = this->nrows();
 	
 	for (lluint i = 0; i < n_elements; i++) {
 		element = this->elem(i, col_index);
-		if (element <= split_point) {
+		if (element <= split_value) {
 			rows_left.push_back(i);
 		} else {
 			rows_right.push_back(i);
@@ -113,9 +112,9 @@ std::vector<Data> Data::split(Split split) {
 	lluint feature = split.getSplitFeatureIndex();
 	std::vector<Data> split_multiway;
 	std::vector<Data> split_binary;
-	
 	split_binary = this->splitBinary(split_values[0], feature);
 	split_multiway.insert(split_multiway.end(), split_binary.begin(), split_binary.end());
+	
 	for (int i = 1; i < n_splits; i++) {
 		split_binary = (split_binary[1]).splitBinary(split_values[i], feature);
 		split_multiway.insert(split_multiway.end(), split_binary.begin(), split_binary.end());

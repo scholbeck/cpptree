@@ -21,7 +21,10 @@ class Split {
 		std::vector<double> getSplitValues();
 		void addSplitValue(double splitpoint);
 		void clearObject();
+		void print();
 };
+
+
 
 
 

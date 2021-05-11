@@ -33,7 +33,7 @@ class Data {
 		double rowMean(lluint row_index);
 		double colMean(lluint col_index);
 
-		std::vector<Data> splitBinary(lluint row_index, lluint col_index);
+		std::vector<Data> splitBinary(double split_value, lluint col_index);
 		std::vector<Data> split(Split split);
 		
 		Data subset(std::vector<lluint> row_id_vec, std::vector<lluint> col_id_vec);

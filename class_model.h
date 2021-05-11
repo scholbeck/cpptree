@@ -20,6 +20,7 @@ class ModelAverage: public Model {
 		ModelAverage(Data* train);
 		void train();
 		std::vector<double> predict(Data* data);
+		void print();
 };
 
 class ModelLinearRegression: public Model {

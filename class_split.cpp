@@ -29,3 +29,15 @@ void Split::clearObject() {
 	this->feature_index = 0;
 	this->split_values.clear();
 }
+
+void Split::print() {
+	
+	printf("Split point summary:\n");
+	printf("Feature: %lld\n", this->getSplitFeatureIndex());
+	printf("Split values:\n");
+	int n_splits = this->split_cnt;
+	for (int i = 0; i < n_splits; i++) {
+		printf("%f, ", this->getSplitValues()[i]);
+	}
+	printf("\n");
+}

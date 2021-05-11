@@ -90,34 +90,16 @@ int main(int argc, char *argv[]) {
 	
 	n1.addChild(&n2);
 	n1.addChild(&n3);
-	//n3.getData()->print();
  
-	std::vector<Node*> child_nodes;
-	Split s = Split();
-	s.setFeatureIndex(1);
-	s.addSplitValue(1);
-	s.addSplitValue(2);
-	s.addSplitValue(3);
-	
-	std::vector<lluint> rows = {1, 50, 10, 3};
-	std::vector<lluint> cols = {1, 2, 4};
-	
-	Data subset = data.subset(rows, cols);
-	
-	std::vector<Data> data_subsets = data.split(s);
-	
-	//printf("%f", data.elem(10, 1));
 	ModelAverage mod = ModelAverage(&data);
 	mod.train();
-	//data_subsets[2].print();
 	ObjectiveSSE obj = ObjectiveSSE();
-	std::vector<double> preds = mod.predict(&data);
-	double obj_value = obj.compute(&data, &mod);
-	
 	Optimizer optim;
+	
+	
 	Split sp = optim.exhaustiveSearch(&data, &obj, &mod);
-	printf("Split feature %lld; split value %f", sp.getSplitFeatureIndex(), sp.getSplitValues()[0]);
-	// child_nodes = n3.split(optim_exhaust);
+	sp.print();
+	//child_nodes = n3.split(optim_exhaust);
 	
 	return EXIT_SUCCESS;
 }
