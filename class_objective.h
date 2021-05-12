@@ -7,13 +7,13 @@
 class Objective {
   public:
     Objective();
-    virtual double compute(Data* data, Model* model) = 0;
+    virtual double compute(Data data, Model* model) = 0;
 };
 
 class ObjectiveSSE: public Objective {
 	public:
 		ObjectiveSSE();
-		double compute(Data* data, Model* model);
+		double compute(Data data, Model* model);
 };
 
 

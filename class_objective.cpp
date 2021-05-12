@@ -7,15 +7,17 @@
 
 
 Objective::Objective() {
+	
 }
 
 ObjectiveSSE::ObjectiveSSE() {
+	
 }
 
-double ObjectiveSSE::compute(Data* data, Model* model) {
+double ObjectiveSSE::compute(Data data, Model* model) {
 	
 	std::vector<double> predictions = model->predict(data);
-	std::vector<double> target_observed = data->col(data->getTargetIndex());
+	std::vector<double> target_observed = data.col(data.getTargetIndex());
 	
 	int n = predictions.size();
 	double cumsum = 0;

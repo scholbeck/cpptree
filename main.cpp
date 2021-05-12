@@ -5,6 +5,10 @@
 #include "class_data.h"
 #include "class_arguments.h"
 #include "class_split.h"
+#include "class_model.h"
+#include "class_optimizer.h"
+#include "class_node.h"
+#include "helper_functions.h"
 
 
 /*
@@ -75,14 +79,16 @@ int main(int argc, char *argv[]) {
 	}
 	*/
 	Data data;
+	data.initRandom(1000, 5);
 	data.setTargetIndex(0);
-	data.initRandom(50, 5);
-	std::deque<lluint> r = {0, 1, 5};
-	std::deque<lluint> c = {0, 1, 4};
+	// data.summary();
+	std::vector<lluint> r = {0, 1, 5};
+	std::vector<lluint> c = {0, 1, 4};
 	
 	Data subset;
 	subset = data.subset(r, c);
 	
+	/*	
 	Split s = Split();
 	s.addSplitValue(data.elem(0, 3));
 	s.addSplitValue(data.elem(10, 3));
@@ -91,11 +97,34 @@ int main(int argc, char *argv[]) {
 
 	s.setFeatureIndex(1);
 	std::vector<Data> part2 = data.split(s);
+	
 	int n_splits = part2.size();
 	for (int i = 0; i < n_splits; i++) {
 		part2[i].summary();
 	}
+	*/
+	ModelAverage mod = ModelAverage(data);
+	mod.train();
 
+	Optimizer optim = Optimizer();
+	ObjectiveSSE obj = ObjectiveSSE();
+	Split sp;
+	mod.summary();
+	/*
+	double obj_val = obj.compute(data, &mod);
+	sp = optim.exhaustiveSearch(data, &obj, &mod);
+	sp.summary();
+	*/
+	
+	std::vector<Node*> child_nodes;
+	Node n = Node("0", &data);
+	child_nodes = n.split(&mod, &obj, &optim, "exhaustive");
+	int n_childs = child_nodes.size();
+	for (int i = 0; i < n_childs; i++) {
+		child_nodes[i]->summary();
+	}
+	
+	
 	
 	return EXIT_SUCCESS;
 }

@@ -6,21 +6,24 @@
 class Model {
   
 	public:
-		Data* training_data;
-    
-		Model(Data* train);
+		Data training_data;
+		bool is_trained;
+		
+		Model(Data train);
+		void checkTrained();
 		virtual void train() = 0;
-		virtual std::vector<double> predict(Data* data) = 0;
+		virtual void summary() = 0;
+		virtual std::vector<double> predict(Data data) = 0;
 };
 
 class ModelAverage: public Model {
 	public:
 		double mean_prediction;
 		
-		ModelAverage(Data* train);
+		ModelAverage(Data train);
 		void train();
-		std::vector<double> predict(Data* data);
-		void print();
+		void summary();
+		std::vector<double> predict(Data data);
 };
 
 class ModelLinearRegression: public Model {

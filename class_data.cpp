@@ -3,9 +3,10 @@
 #include <getopt.h>
 #include <iostream>
 #include "class_data.h"
-#include <deque>
+#include <vector>
 #include <ctime>
 #include <algorithm>
+#include "helper_functions.h"
 
 Data::Data() {
 	
@@ -18,11 +19,11 @@ void Data::setTargetIndex(lluint target) {
 	this->target_index = target;
 }
 
-void Data::addRow(std::deque<double> row) {
+void Data::addRow(std::vector<double> row) {
 	// check dimensions before appending row
 	rows.push_back(row);
 }
-void Data::addCol(std::deque<double> col) {
+void Data::addCol(std::vector<double> col) {
 	// check dimensions before appending col
 	lluint n_rows = this->nrows();
 	for (lluint i = 0; i < n_rows; i++) {
@@ -42,21 +43,21 @@ lluint Data::ncols() {
 	return this->row(0).size();
 }
 
-std::deque<double> Data::row(lluint i) {
+std::vector<double> Data::row(lluint i) {
 	return this->rows[i];
 }
 
-std::deque<double> Data::col(lluint j) {
-	std::deque<double> c;
+std::vector<double> Data::col(lluint j) {
+	std::vector<double> c;
 	lluint n_rows = this->nrows();
 	for (lluint i = 0; i < n_rows; i++) {
-		c.push_back(this->row(j)[i]);
+		c.push_back(this->row(i)[j]);
 	}
 	return c;
 }
 
 void Data::init(lluint n_rows, lluint n_cols) {
-	std::deque<std::deque<double>> vec(n_rows, std::deque<double>(n_cols));
+	std::vector<std::vector<double>> vec(n_rows, std::vector<double>(n_cols));
 	this->rows = vec;
 }
 
@@ -84,28 +85,28 @@ void Data::print() {
 
 void Data::summary() {
 	this->print();
-	printf("\nObject summary:\nData frame of dimension %lld x %lld\n", this->nrows(), this->ncols());
+	std::cout << "data summary : \n";
+	std::cout << "matrix of dimension : " << this->nrows() << " x " << this->ncols() << "\n";
 }
 
-Data Data::subset(std::deque<lluint> rows, std::deque<lluint> cols) {
+Data Data::subset(std::vector<lluint> rows, std::vector<lluint> cols) {
 
 	std::sort(cols.begin(), cols.end());
 	Data subset;
+	subset.setTargetIndex(this->getTargetIndex());
 	lluint n_rows = rows.size();
 	lluint n_cols = cols.size();
-	std::deque<double> subset_row;
-	std::deque<double> subset_row_col;
-	lluint row_temp, col_temp;
-	std::deque<lluint> cols_cpy;
+	std::vector<double> subset_row;
+	std::vector<double> subset_row_col;
+	lluint current_row_ix, current_col_ix;
+	std::vector<lluint> cols_cpy;
 	for (lluint i = 0; i < n_rows; i++) {
-		row_temp = rows.front();
-		rows.pop_front();
-		subset_row = this->row(row_temp);
+		current_row_ix = rows[i];
+		subset_row = this->row(current_row_ix);
 		cols_cpy = cols;
 		for (lluint j = 0; j < n_cols; j++) {
-			col_temp = cols_cpy.front();
-			cols_cpy.pop_front();
-			subset_row_col.push_back(subset_row[col_temp]);
+			current_col_ix = cols[j];
+			subset_row_col.push_back(subset_row[current_col_ix]);
 		}
 		subset.addRow(subset_row_col);
 		subset_row_col.clear();
@@ -115,17 +116,9 @@ Data Data::subset(std::deque<lluint> rows, std::deque<lluint> cols) {
 }
 
 
-std::deque<lluint> initDequeSeq(lluint from, lluint to) {
-	std::deque<lluint> seq;
-	for (lluint i = from; i < to; i++) {
-		seq.push_back(i);
-	}
-	return seq;
-}
-
 std::vector<Data> Data::splitBinary(double split_value, lluint col_index) {
-	std::deque<lluint> rows_left;
-	std::deque<lluint> rows_right;
+	std::vector<lluint> rows_left;
+	std::vector<lluint> rows_right;
 	std::vector<Data> data_partitioned;
 	
 	double element;
@@ -140,7 +133,7 @@ std::vector<Data> Data::splitBinary(double split_value, lluint col_index) {
 		}
 	}
 	
-	std::deque<lluint> cols = initDequeSeq(0, this->ncols()); // init deque from 0 to highest column index
+	std::vector<lluint> cols = initVectorSeq(0, this->ncols()); // init vector from 0 to highest column index
 	Data subset_left = this->subset(rows_left, cols);
 	Data subset_right = this->subset(rows_right, cols);
 	data_partitioned.push_back(subset_left);

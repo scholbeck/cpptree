@@ -20,8 +20,8 @@ class Split {
 		void setFeatureIndex(lluint feature_index);
 		std::vector<double> getSplitValues();
 		void addSplitValue(double splitpoint);
-		void clearObject();
-		void print();
+		void clear();
+		void summary();
 };
 
 

@@ -1,54 +1,51 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <armadillo>
-#include <getopt.h>
+
 #include <iostream>
-#include "class_tree.h"
+#include <string>
 #include "class_node.h"
 #include "class_optimizer.h"
 #include "class_model.h"
+#include "class_data.h"
 
 
-Node::Node(int id, Data* data, Tree* tree) {
+
+
+Node::Node(std::string id, Data* data) {
 	
-	this->tree = tree;
 	this->data = data;
 	this->id = id;
 	this->child_cnt = 0;
 	this->is_leaf = false;
 }
 
-int Node::getId() {
+std::string Node::getId() {
 	return id;
 }
 
 Data* Node::getData() {
-	return tree->getData();
+	return this->data;
 }
-
 
 void Node::addChild(Node* child) {
 	children.push_back(child);
 	this->child_cnt++;
 }
 
-std::vector<Node*> Node::split() {
-	std::vector<Data*> data_splitted;
-	std::vector<Node*> child_nodes;
+void Node::summary() {	
+	std::cout << "node summary:\n";
+	std::cout << "node ID: " << this->id << "\n";
+}
+
+std::vector<Node*> Node::split(Model* mod, Objective* obj, Optimizer* optim, std::string algo) {
+
 	Split s;
-	Optimizer opt;
-	ModelAverage mod = ModelAverage(this->getData());
-	
-	s = opt.optimize((this->tree)->getData(), (this->tree)->getObjective(), &mod);
-	
-	/*
-	data_splitted = (this->getData())->split(s);
-	int n_children = data_splitted.size();
-	
-	for (int i = 0; i < n_children; i++) {
-		Node* n = new Node(001, data_splitted[i], this->tree);
-		child_nodes.push_back(n);
+	s = optim->searchOptimum(*(this->getData()), obj, mod, algo);
+	std::vector<Data> child_node_data = this->getData()->split(s);
+	int n_child_nodes = child_node_data.size();
+	std::vector<Node*> child_nodes;
+	for (int i = 0; i < n_child_nodes; i++) {
+		std::string child_id = this->id + std::to_string(i);
+		Node* child = new Node(child_id, &child_node_data[i]);
+		child_nodes.push_back(child);
 	}
-	*/
 	return child_nodes;
 }
