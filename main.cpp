@@ -8,10 +8,11 @@
 #include "class_model.h"
 #include "class_optimizer.h"
 #include "class_node.h"
+#include "class_factory.h"
 #include "helper_functions.h"
 
 
-/*
+
 void printHelp() {
 	printf("Required arguments: filename, maxsplit, minsize.\n");
 }
@@ -22,6 +23,8 @@ int processArguments(int argc, char** argv, Arguments *arguments)
             {"filename", required_argument, nullptr, 1000},
             {"maxsplit", required_argument, nullptr, 1100},
             {"minsize", required_argument, nullptr, 1200},
+            {"algorithm", required_argument, nullptr, 1300},
+            {"objective", required_argument, nullptr, 1400},
             {"help", no_argument, nullptr, 1300}
     };
 	
@@ -38,19 +41,24 @@ int processArguments(int argc, char** argv, Arguments *arguments)
             arguments->setFilename(std::string(optarg));
             break;
         case 1100:
-            arguments->setMaxSplits((ssize_t) atol(optarg));
+            arguments->setMaxSplits((lluint) atol(optarg));
             break;
         case 1200:
-            arguments->setMinNodeSize((ssize_t) atol(optarg));
+            arguments->setMinNodeSize((lluint) atol(optarg));
             break;
         case 1300:
+            arguments->setAlgorithm(std::string(optarg));
+            break;
+        case 1400:
+            arguments->setObjective(std::string(optarg));
+            break;  
         case '?': // Unrecognized option
         default:
             printHelp();
             break;
         }
     }
-    
+    /*
     if (arguments->getFilename() == "") {
 		printf("Filename not specified.\n");
 		return -1;
@@ -63,32 +71,35 @@ int processArguments(int argc, char** argv, Arguments *arguments)
 		printf("Maximum split number not specified.\n");
 		return -1;
     }
-    
+    */
     return 0;
     
 }
 
-*/
+
 int main(int argc, char *argv[]) {
 
-	/*
-	Arguments arguments;
+	
+	Arguments args;
 	int arg_status = 0;
-	if ((arg_status = processArguments(argc, argv, &arguments)) == -1) {
+	if ((arg_status = processArguments(argc, argv, &args)) == -1) {
 		return EXIT_FAILURE;
 	}
-	*/
+	
 	Data data;
 	data.initRandom(1000, 5);
 	data.setTargetIndex(0);
-	// data.summary();
+	
+	
+	/*
+	data.summary();
 	std::vector<lluint> r = {0, 1, 5};
 	std::vector<lluint> c = {0, 1, 4};
 	
 	Data subset;
 	subset = data.subset(r, c);
 	
-	/*	
+		
 	Split s = Split();
 	s.addSplitValue(data.elem(0, 3));
 	s.addSplitValue(data.elem(10, 3));
@@ -103,29 +114,36 @@ int main(int argc, char *argv[]) {
 		part2[i].summary();
 	}
 	*/
-	ModelAverage mod = ModelAverage(data);
-	mod.train();
-
-	Optimizer optim = Optimizer();
-	ObjectiveSSE obj = ObjectiveSSE();
-	Split sp;
-	mod.summary();
+	Factory factory = Factory(args);
+	Model* mod = factory.createModel();
+	Objective* obj = factory.createObjective();
+	Optimizer* optim = factory.createOptimizer();
+	
+	optim->setObjective(obj);
+	optim->setModel(mod);
+	free(mod);
+	free(obj);
+	free(optim);
+	
 	/*
-	double obj_val = obj.compute(data, &mod);
-	sp = optim.exhaustiveSearch(data, &obj, &mod);
-	sp.summary();
-	*/
+	ExhaustiveSearch optim;
+	ObjectiveSSE obj = ObjectiveSSE();
+	ModelAverage mod = ModelAverage();
+	optim.setObjective(&obj);
+	optim.setModel(&mod);
+	mod.setTrainingData(data);	
 	
-	std::vector<Node*> child_nodes;
-	Node n = Node("0", &data);
-	child_nodes = n.split(&mod, &obj, &optim, "exhaustive");
-	int n_childs = child_nodes.size();
-	for (int i = 0; i < n_childs; i++) {
-		child_nodes[i]->summary();
+	std::vector<Node> child_nodes;
+	Node n = Node("0", data);
+	n.setOptimizer(&optim);
+	child_nodes = n.split();
+	if (child_nodes.empty() == false) {
+		int n_childs = child_nodes.size();
+		for (int i = 0; i < n_childs; i++) {
+			child_nodes[i].summary();
+		}
 	}
-	
-	
-	
+	* */
 	return EXIT_SUCCESS;
 }
 

@@ -14,7 +14,7 @@ ObjectiveSSE::ObjectiveSSE() {
 	
 }
 
-double ObjectiveSSE::compute(Data data, Model* model) {
+double ObjectiveSSE::evaluateModel(Data data, Model* model) {
 	
 	std::vector<double> predictions = model->predict(data);
 	std::vector<double> target_observed = data.col(data.getTargetIndex());

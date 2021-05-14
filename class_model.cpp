@@ -4,9 +4,12 @@
 #include "iostream"
 
 
-Model::Model(Data train) {
-	this->training_data = train;
+Model::Model() {
 	this->is_trained = false;
+}
+
+void Model::setTrainingData(Data data) {
+	this->training_data = data;
 }
 
 void Model::checkTrained() {
@@ -15,18 +18,16 @@ void Model::checkTrained() {
 	}
 }
 
-ModelAverage::ModelAverage(Data train) : Model(train) {
+ModelAverage::ModelAverage() : Model() {
 	//
 }
 
 void ModelAverage::train() {
-	std::cout << "training model...\n";
 	lluint target_index = this->training_data.getTargetIndex();
 	std::vector<double> target_values = this->training_data.col(target_index);
 	this->mean_prediction = mean(target_values);
 	
 	this->is_trained = true;
-	std::cout << "training model complete.\n";
 }
 
 void ModelAverage::summary() {

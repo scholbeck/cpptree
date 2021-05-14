@@ -2,7 +2,9 @@
 #define OPTIMIZER_H
 
 #include "string"
+#include "class_arguments.h"
 #include "class_data.h"
+#include "class_model.h"
 #include "class_objective.h"
 #include "class_split.h"
 
@@ -10,10 +12,28 @@
 class Optimizer {
 	
   public:
-    Optimizer();
-    
-    Split searchOptimum(Data data, Objective* obj, Model* mod, std::string algo);
-	Split exhaustiveSearch(Data data, Objective* obj, Model* mod);
+	Objective* obj;
+	Data data;
+	Model* mod;
+  
+    Optimizer(); 
+	virtual Split searchOptimum(Data data) = 0;
+	
+	Objective* getObjective();
+	void setObjective(Objective* obj);
+	
+	Model* getModel();
+	void setModel(Model* mod);
+	
+	double evaluateObjective(Data data);
+	
 };
+
+class ExhaustiveSearch: public Optimizer {
+	public:
+		ExhaustiveSearch();
+		Split searchOptimum(Data data);
+};
+
 
 #endif 

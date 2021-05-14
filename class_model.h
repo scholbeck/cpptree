@@ -9,7 +9,8 @@ class Model {
 		Data training_data;
 		bool is_trained;
 		
-		Model(Data train);
+		Model();
+		void setTrainingData(Data data);
 		void checkTrained();
 		virtual void train() = 0;
 		virtual void summary() = 0;
@@ -20,7 +21,7 @@ class ModelAverage: public Model {
 	public:
 		double mean_prediction;
 		
-		ModelAverage(Data train);
+		ModelAverage();
 		void train();
 		void summary();
 		std::vector<double> predict(Data data);
