@@ -22,7 +22,10 @@ class Data {
 		
 		void setTargetIndex(lluint target);
 		void addRow(std::vector<double> row);
+		void addRows(std::vector<std::vector<double>> row_vec);
 		void addCol(std::vector<double> col);
+		void addCols(std::vector<std::vector<double>> col_vec);
+		
 		void print();
 		lluint getTargetIndex();
 		double elem(lluint row_index, lluint col_index);

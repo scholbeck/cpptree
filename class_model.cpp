@@ -26,7 +26,6 @@ void ModelAverage::train() {
 	lluint target_index = this->training_data.getTargetIndex();
 	std::vector<double> target_values = this->training_data.col(target_index);
 	this->mean_prediction = mean(target_values);
-	
 	this->is_trained = true;
 }
 
@@ -36,12 +35,9 @@ void ModelAverage::summary() {
 }
 
 std::vector<double> ModelAverage::predict(Data data) {
-	
-	this->checkTrained();
-	
+	this->checkTrained();	
 	std::vector<double> predictions;
 	int n = data.nrows();
-	
 	for (int i = 0; i < n; i++) {
 		predictions.push_back(this->mean_prediction);
 	}

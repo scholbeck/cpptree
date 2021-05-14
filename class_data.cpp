@@ -2,11 +2,11 @@
 #include <stdlib.h>
 #include <getopt.h>
 #include <iostream>
+#include "helper_functions.h"
 #include "class_data.h"
 #include <vector>
 #include <ctime>
 #include <algorithm>
-#include "helper_functions.h"
 
 Data::Data() {
 	
@@ -23,11 +23,28 @@ void Data::addRow(std::vector<double> row) {
 	// check dimensions before appending row
 	rows.push_back(row);
 }
+
+void Data::addRows(std::vector<std::vector<double>> row_vec) {
+	// check dimensions before appending rows
+	lluint n = row_vec.size();
+	for (lluint i = 0; i < n; i++) {
+		this->addRow(row_vec[i]);
+	} 
+}
+
 void Data::addCol(std::vector<double> col) {
 	// check dimensions before appending col
 	lluint n_rows = this->nrows();
 	for (lluint i = 0; i < n_rows; i++) {
 		rows[i].push_back(col[i]);
+	}
+}
+
+void Data::addCols(std::vector<std::vector<double>> col_vec) {
+	// check dimensions before appending cols
+	lluint n = col_vec.size();
+	for (lluint j = 0; j < n; j++) {
+		this->addCol(col_vec[j]);
 	}
 }
 
@@ -84,7 +101,6 @@ void Data::print() {
 }
 
 void Data::summary() {
-	this->print();
 	std::cout << "data summary : \n";
 	std::cout << "matrix of dimension : " << this->nrows() << " x " << this->ncols() << "\n";
 }
@@ -132,8 +148,7 @@ std::vector<Data> Data::splitBinary(double split_value, lluint col_index) {
 			rows_right.push_back(i);
 		}
 	}
-	
-	std::vector<lluint> cols = initVectorSeq(0, this->ncols()); // init vector from 0 to highest column index
+	std::vector<lluint> cols = initVectorSeq(0, (this->ncols()) - 1); // init vector from 0 to highest column index
 	Data subset_left = this->subset(rows_left, cols);
 	Data subset_right = this->subset(rows_right, cols);
 	data_partitioned.push_back(subset_left);

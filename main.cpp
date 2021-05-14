@@ -12,20 +12,21 @@
 #include "helper_functions.h"
 
 
-
 void printHelp() {
-	printf("Required arguments: filename, maxsplit, minsize.\n");
+	std::cout << "Required arguments: filename, children, minsize, algorithm, objective, model.\n";
+	std::cout << "Example: ./tree --algorithm exhaustive --objective sse --model mean --minsize 30 --children 2.\n";
 }
 
 int processArguments(int argc, char** argv, Arguments *arguments)
 {
 	const option long_opts[] = {
             {"filename", required_argument, nullptr, 1000},
-            {"maxsplit", required_argument, nullptr, 1100},
+            {"children", required_argument, nullptr, 1100},
             {"minsize", required_argument, nullptr, 1200},
             {"algorithm", required_argument, nullptr, 1300},
             {"objective", required_argument, nullptr, 1400},
-            {"help", no_argument, nullptr, 1300}
+            {"model", required_argument, nullptr, 1500},
+            {"help", no_argument, nullptr, 1600}
     };
 	
     while (true)
@@ -41,7 +42,7 @@ int processArguments(int argc, char** argv, Arguments *arguments)
             arguments->setFilename(std::string(optarg));
             break;
         case 1100:
-            arguments->setMaxSplits((lluint) atol(optarg));
+            arguments->setMaxChildren((lluint) atol(optarg));
             break;
         case 1200:
             arguments->setMinNodeSize((lluint) atol(optarg));
@@ -52,6 +53,12 @@ int processArguments(int argc, char** argv, Arguments *arguments)
         case 1400:
             arguments->setObjective(std::string(optarg));
             break;  
+		case 1500:
+            arguments->setModel(std::string(optarg));
+            break; 
+        case 1600:
+            printHelp();
+            break;
         case '?': // Unrecognized option
         default:
             printHelp();
@@ -63,22 +70,34 @@ int processArguments(int argc, char** argv, Arguments *arguments)
 		printf("Filename not specified.\n");
 		return -1;
     }
+    * IMPLEMENT FILE READER
+    */
     if (arguments->getMinNodeSize() == 0) {
 		printf("Minimum node size not specified.\n");
 		return -1;
     }
-    if (arguments->getMaxSplits() == 0) {
-		printf("Maximum split number not specified.\n");
+    if (arguments->getMaxChildren() == 0) {
+		printf("Maximum child number not specified.\n");
 		return -1;
     }
-    */
+    if (arguments->getObjective() == "") {
+		printf("Objective function not specified.\n");
+		return -1;
+    }
+    if (arguments->getModel() == "") {
+		printf("Model type not specified.\n");
+		return -1;
+    }
+    if (arguments->getAlgorithm() == "") {
+		printf("Search algorithm not specified.\n");
+		return -1;
+    }
+    
     return 0;
     
 }
 
-
 int main(int argc, char *argv[]) {
-
 	
 	Arguments args;
 	int arg_status = 0;
@@ -87,33 +106,11 @@ int main(int argc, char *argv[]) {
 	}
 	
 	Data data;
-	data.initRandom(1000, 5);
+
+	lluint n = 100;
+	data.initRandom(n, 5);
 	data.setTargetIndex(0);
 	
-	
-	/*
-	data.summary();
-	std::vector<lluint> r = {0, 1, 5};
-	std::vector<lluint> c = {0, 1, 4};
-	
-	Data subset;
-	subset = data.subset(r, c);
-	
-		
-	Split s = Split();
-	s.addSplitValue(data.elem(0, 3));
-	s.addSplitValue(data.elem(10, 3));
-	s.addSplitValue(data.elem(20, 3));
-	s.addSplitValue(data.elem(30, 3));
-
-	s.setFeatureIndex(1);
-	std::vector<Data> part2 = data.split(s);
-	
-	int n_splits = part2.size();
-	for (int i = 0; i < n_splits; i++) {
-		part2[i].summary();
-	}
-	*/
 	Factory factory = Factory(args);
 	Model* mod = factory.createModel();
 	Objective* obj = factory.createObjective();
@@ -121,29 +118,24 @@ int main(int argc, char *argv[]) {
 	
 	optim->setObjective(obj);
 	optim->setModel(mod);
-	free(mod);
-	free(obj);
-	free(optim);
-	
-	/*
-	ExhaustiveSearch optim;
-	ObjectiveSSE obj = ObjectiveSSE();
-	ModelAverage mod = ModelAverage();
-	optim.setObjective(&obj);
-	optim.setModel(&mod);
-	mod.setTrainingData(data);	
+	optim->setMinNodeSize(args.getMinNodeSize());
 	
 	std::vector<Node> child_nodes;
-	Node n = Node("0", data);
-	n.setOptimizer(&optim);
-	child_nodes = n.split();
+	Node node = Node("0", data);
+	node.setOptimizer(optim);
+	child_nodes = node.split();
+
 	if (child_nodes.empty() == false) {
 		int n_childs = child_nodes.size();
 		for (int i = 0; i < n_childs; i++) {
 			child_nodes[i].summary();
 		}
 	}
-	* */
+	
+	free(mod);
+	free(obj);
+	free(optim);
+	
 	return EXIT_SUCCESS;
 }
 

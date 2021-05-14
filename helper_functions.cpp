@@ -12,7 +12,7 @@ std::vector<lluint> initVectorLLUInt(lluint start, lluint end) {
 	return vec;
 }
 
-void printvectorLLUInt(std::vector<lluint> vec) {
+void printVectorLLUInt(std::vector<lluint> vec) {
 	
 	lluint n = vec.size();
 	printf("Printing vector:\n");
@@ -53,11 +53,19 @@ double mean(std::vector<double> vec) {
 }
 
 
-
 std::vector<lluint> initVectorSeq(lluint from, lluint to) {
 	std::vector<lluint> seq;
-	for (lluint i = from; i < to; i++) {
+	for (lluint i = from; i <= to; i++) {
 		seq.push_back(i);
 	}
 	return seq;
+
+}
+
+std::vector<double> initVectorDoubleValue(double value, lluint size) {
+	std::vector<double> vec;
+	for (lluint i = 0; i < size; i++) {
+		vec.push_back(value);
+	}
+	return vec;
 }

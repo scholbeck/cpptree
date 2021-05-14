@@ -13,7 +13,7 @@ class Arguments {
     Arguments();
     
     std::string filename;
-    lluint max_splits;
+    lluint max_children;
     lluint min_node_size;
     std::string algorithm;
     std::string objective;
@@ -22,8 +22,8 @@ class Arguments {
     std::string getFilename();
     void setFilename(std::string);
 	
-	lluint getMaxSplits();
-	void setMaxSplits(lluint max_splits);
+	lluint getMaxChildren();
+	void setMaxChildren(lluint max_children);
 	
 	lluint getMinNodeSize();
 	void setMinNodeSize(lluint min_node_size);

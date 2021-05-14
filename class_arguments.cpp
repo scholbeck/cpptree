@@ -9,8 +9,9 @@ Arguments::Arguments() {
   this->filename = "";
   this->algorithm = "";
   this->objective = "";
+  this->model = "";
   this->min_node_size = 0;
-  this->max_splits = 0;
+  this->max_children = 0;
 }
 
 std::string Arguments::getFilename() {
@@ -20,11 +21,11 @@ void Arguments::setFilename(std::string filename) {
   this->filename = filename;
 }
 
-lluint Arguments::getMaxSplits() {
-	return this->max_splits;
+lluint Arguments::getMaxChildren() {
+	return this->max_children;
 }
-void Arguments::setMaxSplits(lluint max_splits) {
-	this->max_splits = max_splits;
+void Arguments::setMaxChildren(lluint max_children) {
+	this->max_children = max_children;
 }
 
 lluint Arguments::getMinNodeSize() {

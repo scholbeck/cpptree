@@ -12,7 +12,6 @@ Factory::Factory(Arguments args) {
 	this->args = args;
 }
 
-
 Objective* Factory::createObjective() {
 	Objective* obj = nullptr;
 	std::string arg = this->args.getObjective();
@@ -32,9 +31,7 @@ Model* Factory::createModel() {
 }
 
 Optimizer* Factory::createOptimizer() {
-	Objective* obj = this->createObjective();
-	Model* mod = this->createModel();
-	
+
 	Optimizer* optim = nullptr;
 	std::string arg = this->args.getAlgorithm();
 	if (arg == "exhaustive") {

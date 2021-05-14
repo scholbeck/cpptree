@@ -40,6 +40,8 @@ void Node::addChild(Node* child) {
 void Node::summary() {	
 	std::cout << "node summary:\n";
 	std::cout << "node ID: " << this->id << "\n";
+	this->data.summary();
+	
 }
 
 std::vector<Node> Node::split() {

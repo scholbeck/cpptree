@@ -1,5 +1,10 @@
+
 #ifndef HELPER_H
 #define HELPER_H
+
+#include <vector>
+
+using lluint = long long unsigned int;
 
 std::vector<lluint> initvectorLLUINT(lluint start, lluint end);
 double mean(std::vector<double> vec);

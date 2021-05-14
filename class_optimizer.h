@@ -15,6 +15,7 @@ class Optimizer {
 	Objective* obj;
 	Data data;
 	Model* mod;
+	lluint min_node_size;
   
     Optimizer(); 
 	virtual Split searchOptimum(Data data) = 0;
@@ -25,8 +26,12 @@ class Optimizer {
 	Model* getModel();
 	void setModel(Model* mod);
 	
+	lluint getMinNodeSize();
+	void setMinNodeSize(lluint min_node_size);
+	
 	double evaluateObjective(Data data);
 	
+	bool checkNodeSize(std::vector<Data> split_data);
 };
 
 class ExhaustiveSearch: public Optimizer {
