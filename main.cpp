@@ -9,6 +9,7 @@
 #include "class_optimizer.h"
 #include "class_node.h"
 #include "class_factory.h"
+#include "class_tree.h"
 #include "helper_functions.h"
 
 
@@ -42,10 +43,10 @@ int processArguments(int argc, char** argv, Arguments *arguments)
             arguments->setFilename(std::string(optarg));
             break;
         case 1100:
-            arguments->setMaxChildren((lluint) atol(optarg));
+            arguments->setMaxChildren((int) atol(optarg));
             break;
         case 1200:
-            arguments->setMinNodeSize((lluint) atol(optarg));
+            arguments->setMinNodeSize((int) atol(optarg));
             break;
         case 1300:
             arguments->setAlgorithm(std::string(optarg));
@@ -107,7 +108,7 @@ int main(int argc, char *argv[]) {
 	
 	Data data;
 
-	lluint n = 100;
+	int n = 500;
 	data.initRandom(n, 5);
 	data.setTargetIndex(0);
 	
@@ -119,19 +120,12 @@ int main(int argc, char *argv[]) {
 	optim->setObjective(obj);
 	optim->setModel(mod);
 	optim->setMinNodeSize(args.getMinNodeSize());
-	
-	std::vector<Node> child_nodes;
-	Node node = Node("0", data);
-	node.setOptimizer(optim);
-	child_nodes = node.split();
 
-	if (child_nodes.empty() == false) {
-		int n_childs = child_nodes.size();
-		for (int i = 0; i < n_childs; i++) {
-			child_nodes[i].summary();
-		}
-	}
+	Tree tree = Tree(data, optim);
+	tree.grow();
+	tree.summary();
 	
+	tree.freeNodeMemory();
 	free(mod);
 	free(obj);
 	free(optim);

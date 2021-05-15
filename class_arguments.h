@@ -5,16 +5,14 @@
 #include <stdlib.h>
 #include <string>
 
-using lluint = long long unsigned int;
-
 class Arguments {
   
   public:
     Arguments();
     
     std::string filename;
-    lluint max_children;
-    lluint min_node_size;
+    int max_children;
+    int min_node_size;
     std::string algorithm;
     std::string objective;
     std::string model;
@@ -22,11 +20,11 @@ class Arguments {
     std::string getFilename();
     void setFilename(std::string);
 	
-	lluint getMaxChildren();
-	void setMaxChildren(lluint max_children);
+	int getMaxChildren();
+	void setMaxChildren(int max_children);
 	
-	lluint getMinNodeSize();
-	void setMinNodeSize(lluint min_node_size);
+	int getMinNodeSize();
+	void setMinNodeSize(int min_node_size);
 	
 	std::string getAlgorithm();
 	void setAlgorithm(std::string algo);

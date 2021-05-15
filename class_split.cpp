@@ -17,11 +17,11 @@ std::vector<double> Split::getSplitValues() {
 	return this->split_values;
 }
 
-void Split::setFeatureIndex(lluint feature_index) {
+void Split::setFeatureIndex(int feature_index) {
 	this->feature_index = feature_index;
 }
 
-lluint Split::getSplitFeatureIndex() {
+int Split::getSplitFeatureIndex() {
 	return this->feature_index;
 }
 

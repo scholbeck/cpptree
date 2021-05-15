@@ -4,20 +4,17 @@
 #include <vector>
 #include "class_data.h"
 
-using lluint = long long unsigned int;
-
-
 class Split {
 
 	public:
 		Split();
 		
-		lluint feature_index;
-		lluint split_cnt;
+		int feature_index;
+		int split_cnt;
 		std::vector<double> split_values;
 		
-		lluint getSplitFeatureIndex();
-		void setFeatureIndex(lluint feature_index);
+		int getSplitFeatureIndex();
+		void setFeatureIndex(int feature_index);
 		std::vector<double> getSplitValues();
 		void addSplitValue(double splitpoint);
 		void clear();

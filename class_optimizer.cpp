@@ -33,11 +33,11 @@ double Optimizer::evaluateObjective(Data data) {
 	return this->obj->evaluateModel(data, this->mod);
 }
 
-lluint Optimizer::getMinNodeSize() {
+int Optimizer::getMinNodeSize() {
 	return this->min_node_size;
 }
 
-void Optimizer::setMinNodeSize(lluint min_node_size) {
+void Optimizer::setMinNodeSize(int min_node_size) {
 	this->min_node_size = min_node_size;
 }
 
@@ -64,8 +64,8 @@ Split ExhaustiveSearch::searchOptimum(Data data) {
 	// only implemented for binary splits
 	// IMPLEMENT FOR ANY NUMBER OF SPLITS (RECURSIVELY?)
 
-	lluint n_rows = data.nrows();
-	lluint n_cols = data.ncols();
+	int n_rows = data.nrows();
+	int n_cols = data.ncols();
 	Split current_split, best_split;
 	std::vector<Data> split_data;
 	this->mod->setTrainingData(data);
@@ -73,11 +73,11 @@ Split ExhaustiveSearch::searchOptimum(Data data) {
 	double best_obj_val = this->evaluateObjective(data);
 	double current_obj_val = best_obj_val;
 	bool geq_min_node_size = true;
-	for (lluint col = 0; col < n_cols; col++) {
+	for (int col = 0; col < n_cols; col++) {
 		if (col == data.getTargetIndex()) {
 			continue;
 		}
-		for (lluint row = 0; row < n_rows; row++) {
+		for (int row = 0; row < n_rows; row++) {
 			current_split.setFeatureIndex(col);
 			current_split.addSplitValue(data.elem(row, col));
 			split_data = data.split(current_split);

@@ -4,13 +4,11 @@
 
 #include <vector>
 
-using lluint = long long unsigned int;
-
-std::vector<lluint> initvectorLLUINT(lluint start, lluint end);
+std::vector<int> initvectorLLUINT(int start, int end);
 double mean(std::vector<double> vec);
-void printVectorLLUInt(std::vector<lluint> vec);
+void printVectorLLUInt(std::vector<int> vec);
 void printVectorInt(std::vector<int> vec);
 void printVectorDouble(std::vector<double> vec);
-std::vector<lluint> initVectorSeq(lluint from, lluint to);
+std::vector<int> initVectorSeq(int from, int to);
 
 #endif 

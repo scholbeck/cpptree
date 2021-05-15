@@ -7,11 +7,12 @@
 #include "class_model.h"
 #include "class_data.h"
 
-
-Node::Node(std::string id, Data data) {
+Node::Node(std::string id, Data data, Optimizer* optim, Tree* tree) {
 	
+	this->tree = tree;
 	this->data = data;
 	this->id = id;
+	this->optim = optim;
 	this->child_cnt = 0;
 	this->is_leaf = false;
 }
@@ -44,8 +45,12 @@ void Node::summary() {
 	
 }
 
-std::vector<Node> Node::split() {
-	std::vector<Node> child_nodes;
+bool Node::isLeaf() {
+	return this->is_leaf;
+}
+
+std::vector<Node*> Node::split() {
+	std::vector<Node*> child_nodes;
 	Split s;
 	s = this->optim->searchOptimum(this->data);
 	if (s.getSplitValues().empty() == false) {
@@ -53,9 +58,23 @@ std::vector<Node> Node::split() {
 		int n_child_nodes = child_node_data.size();
 		for (int i = 0; i < n_child_nodes; i++) {
 			std::string child_id = this->id + std::to_string(i);
-			Node child = Node(child_id, child_node_data[i]);
+			Node* child = new Node(child_id, child_node_data[i], this->optim, this->tree);
 			child_nodes.push_back(child);
 		}
 	}
 	return child_nodes;
+}
+
+void Node::recursiveSplit() {
+	
+	std::vector<Node*> child_nodes = this->split();
+	if (child_nodes.empty() == false) {
+		int n_splits = child_nodes.size();
+		for (int i = 0; i < n_splits; i++) {
+			child_nodes[i]->recursiveSplit();	
+		}
+	} else {
+		this->is_leaf = true;
+	}
+	this->tree->addNode(this);
 }

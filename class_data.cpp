@@ -12,10 +12,10 @@ Data::Data() {
 	
 }
 
-lluint Data::getTargetIndex() {
+int Data::getTargetIndex() {
 	return this->target_index;
 }
-void Data::setTargetIndex(lluint target) {
+void Data::setTargetIndex(int target) {
 	this->target_index = target;
 }
 
@@ -26,74 +26,74 @@ void Data::addRow(std::vector<double> row) {
 
 void Data::addRows(std::vector<std::vector<double>> row_vec) {
 	// check dimensions before appending rows
-	lluint n = row_vec.size();
-	for (lluint i = 0; i < n; i++) {
+	int n = row_vec.size();
+	for (int i = 0; i < n; i++) {
 		this->addRow(row_vec[i]);
 	} 
 }
 
 void Data::addCol(std::vector<double> col) {
 	// check dimensions before appending col
-	lluint n_rows = this->nrows();
-	for (lluint i = 0; i < n_rows; i++) {
+	int n_rows = this->nrows();
+	for (int i = 0; i < n_rows; i++) {
 		rows[i].push_back(col[i]);
 	}
 }
 
 void Data::addCols(std::vector<std::vector<double>> col_vec) {
 	// check dimensions before appending cols
-	lluint n = col_vec.size();
-	for (lluint j = 0; j < n; j++) {
+	int n = col_vec.size();
+	for (int j = 0; j < n; j++) {
 		this->addCol(col_vec[j]);
 	}
 }
 
-double Data::elem(lluint row_index, lluint col_index) {
+double Data::elem(int row_index, int col_index) {
 	return (this->row(row_index))[col_index];
 }
 
-lluint Data::nrows() {
+int Data::nrows() {
 	return this->rows.size();
 }
 
-lluint Data::ncols() {
+int Data::ncols() {
 	return this->row(0).size();
 }
 
-std::vector<double> Data::row(lluint i) {
+std::vector<double> Data::row(int i) {
 	return this->rows[i];
 }
 
-std::vector<double> Data::col(lluint j) {
+std::vector<double> Data::col(int j) {
 	std::vector<double> c;
-	lluint n_rows = this->nrows();
-	for (lluint i = 0; i < n_rows; i++) {
+	int n_rows = this->nrows();
+	for (int i = 0; i < n_rows; i++) {
 		c.push_back(this->row(i)[j]);
 	}
 	return c;
 }
 
-void Data::init(lluint n_rows, lluint n_cols) {
+void Data::init(int n_rows, int n_cols) {
 	std::vector<std::vector<double>> vec(n_rows, std::vector<double>(n_cols));
 	this->rows = vec;
 }
 
-void Data::initRandom(lluint n_rows, lluint n_cols) {
+void Data::initRandom(int n_rows, int n_cols) {
 	this->init(n_rows, n_cols);
 	
-	for (lluint i = 0; i < n_rows; i++) {
-		for (lluint j = 0; j < n_cols; j++) {
+	for (int i = 0; i < n_rows; i++) {
+		for (int j = 0; j < n_cols; j++) {
 			(this->rows[i])[j] = std::rand();
 		}
 	}
 }
 
 void Data::print() {
-	lluint n_rows = this->nrows();
-	lluint n_cols = this->ncols();
+	int n_rows = this->nrows();
+	int n_cols = this->ncols();
 	printf("\n");
-	for (lluint i = 0; i < n_rows; i++) {
-		for (lluint j = 0; j < n_cols; j++) {
+	for (int i = 0; i < n_rows; i++) {
+		for (int j = 0; j < n_cols; j++) {
 			printf("%f ", (this->rows[i])[j]);
 		}
 	printf("\n");
@@ -105,22 +105,22 @@ void Data::summary() {
 	std::cout << "matrix of dimension : " << this->nrows() << " x " << this->ncols() << "\n";
 }
 
-Data Data::subset(std::vector<lluint> rows, std::vector<lluint> cols) {
+Data Data::subset(std::vector<int> rows, std::vector<int> cols) {
 
 	std::sort(cols.begin(), cols.end());
 	Data subset;
 	subset.setTargetIndex(this->getTargetIndex());
-	lluint n_rows = rows.size();
-	lluint n_cols = cols.size();
+	int n_rows = rows.size();
+	int n_cols = cols.size();
 	std::vector<double> subset_row;
 	std::vector<double> subset_row_col;
-	lluint current_row_ix, current_col_ix;
-	std::vector<lluint> cols_cpy;
-	for (lluint i = 0; i < n_rows; i++) {
+	int current_row_ix, current_col_ix;
+	std::vector<int> cols_cpy;
+	for (int i = 0; i < n_rows; i++) {
 		current_row_ix = rows[i];
 		subset_row = this->row(current_row_ix);
 		cols_cpy = cols;
-		for (lluint j = 0; j < n_cols; j++) {
+		for (int j = 0; j < n_cols; j++) {
 			current_col_ix = cols[j];
 			subset_row_col.push_back(subset_row[current_col_ix]);
 		}
@@ -132,15 +132,15 @@ Data Data::subset(std::vector<lluint> rows, std::vector<lluint> cols) {
 }
 
 
-std::vector<Data> Data::splitBinary(double split_value, lluint col_index) {
-	std::vector<lluint> rows_left;
-	std::vector<lluint> rows_right;
+std::vector<Data> Data::splitBinary(double split_value, int col_index) {
+	std::vector<int> rows_left;
+	std::vector<int> rows_right;
 	std::vector<Data> data_partitioned;
 	
 	double element;
-	lluint n_elements = this->nrows();
+	int n_elements = this->nrows();
 	
-	for (lluint i = 0; i < n_elements; i++) {
+	for (int i = 0; i < n_elements; i++) {
 		element = this->elem(i, col_index);
 		if (element <= split_value) {
 			rows_left.push_back(i);
@@ -148,7 +148,7 @@ std::vector<Data> Data::splitBinary(double split_value, lluint col_index) {
 			rows_right.push_back(i);
 		}
 	}
-	std::vector<lluint> cols = initVectorSeq(0, (this->ncols()) - 1); // init vector from 0 to highest column index
+	std::vector<int> cols = initVectorSeq(0, (this->ncols()) - 1); // init vector from 0 to highest column index
 	Data subset_left = this->subset(rows_left, cols);
 	Data subset_right = this->subset(rows_right, cols);
 	data_partitioned.push_back(subset_left);
@@ -163,7 +163,7 @@ std::vector<Data> Data::split(Split split) {
 	std::vector<double> split_values = split.getSplitValues();
 	std::sort(split_values.begin(), split_values.end());
 	int n_splits = split_values.size();
-	lluint feature = split.getSplitFeatureIndex();
+	int feature = split.getSplitFeatureIndex();
 	std::vector<Data> split_multiway;
 	std::vector<Data> split_binary;
 	split_binary = this->splitBinary(split_values[0], feature);

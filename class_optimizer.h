@@ -15,7 +15,7 @@ class Optimizer {
 	Objective* obj;
 	Data data;
 	Model* mod;
-	lluint min_node_size;
+	int min_node_size;
   
     Optimizer(); 
 	virtual Split searchOptimum(Data data) = 0;
@@ -26,8 +26,8 @@ class Optimizer {
 	Model* getModel();
 	void setModel(Model* mod);
 	
-	lluint getMinNodeSize();
-	void setMinNodeSize(lluint min_node_size);
+	int getMinNodeSize();
+	void setMinNodeSize(int min_node_size);
 	
 	double evaluateObjective(Data data);
 	

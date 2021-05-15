@@ -21,17 +21,17 @@ void Arguments::setFilename(std::string filename) {
   this->filename = filename;
 }
 
-lluint Arguments::getMaxChildren() {
+int Arguments::getMaxChildren() {
 	return this->max_children;
 }
-void Arguments::setMaxChildren(lluint max_children) {
+void Arguments::setMaxChildren(int max_children) {
 	this->max_children = max_children;
 }
 
-lluint Arguments::getMinNodeSize() {
+int Arguments::getMinNodeSize() {
 	return this->min_node_size;
 }
-void Arguments::setMinNodeSize(lluint min_node_size) {
+void Arguments::setMinNodeSize(int min_node_size) {
 	this->min_node_size = min_node_size;
 }
 
