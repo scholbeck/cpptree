@@ -4,10 +4,8 @@
 #include <string>
 #include <stdlib.h>
 #include <vector>
-#include <vector>
 #include "class_split.h"
 
-class Split;
 
 class Data {
   
@@ -22,6 +20,7 @@ class Data {
 		void setTargetIndex(int target);
 		void addRow(std::vector<double> row);
 		void addRows(std::vector<std::vector<double>> row_vec);
+		void replaceRow(int row_ix, std::vector<double> values);	
 		void addCol(std::vector<double> col);
 		void addCols(std::vector<std::vector<double>> col_vec);
 		

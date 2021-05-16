@@ -13,31 +13,26 @@ class Optimizer {
 	
   public:
 	Objective* obj;
-	Data data;
-	Model* mod;
 	int min_node_size;
+	int max_children;
   
     Optimizer(); 
-	virtual Split searchOptimum(Data data) = 0;
-	
-	Objective* getObjective();
-	void setObjective(Objective* obj);
-	
-	Model* getModel();
-	void setModel(Model* mod);
-	
+	virtual Split searchOptimum(Data data, Arguments args) = 0;
 	int getMinNodeSize();
 	void setMinNodeSize(int min_node_size);
-	
+	int getMaxChildren();
+	void setMaxChildren(int max_children);
+	Objective* getObjective();
+	void setObjective(Objective* obj);
 	double evaluateObjective(Data data);
-	
 	bool checkNodeSize(std::vector<Data> split_data);
+	Model* buildModel(Arguments args);
 };
 
-class ExhaustiveSearch: public Optimizer {
+class OptimizerExhaustiveSearch: public Optimizer {
 	public:
-		ExhaustiveSearch();
-		Split searchOptimum(Data data);
+		OptimizerExhaustiveSearch();
+		Split searchOptimum(Data data, Arguments args);
 };
 
 

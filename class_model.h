@@ -2,6 +2,8 @@
 #define MODEL_H
 
 #include "class_data.h"
+#include "class_objective.h"
+
 
 class Model {
   
@@ -15,6 +17,7 @@ class Model {
 		virtual void train() = 0;
 		virtual void summary() = 0;
 		virtual std::vector<double> predict(Data data) = 0;
+		virtual double evaluate(Data data, Objective* obj);
 };
 
 class ModelAverage: public Model {

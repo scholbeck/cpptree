@@ -18,6 +18,13 @@ void Model::checkTrained() {
 	}
 }
 
+
+double Model::evaluate(Data data, Objective* obj) {
+	std::vector<double> target_obs = data.col(data.getTargetIndex());
+	std::vector<double> target_pred = this->predict(data);
+	return obj->compute(target_obs, target_pred);
+}
+
 ModelAverage::ModelAverage() : Model() {
 	//
 }
@@ -35,11 +42,9 @@ void ModelAverage::summary() {
 }
 
 std::vector<double> ModelAverage::predict(Data data) {
-	this->checkTrained();	
-	std::vector<double> predictions;
+	this->checkTrained();
 	int n = data.nrows();
-	for (int i = 0; i < n; i++) {
-		predictions.push_back(this->mean_prediction);
-	}
+	std::vector<double> predictions(n, mean_prediction);
 	return predictions;
 }
+

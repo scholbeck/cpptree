@@ -13,14 +13,6 @@ Optimizer::Optimizer() {
 
 }
 
-Model* Optimizer::getModel() {
-	return this->mod;
-}
-
-void Optimizer::setModel(Model* mod) {
-	this->mod = mod;
-}
-
 Objective* Optimizer::getObjective() {
 	return this->obj;
 }
@@ -29,8 +21,12 @@ void Optimizer::setObjective(Objective* obj) {
 	this->obj = obj;
 }
 
-double Optimizer::evaluateObjective(Data data) {
-	return this->obj->evaluateModel(data, this->mod);
+int Optimizer::getMaxChildren() {
+	return this->max_children;
+}
+
+void Optimizer::setMaxChildren(int max_children) {
+	this->max_children = max_children;
 }
 
 int Optimizer::getMinNodeSize() {
@@ -56,23 +52,35 @@ bool Optimizer::checkNodeSize(std::vector<Data> split_data) {
 	return geq_min;
 }
 
-ExhaustiveSearch::ExhaustiveSearch() {
+OptimizerExhaustiveSearch::OptimizerExhaustiveSearch() {
 	
 }
 
-Split ExhaustiveSearch::searchOptimum(Data data) {
-	// only implemented for binary splits
-	// IMPLEMENT FOR ANY NUMBER OF SPLITS (RECURSIVELY?)
+Model* Optimizer::buildModel(Arguments args) {
+	Model* m = new ModelAverage();
+	return m;
+}
 
+Split OptimizerExhaustiveSearch::searchOptimum(Data data, Arguments args) {
+	// only implemented for binary splits and model average
+	// IMPLEMENT FOR ANY NUMBER OF SPLITS (RECURSIVELY?) AND LINEAR MODELS
+
+	std::vector<Model*> child_node_models;
+	
+	Model* mod = this->buildModel(args);
+	mod->setTrainingData(data);
+	mod->train();
+	
+	double best_obj_val = mod->evaluate(data, obj);
+	double current_obj_val = best_obj_val;
+	
 	int n_rows = data.nrows();
 	int n_cols = data.ncols();
 	Split current_split, best_split;
+	current_split.child_node_models = child_node_models;
 	std::vector<Data> split_data;
-	this->mod->setTrainingData(data);
-	this->mod->train();
-	double best_obj_val = this->evaluateObjective(data);
-	double current_obj_val = best_obj_val;
 	bool geq_min_node_size = true;
+	
 	for (int col = 0; col < n_cols; col++) {
 		if (col == data.getTargetIndex()) {
 			continue;
@@ -87,11 +95,14 @@ Split ExhaustiveSearch::searchOptimum(Data data) {
 				current_split.clear();
 				continue;
 			}
-			int n_splits = split_data.size();
-			for (int i = 0; i < n_splits; i++) {
-				this->mod->setTrainingData(split_data[i]);
-				this->mod->train();
-				current_obj_val += this->evaluateObjective(split_data[i]);
+			int n_children = split_data.size();
+			for (int i = 0; i < n_children; i++) {
+				Model* m = this->buildModel(args);
+				m->setTrainingData(split_data[i]);
+				m->train();
+				child_node_models.push_back(m);
+				current_split.child_node_models = child_node_models;
+				current_obj_val += m->evaluate(split_data[i], this->obj);
 			}
 			if (current_obj_val < best_obj_val) {
 				best_obj_val = current_obj_val;

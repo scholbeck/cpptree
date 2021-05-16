@@ -7,14 +7,35 @@
 #include "class_model.h"
 #include "class_data.h"
 
-Node::Node(std::string id, Data data, Optimizer* optim, Tree* tree) {
+Node::Node(std::string id, Data data, Tree* tree) {
 	
 	this->tree = tree;
 	this->data = data;
 	this->id = id;
-	this->optim = optim;
 	this->child_cnt = 0;
 	this->is_leaf = false;
+}
+
+Optimizer* Node::createOptimizer(Arguments args) {
+	Optimizer* optim;
+	Objective* obj;
+	std::string arg;
+	arg = args.getAlgorithm();
+	if (arg == "exhaustive") {
+		optim = new OptimizerExhaustiveSearch();
+	}
+	arg = args.getObjective();
+	if (arg == "sse") {
+		obj = new ObjectiveSSE();
+	}
+	optim->setObjective(obj);
+	optim->setMinNodeSize(args.getMinNodeSize());
+	optim->setMaxChildren(args.getMaxChildren());
+	return optim;
+}
+
+void Node::setSplit(Split s) {
+	this->split_data = s;
 }
 
 std::string Node::getId() {
@@ -25,12 +46,11 @@ Data Node::getData() {
 	return this->data;
 }
 
-Optimizer* Node::getOptimizer() {
-	return this->optim;
+Model* Node::getModel() {
+	return this->mod;
 }
-
-void Node::setOptimizer(Optimizer* optim) {
-	this->optim = optim;
+void Node::setModel(Model* mod) {
+	this->mod = mod;
 }
 
 void Node::addChild(Node* child) {
@@ -39,10 +59,15 @@ void Node::addChild(Node* child) {
 }
 
 void Node::summary() {	
-	std::cout << "node summary:\n";
+	std::cout << "\nnode summary:\n\n";
 	std::cout << "node ID: " << this->id << "\n";
+	if (this->is_leaf == true) {
+		std::cout << "is leaf: yes\n";
+	} else {
+		std::cout << "is leaf: no\n";
+	}
 	this->data.summary();
-	
+	this->mod->summary();
 }
 
 bool Node::isLeaf() {
@@ -50,18 +75,22 @@ bool Node::isLeaf() {
 }
 
 std::vector<Node*> Node::split() {
+	Optimizer* optim = createOptimizer(this->tree->args);
 	std::vector<Node*> child_nodes;
 	Split s;
-	s = this->optim->searchOptimum(this->data);
+	s = optim->searchOptimum(this->data, this->tree->args);
+	this->setSplit(s);
 	if (s.getSplitValues().empty() == false) {
 		std::vector<Data> child_node_data = this->data.split(s);
 		int n_child_nodes = child_node_data.size();
 		for (int i = 0; i < n_child_nodes; i++) {
 			std::string child_id = this->id + std::to_string(i);
-			Node* child = new Node(child_id, child_node_data[i], this->optim, this->tree);
+			Node* child = new Node(child_id, child_node_data[i], this->tree);
+			child->setModel(s.getChildNodeModels()[i]);
 			child_nodes.push_back(child);
 		}
 	}
+	free(optim);
 	return child_nodes;
 }
 
@@ -78,3 +107,4 @@ void Node::recursiveSplit() {
 	}
 	this->tree->addNode(this);
 }
+

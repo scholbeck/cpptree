@@ -10,8 +10,9 @@ class Node;
 class Tree {
   
   public:
-    Tree(Data data, Optimizer* optim);
+    Tree(Data data, Arguments args);
     
+    Arguments args;
     Data data;
     Node* root;
     std::vector<Node*> nodes;

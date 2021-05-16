@@ -14,17 +14,11 @@ ObjectiveSSE::ObjectiveSSE() {
 	
 }
 
-double ObjectiveSSE::evaluateModel(Data data, Model* model) {
-	
-	std::vector<double> predictions = model->predict(data);
-	std::vector<double> target_observed = data.col(data.getTargetIndex());
-	
-	int n = predictions.size();
+double ObjectiveSSE::compute(std::vector<double> target_obs, std::vector<double> target_preds) {
+	int n = target_obs.size();
 	double cumsum = 0;
-	
 	for (int i = 0; i < n; i++) {
-		cumsum += pow((predictions[i] - target_observed[i]), 2);
+		cumsum += pow((target_preds[i] - target_obs[i]), 2);
 	}
-	
 	return cumsum;
 }

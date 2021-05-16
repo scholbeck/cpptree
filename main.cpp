@@ -8,7 +8,6 @@
 #include "class_model.h"
 #include "class_optimizer.h"
 #include "class_node.h"
-#include "class_factory.h"
 #include "class_tree.h"
 #include "helper_functions.h"
 
@@ -108,27 +107,15 @@ int main(int argc, char *argv[]) {
 	
 	Data data;
 
-	int n = 500;
+	int n = 200;
 	data.initRandom(n, 5);
 	data.setTargetIndex(0);
 	
-	Factory factory = Factory(args);
-	Model* mod = factory.createModel();
-	Objective* obj = factory.createObjective();
-	Optimizer* optim = factory.createOptimizer();
-	
-	optim->setObjective(obj);
-	optim->setModel(mod);
-	optim->setMinNodeSize(args.getMinNodeSize());
-
-	Tree tree = Tree(data, optim);
+	Tree tree = Tree(data, args);
 	tree.grow();
 	tree.summary();
 	
 	tree.freeNodeMemory();
-	free(mod);
-	free(obj);
-	free(optim);
 	
 	return EXIT_SUCCESS;
 }

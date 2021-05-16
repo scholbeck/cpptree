@@ -17,6 +17,15 @@ std::vector<double> Split::getSplitValues() {
 	return this->split_values;
 }
 
+
+void Split::addChildNodeModel(Model* mod) {
+	this->child_node_models.push_back(mod);
+}
+
+std::vector<Model*> Split::getChildNodeModels() {
+	return this->child_node_models;
+}
+
 void Split::setFeatureIndex(int feature_index) {
 	this->feature_index = feature_index;
 }

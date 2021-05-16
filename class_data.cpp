@@ -24,6 +24,10 @@ void Data::addRow(std::vector<double> row) {
 	rows.push_back(row);
 }
 
+void Data::replaceRow(int row_ix, std::vector<double> values) {
+	this->rows[row_ix] = values;
+}
+
 void Data::addRows(std::vector<std::vector<double>> row_vec) {
 	// check dimensions before appending rows
 	int n = row_vec.size();
@@ -74,7 +78,7 @@ std::vector<double> Data::col(int j) {
 }
 
 void Data::init(int n_rows, int n_cols) {
-	std::vector<std::vector<double>> vec(n_rows, std::vector<double>(n_cols));
+	std::vector<std::vector<double>> vec(n_rows, std::vector<double>(n_cols, 0));
 	this->rows = vec;
 }
 
@@ -105,29 +109,20 @@ void Data::summary() {
 	std::cout << "matrix of dimension : " << this->nrows() << " x " << this->ncols() << "\n";
 }
 
+
 Data Data::subset(std::vector<int> rows, std::vector<int> cols) {
 
 	std::sort(cols.begin(), cols.end());
+	int n_rows_subset = rows.size();
+	int n_cols_subset = cols.size();
 	Data subset;
+	subset.init(n_rows_subset, n_cols_subset);
 	subset.setTargetIndex(this->getTargetIndex());
-	int n_rows = rows.size();
-	int n_cols = cols.size();
-	std::vector<double> subset_row;
-	std::vector<double> subset_row_col;
-	int current_row_ix, current_col_ix;
-	std::vector<int> cols_cpy;
-	for (int i = 0; i < n_rows; i++) {
-		current_row_ix = rows[i];
-		subset_row = this->row(current_row_ix);
-		cols_cpy = cols;
-		for (int j = 0; j < n_cols; j++) {
-			current_col_ix = cols[j];
-			subset_row_col.push_back(subset_row[current_col_ix]);
+	for (int i = 0; i < n_rows_subset; i++) {
+		for (int j = 0; j < n_cols_subset; j++) {
+			(subset.rows[i])[j] = this->elem(rows[i], cols[j]);
 		}
-		subset.addRow(subset_row_col);
-		subset_row_col.clear();
 	}
-	
 	return subset;
 }
 

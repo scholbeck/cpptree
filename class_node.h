@@ -12,25 +12,30 @@ class Tree;
 class Node {
 	
   public:
-    Node(std::string id, Data data, Optimizer* optim, Tree* tree);
+    Node(std::string id, Data data, Tree* tree);
     
     std::string id;
     Data data; 
+    Split split_data;
     Tree* tree;
+    Model* mod;
     int child_cnt;
     std::vector<Node*> children;
     bool is_leaf;
-    Optimizer* optim;
+    double obj_val;
     
     std::string getId();
+    Model* getModel();
+    void setModel(Model* mod);
     void summary();
     Data getData();
     bool isLeaf();
     std::vector<Node*> split();
     void recursiveSplit();
     void addChild(Node* child);
+	void setSplit(Split s);
     Optimizer* getOptimizer();
-    void setOptimizer(Optimizer* optim);
+    Optimizer* createOptimizer(Arguments args);
 
     
 };
