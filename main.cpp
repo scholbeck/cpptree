@@ -9,6 +9,7 @@
 #include "class_optimizer.h"
 #include "class_node.h"
 #include "class_tree.h"
+#include "class_reader.h"
 #include "helper_functions.h"
 
 
@@ -100,13 +101,17 @@ int processArguments(int argc, char** argv, Arguments *arguments)
 int main(int argc, char *argv[]) {
 	
 	Arguments args;
+	Reader reader;
+	Data data;
+	
 	int arg_status = 0;
 	if ((arg_status = processArguments(argc, argv, &args)) == -1) {
 		return EXIT_FAILURE;
 	}
+	int read_status = 0;
+	char sep = ',';
+	data = reader.read(args.getFilename(), sep);
 	
-	Data data;
-
 	int n = 200;
 	data.initRandom(n, 5);
 	data.setTargetIndex(0);

@@ -1,4 +1,6 @@
-#include "class_data.h"
+
+
+#include <iostream>
 #include "helper_functions.h"
 
 
@@ -17,17 +19,27 @@ void printVectorLLUInt(std::vector<int> vec) {
 	int n = vec.size();
 	printf("Printing vector:\n");
 	for (int i = 0; i < n; i++) {
-		printf("%d\n ", vec[i]);
+		std::cout << vec[i] << "\n";
 	}
 	printf("\n");
 }
 
-void printvectorInt(std::vector<int> vec) {
+void printVectorInt(std::vector<int> vec) {
 	
 	int n = vec.size();
 	printf("Printing vector:\n");
 	for (int i = 0; i < n; i++) {
-		printf("%d\n", vec[i]);
+		std::cout << vec[i] << "\n";
+	}
+	printf("\n");
+}
+
+void printVectorString(std::vector<std::string> vec) {
+	
+	int n = vec.size();
+	printf("Printing vector:\n");
+	for (int i = 0; i < n; i++) {
+		std::cout << vec[i] << "\n";
 	}
 	printf("\n");
 }
@@ -37,7 +49,7 @@ void printVectorDouble(std::vector<double> vec) {
 	int n = vec.size();
 	printf("Printing vector:\n");
 	for (int i = 0; i < n; i++) {
-		printf("%f\n", vec[i]);
+		std::cout << vec[i] << "\n";
 	}
 	printf("\n");
 }

@@ -4,6 +4,7 @@
 #include <string>
 #include <stdlib.h>
 #include <vector>
+#include <map>
 #include "class_split.h"
 
 
@@ -14,10 +15,12 @@ class Data {
     
 		std::vector<std::vector<double>> rows; // each row is a vector containg all col values
 		int target_index;
+		std::vector<std::map<std::string, int>> categ_encodings;
 		
 		void load(std::string filename); // read data from disc
 		
 		void setTargetIndex(int target);
+		void addCategEncoding(std::map<std::string, int>);
 		void addRow(std::vector<double> row);
 		void addRows(std::vector<std::vector<double>> row_vec);
 		void replaceRow(int row_ix, std::vector<double> values);	

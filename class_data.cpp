@@ -5,6 +5,7 @@
 #include "helper_functions.h"
 #include "class_data.h"
 #include <vector>
+#include <map>
 #include <ctime>
 #include <algorithm>
 
@@ -22,6 +23,10 @@ void Data::setTargetIndex(int target) {
 void Data::addRow(std::vector<double> row) {
 	// check dimensions before appending row
 	rows.push_back(row);
+}
+
+void Data::addCategEncoding(std::map<std::string, int> m) {
+	this->categ_encodings.push_back(m);
 }
 
 void Data::replaceRow(int row_ix, std::vector<double> values) {
