@@ -110,11 +110,15 @@ int main(int argc, char *argv[]) {
 	}
 	int read_status = 0;
 	char sep = ',';
-	data = reader.read(args.getFilename(), sep);
 	
-	int n = 200;
-	data.initRandom(n, 5);
-	data.setTargetIndex(0);
+	data = reader.read(args.getFilename(), sep);
+	data.print();
+	data.summary();
+	data.setTargetIndex(4);
+	
+	// int n = 200;
+	// data.initRandom(n, 5);
+	// data.setTargetIndex(0);
 	
 	Tree tree = Tree(data, args);
 	tree.grow();

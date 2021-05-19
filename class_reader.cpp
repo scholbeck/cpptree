@@ -19,12 +19,6 @@ std::set<std::string> detectLevels(std::vector<std::vector<std::string>> vec, in
 	for (int i = 0; i < n_rows; i++) {
 		levels.insert(vec[i][col_ix]);
 	}
-	
-	for (auto it = levels.begin(); it != levels.end(); it++)
-    {
-        std::cout << *it << std::endl;
-    }
-	
     return levels;
 }
 
@@ -86,9 +80,8 @@ Data Reader::read(std::string filename, char sep) {
 				std::set<std::string> levels = detectLevels(rows_strings, j);
 				std::map<std::string, int> m;
 				int l = 0;
-				for (auto it = levels.begin(); it != levels.end(); it++) {
-					std::cout << *it;
-					//m.insert({*it, l});	
+				for (auto it = levels.begin(); it != levels.end(); ++it) {
+					m.insert(std::pair<std::string, int> (*it, l));
 					l++;
 				}
 				// create mapping for all feature levels to integer 0, 1, 2, etc.
@@ -98,8 +91,7 @@ Data Reader::read(std::string filename, char sep) {
 				// add mapped integer to data
 			}
 		}
-		printVectorDouble(new_row);
-		//data.addRow(new_row);
+		data.addRow(new_row);
 		new_row.clear();
 		
 	}
