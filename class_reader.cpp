@@ -69,6 +69,7 @@ Data Reader::read(std::string filename, char sep) {
     int n_cols = rows_strings[0].size();
     std::vector<std::string> types = detectColTypes(rows_strings[0]);
 	Data data;
+	data.setColTypes(types);
     std::vector<double> new_row;
     
     for (int i = 0; i < n_rows; i++) {
@@ -84,7 +85,7 @@ Data Reader::read(std::string filename, char sep) {
 					m.insert(std::pair<std::string, int> (*it, l));
 					l++;
 				}
-				// create mapping for all feature levels to integer 0, 1, 2, etc.
+				// create mapping for each categ feature j and for all its feature levels to integer 0, 1, 2, etc.
 				data.addCategEncoding(j, m);
 				// add mapping to data object
 				new_row.push_back(m.at(rows_strings[i][j]));

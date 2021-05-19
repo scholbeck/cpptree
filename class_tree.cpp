@@ -27,7 +27,7 @@ void Tree::addNode(Node* node) {
 
 void Tree::grow() {
 	Optimizer* optim = this->root->createOptimizer(args);
-	this->root->setModel(optim->buildModel(args));
+	this->root->setModel(optim->buildModel(this->data, args));
 	this->root->recursiveSplit();
 }
 

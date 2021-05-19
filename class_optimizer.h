@@ -26,7 +26,7 @@ class Optimizer {
 	void setObjective(Objective* obj);
 	double evaluateObjective(Data data);
 	bool checkNodeSize(std::vector<Data> split_data);
-	Model* buildModel(Arguments args);
+	Model* buildModel(Data data, Arguments args);
 };
 
 class OptimExhaustSearchRegr: public Optimizer {

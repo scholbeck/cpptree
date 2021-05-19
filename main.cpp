@@ -116,23 +116,19 @@ int main(int argc, char *argv[]) {
 	if ((arg_status = processArguments(argc, argv, &args)) == -1) {
 		return EXIT_FAILURE;
 	}
-	int read_status = 0;
-	std::cout << args.getSep();
-	
 	data = reader.read(args.getFilename(), args.getSep());
-	data.print();
-	data.summary();
+	//data.print();
 	data.setTargetIndex(4);
-	
+	//data.summary();
 	// int n = 200;
 	// data.initRandom(n, 5);
 	// data.setTargetIndex(0);
 	
-	Tree tree = Tree(data, args);
-	tree.grow();
-	tree.summary();
+	//Tree tree = Tree(data, args);
+	//tree.grow();
+	//tree.summary();
 	
-	tree.freeNodeMemory();
+	//tree.freeNodeMemory();
 	
 	return EXIT_SUCCESS;
 }

@@ -25,6 +25,10 @@ void Data::addRow(std::vector<double> row) {
 	rows.push_back(row);
 }
 
+void Data::setCategEncodings(std::map<int, std::map<std::string, int>> categ_encodings) {
+	this->categ_encodings = categ_encodings;
+}
+
 void Data::addCategEncoding(int col, std::map<std::string, int> m) {
 	this->categ_encodings.insert(std::pair<int, std::map<std::string, int>> (col, m));
 }
@@ -115,9 +119,32 @@ void Data::print() {
 
 void Data::summary() {
 	std::cout << "data summary : \n";
-	std::cout << "matrix of dimension : " << this->nrows() << " x " << this->ncols() << "\n";
+	std::cout << "\tmatrix of dimension : " << this->nrows() << " x " << this->ncols() << "\n";
+	std::cout << "\ttarget : column " << this->getTargetIndex() << " \n";
+	std::cout << "\tcolumn types : ";
+	std::vector<std::string> types = this->getColTypes();
+	std::map<std::string, int> levels;
+	for (int j = 0; j < this->ncols(); j++) {
+		std::cout << types[j] << " ";
+	}
+	std::cout << "\n";
+	std::cout << "\tcategorial encodings :\n";
+	for (int j = 0; j < this->ncols(); j++) {
+		if (types[j] == "categ") {
+			levels = this->categ_encodings.at(j);
+			for (auto it = levels.begin(); it != levels.end(); ++it) {
+				std::cout << "\t\t" << it->first << " = " << it->second << "\n";
+			}
+		}
+	}
 }
 
+void Data::setColTypes(std::vector<std::string> types) {
+	this->coltypes = types;
+}
+std::vector<std::string> Data::getColTypes() {
+	return this->coltypes;
+}
 
 Data Data::subset(std::vector<int> rows, std::vector<int> cols) {
 
@@ -125,6 +152,7 @@ Data Data::subset(std::vector<int> rows, std::vector<int> cols) {
 	int n_rows_subset = rows.size();
 	int n_cols_subset = cols.size();
 	Data subset;
+	subset.setCategEncodings(this->getCategEncodings());
 	subset.init(n_rows_subset, n_cols_subset);
 	subset.setTargetIndex(this->getTargetIndex());
 	for (int i = 0; i < n_rows_subset; i++) {

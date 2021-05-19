@@ -15,6 +15,7 @@ class Data {
     
 		std::vector<std::vector<double>> rows; // each row is a vector containg all col values
 		int target_index;
+		std::vector<std::string> coltypes;
 		std::map<int, std::map<std::string, int>> categ_encodings;
 		
 		void load(std::string filename); // read data from disc
@@ -22,6 +23,9 @@ class Data {
 		void setTargetIndex(int target);
 		void addCategEncoding(int col, std::map<std::string, int>);
 		std::map<int, std::map<std::string, int>> getCategEncodings();
+		void setCategEncodings(std::map<int, std::map<std::string, int>> categ_encodings);
+		void setColTypes(std::vector<std::string> types);
+		std::vector<std::string> getColTypes();
 		void addRow(std::vector<double> row);
 		void addRows(std::vector<std::vector<double>> row_vec);
 		void replaceRow(int row_ix, std::vector<double> values);	

@@ -8,7 +8,6 @@
 #include "class_data.h"
 
 Node::Node(std::string id, Data data, Tree* tree) {
-	
 	this->tree = tree;
 	this->data = data;
 	this->id = id;
@@ -17,17 +16,19 @@ Node::Node(std::string id, Data data, Tree* tree) {
 }
 
 Optimizer* Node::createOptimizer(Arguments args) {
-	Optimizer* optim;
-	Objective* obj;
+	Optimizer* optim = NULL;
+	Objective* obj = NULL;
 	if (args.getAlgorithm() == "exhaustive") {
-		if (args.getTask() == "regression") {
+		if (args.getTask() == "regr") {
 			optim = new OptimExhaustSearchRegr();
-		} else {
+		} else if (args.getTask() == "classif") {
 			optim = new OptimExhaustSearchClassif();
 		}
 	}
 	if (args.getObjective() == "sse") {
 		obj = new ObjectiveSSE();
+	} else if (args.getObjective() == "gini") {
+		obj = new ObjectiveGini();
 	}
 	optim->setObjective(obj);
 	optim->setMinNodeSize(args.getMinNodeSize());
@@ -96,7 +97,6 @@ std::vector<Node*> Node::split() {
 }
 
 void Node::recursiveSplit() {
-	
 	std::vector<Node*> child_nodes = this->split();
 	if (child_nodes.empty() == false) {
 		int n_splits = child_nodes.size();

@@ -19,9 +19,8 @@ void Model::checkTrained() {
 }
 
 double Model::evaluate(Data data, Objective* obj) {
-	std::vector<double> target_obs = data.col(data.getTargetIndex());
 	std::vector<double> target_pred = this->predict(data);
-	return obj->compute(target_obs, target_pred);
+	return obj->compute(data, target_pred);
 }
 
 // ModelAverage
@@ -59,7 +58,10 @@ void ModelMajorityVote::train() {
 	int target_index = this->training_data.getTargetIndex();
 	int n_obs = this->training_data.nrows();
 	std::vector<double> target_values = this->training_data.col(target_index);
+	std::cout << "debug this1\n";
+	this->training_data.summary();
 	std::map<std::string, int> levels = this->training_data.getCategEncodings().at(target_index);
+	std::cout << "debug this2\n";
 	std::map<int, double> probs;
 	int max_ix, l;
 	double max_cnt, level_cnt;
@@ -79,12 +81,13 @@ void ModelMajorityVote::train() {
 
 void ModelMajorityVote::summary() {
 	std::cout << "model summary:\nclass <Majority Vote>\n";	
+	std::cout << "majority class: " << this->majority_class << "\n";
 }
 
 std::vector<double> ModelMajorityVote::predict(Data data) {
 	this->checkTrained();
-	int n = data.nrows();
-	std::vector<double> predictions;
+	int n_obs = data.nrows();
+	std::vector<double> predictions(n_obs, this->majority_class);
 	return predictions;
 }
 

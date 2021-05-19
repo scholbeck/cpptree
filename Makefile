@@ -8,4 +8,4 @@ clean:
 	rm -f main
 
 iris:
-	./tree --filename data/iris.data --sep , --task classif --algorithm exhaustive --objective sse --model mean --minsize 20 --children 2
+	./tree --filename data/iris.data --sep , --task classif --algorithm exhaustive --objective gini --model majorvote --minsize 20 --children 2
