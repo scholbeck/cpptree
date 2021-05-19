@@ -19,13 +19,14 @@ Node::Node(std::string id, Data data, Tree* tree) {
 Optimizer* Node::createOptimizer(Arguments args) {
 	Optimizer* optim;
 	Objective* obj;
-	std::string arg;
-	arg = args.getAlgorithm();
-	if (arg == "exhaustive") {
-		optim = new OptimizerExhaustiveSearch();
+	if (args.getAlgorithm() == "exhaustive") {
+		if (args.getTask() == "regression") {
+			optim = new OptimExhaustSearchRegr();
+		} else {
+			optim = new OptimExhaustSearchClassif();
+		}
 	}
-	arg = args.getObjective();
-	if (arg == "sse") {
+	if (args.getObjective() == "sse") {
 		obj = new ObjectiveSSE();
 	}
 	optim->setObjective(obj);

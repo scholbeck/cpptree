@@ -20,6 +20,8 @@ class Model {
 		virtual double evaluate(Data data, Objective* obj);
 };
 
+// Regression
+
 class ModelAverage: public Model {
 	public:
 		double mean_prediction;
@@ -33,6 +35,20 @@ class ModelAverage: public Model {
 class ModelLinearRegression: public Model {
 	public:
 		//using Model::predict;
+};
+
+// Classification
+
+
+class ModelMajorityVote: public Model {
+	public:
+		int majority_class;
+		std::map<int, double> probs;
+		
+		ModelMajorityVote();
+		void train();
+		void summary();
+		std::vector<double> predict(Data data);
 };
 
 

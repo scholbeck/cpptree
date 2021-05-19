@@ -7,5 +7,5 @@ main: main.cpp
 clean:
 	rm -f main
 
-run:
-	./tree --filename data/iris.data --algorithm exhaustive --objective sse --model mean --minsize 20 --children 2
+iris:
+	./tree --filename data/iris.data --sep , --task classif --algorithm exhaustive --objective sse --model mean --minsize 20 --children 2

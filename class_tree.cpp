@@ -10,7 +10,6 @@
 #include "class_arguments.h"
 
 
-
 Tree::Tree(Data data, Arguments args) {
 	this->root = new Node("0", data, this);
 	this->args = args,

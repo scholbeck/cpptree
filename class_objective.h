@@ -16,5 +16,11 @@ class ObjectiveSSE: public Objective {
 		double compute(std::vector<double> target, std::vector<double> predictions);
 };
 
+class ObjectiveGini: public Objective {
+	public:
+		ObjectiveGini();
+		double compute(std::vector<double> target, std::vector<double> predictions, int n_levels);
+};
+
 
 #endif 

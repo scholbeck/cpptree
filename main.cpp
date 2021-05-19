@@ -27,7 +27,9 @@ int processArguments(int argc, char** argv, Arguments *arguments)
             {"algorithm", required_argument, nullptr, 1300},
             {"objective", required_argument, nullptr, 1400},
             {"model", required_argument, nullptr, 1500},
-            {"help", no_argument, nullptr, 1600}
+            {"task", required_argument, nullptr, 1600},
+            {"sep", required_argument, nullptr, 1700},
+            {"help", no_argument, nullptr, 1800}
     };
 	
     while (true)
@@ -57,7 +59,13 @@ int processArguments(int argc, char** argv, Arguments *arguments)
 		case 1500:
             arguments->setModel(std::string(optarg));
             break; 
-        case 1600:
+		case 1600:
+            arguments->setTask(std::string(optarg));
+            break;
+        case 1700:
+            arguments->setSep(*optarg);
+            break;
+        case 1800:
             printHelp();
             break;
         case '?': // Unrecognized option
@@ -109,9 +117,9 @@ int main(int argc, char *argv[]) {
 		return EXIT_FAILURE;
 	}
 	int read_status = 0;
-	char sep = ',';
+	std::cout << args.getSep();
 	
-	data = reader.read(args.getFilename(), sep);
+	data = reader.read(args.getFilename(), args.getSep());
 	data.print();
 	data.summary();
 	data.setTargetIndex(4);

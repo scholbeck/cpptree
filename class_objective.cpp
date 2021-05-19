@@ -22,3 +22,15 @@ double ObjectiveSSE::compute(std::vector<double> target_obs, std::vector<double>
 	}
 	return cumsum;
 }
+
+
+double ObjectiveGini::compute(std::vector<double> target_obs, std::vector<double> target_preds, int n_levels) {
+	int n = target_obs.size();
+	std::vector<double> p_vec;
+	double gini;
+	double p;
+	for (int i = 0; i < n; i++) {
+		
+	}
+	return gini;
+}

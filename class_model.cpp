@@ -2,7 +2,7 @@
 #include "class_model.h"
 #include "helper_functions.h"
 #include "iostream"
-
+#include <algorithm>
 
 Model::Model() {
 	this->is_trained = false;
@@ -18,12 +18,13 @@ void Model::checkTrained() {
 	}
 }
 
-
 double Model::evaluate(Data data, Objective* obj) {
 	std::vector<double> target_obs = data.col(data.getTargetIndex());
 	std::vector<double> target_pred = this->predict(data);
 	return obj->compute(target_obs, target_pred);
 }
+
+// ModelAverage
 
 ModelAverage::ModelAverage() : Model() {
 	//
@@ -45,6 +46,45 @@ std::vector<double> ModelAverage::predict(Data data) {
 	this->checkTrained();
 	int n = data.nrows();
 	std::vector<double> predictions(n, mean_prediction);
+	return predictions;
+}
+
+// ModelMajorityVote
+
+ModelMajorityVote::ModelMajorityVote() : Model() {
+	//
+}
+
+void ModelMajorityVote::train() {
+	int target_index = this->training_data.getTargetIndex();
+	int n_obs = this->training_data.nrows();
+	std::vector<double> target_values = this->training_data.col(target_index);
+	std::map<std::string, int> levels = this->training_data.getCategEncodings().at(target_index);
+	std::map<int, double> probs;
+	int max_ix, l;
+	double max_cnt, level_cnt;
+	for (auto it = levels.begin(); it != levels.end(); ++it) {
+		l = it->second; // mapped integer value of target level
+		level_cnt = std::count(target_values.begin(), target_values.end(), l);
+		probs.insert(std::pair<int, double> (l, (level_cnt / n_obs))); // insert pair of (level, count)	
+		if (level_cnt > max_cnt) {
+			max_cnt = level_cnt;
+			max_ix = l;
+		}
+	}
+	this->majority_class = max_ix;
+	this->probs = probs;
+	this->is_trained = true;
+}
+
+void ModelMajorityVote::summary() {
+	std::cout << "model summary:\nclass <Majority Vote>\n";	
+}
+
+std::vector<double> ModelMajorityVote::predict(Data data) {
+	this->checkTrained();
+	int n = data.nrows();
+	std::vector<double> predictions;
 	return predictions;
 }
 

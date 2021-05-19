@@ -16,6 +16,8 @@ class Arguments {
     std::string algorithm;
     std::string objective;
     std::string model;
+    std::string task;
+    char sep;
     
     std::string getFilename();
     void setFilename(std::string);
@@ -35,6 +37,11 @@ class Arguments {
 	std::string getModel();
 	void setModel(std::string mod);
 	
+	std::string getTask();
+	void setTask(std::string task);
+	
+	char getSep();
+	void setSep(char sep);
 };
 
 

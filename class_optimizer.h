@@ -29,9 +29,15 @@ class Optimizer {
 	Model* buildModel(Arguments args);
 };
 
-class OptimizerExhaustiveSearch: public Optimizer {
+class OptimExhaustSearchRegr: public Optimizer {
 	public:
-		OptimizerExhaustiveSearch();
+		OptimExhaustSearchRegr();
+		Split searchOptimum(Data data, Arguments args);
+};
+
+class OptimExhaustSearchClassif: public Optimizer {
+	public:
+		OptimExhaustSearchClassif();
 		Split searchOptimum(Data data, Arguments args);
 };
 

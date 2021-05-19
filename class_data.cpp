@@ -25,8 +25,12 @@ void Data::addRow(std::vector<double> row) {
 	rows.push_back(row);
 }
 
-void Data::addCategEncoding(std::map<std::string, int> m) {
-	this->categ_encodings.push_back(m);
+void Data::addCategEncoding(int col, std::map<std::string, int> m) {
+	this->categ_encodings.insert(std::pair<int, std::map<std::string, int>> (col, m));
+}
+
+std::map<int, std::map<std::string, int>> Data::getCategEncodings() {
+	return this->categ_encodings;
 }
 
 void Data::replaceRow(int row_ix, std::vector<double> values) {

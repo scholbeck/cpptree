@@ -85,7 +85,7 @@ Data Reader::read(std::string filename, char sep) {
 					l++;
 				}
 				// create mapping for all feature levels to integer 0, 1, 2, etc.
-				data.addCategEncoding(m);
+				data.addCategEncoding(j, m);
 				// add mapping to data object
 				new_row.push_back(m.at(rows_strings[i][j]));
 				// add mapped integer to data
@@ -93,7 +93,6 @@ Data Reader::read(std::string filename, char sep) {
 		}
 		data.addRow(new_row);
 		new_row.clear();
-		
 	}
 	
 	return data;
