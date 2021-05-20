@@ -141,7 +141,8 @@ int main(int argc, char *argv[]) {
 	tree.grow();
 	duration = (std::clock() - start) / (double) CLOCKS_PER_SEC;
 	
-	tree.summary(); 
+	tree.sortNodesAsc();
+	tree.summary();
     std::cout << "Training complete. Duration: "<< duration << "sec\n";
 
 	tree.freeNodeMemory();

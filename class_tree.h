@@ -23,7 +23,8 @@ class Tree {
     void grow();
     void summary();
     void freeNodeMemory();
-        
+    void print();
+    void sortNodesAsc();
 };
 
 

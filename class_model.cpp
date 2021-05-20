@@ -77,8 +77,8 @@ void ModelMajorityVote::train() {
 }
 
 void ModelMajorityVote::summary() {
-	std::cout << "model summary:\nclass <Majority Vote>\n";	
-	std::cout << "majority class: " << this->majority_class << "\n";
+	std::cout << "MODEL SUMMARY\n\tclass <Majority Vote>\n";	
+	std::cout << "\tmajority class: " << this->majority_class << "\n";
 }
 
 std::vector<double> ModelMajorityVote::predict(Data data) {

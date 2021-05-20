@@ -20,7 +20,7 @@ class Node {
     Tree* tree;
     Model* mod;
     int child_cnt;
-    std::vector<Node*> children;
+    std::vector<Node*> child_nodes;
     bool is_leaf;
     double obj_val;
     
@@ -32,6 +32,7 @@ class Node {
     bool isLeaf();
     std::vector<Node*> split();
     void recursiveSplit();
+    std::vector<Node*> getChildNodes();
     void addChild(Node* child);
 	void setSplit(Split s);
     Optimizer* getOptimizer();

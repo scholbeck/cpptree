@@ -35,8 +35,12 @@ void Node::setModel(Model* mod) {
 	this->mod = mod;
 }
 
+
+std::vector<Node*> Node::getChildNodes() {
+	return this->child_nodes;
+}
 void Node::addChild(Node* child) {
-	children.push_back(child);
+	child_nodes.push_back(child);
 	this->child_cnt++;
 }
 
@@ -101,6 +105,7 @@ std::vector<Node*> Node::split() {
 
 void Node::recursiveSplit() {
 	std::vector<Node*> child_nodes = this->split();
+	this->child_nodes = child_nodes;
 	if (child_nodes.empty() == false) {
 		int n_splits = child_nodes.size();
 		for (int i = 0; i < n_splits; i++) {
