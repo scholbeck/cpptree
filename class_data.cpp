@@ -129,7 +129,7 @@ void Data::summary() {
 		std::cout << "(" << j << " : "<< types[j] << ") | ";
 	}
 	std::cout << "\n";
-	std::cout << "\tcategorial encodings :\n";
+	std::cout << "\tcategorical encodings :\n";
 	for (int j = 0; j < this->ncols(); j++) {
 		if (types[j] == "categ") {
 			std::cout << "\t\tcolumn " << j << " : \n";
