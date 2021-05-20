@@ -11,6 +11,7 @@
 #include "class_tree.h"
 #include "class_reader.h"
 #include "helper_functions.h"
+#include <ctime>
 
 
 void printHelp() {
@@ -124,11 +125,26 @@ int main(int argc, char *argv[]) {
 	// data.initRandom(n, 5);
 	// data.setTargetIndex(0);
 	
-	//Tree tree = Tree(data, args);
-	//tree.grow();
-	//tree.summary();
+	/*
+	OptimExhaustSearchClassif optim;
+	ObjectiveGini obj;
+	optim.setObjective(&obj);
+	optim.setMinNodeSize(args.getMinNodeSize());
+	optim.setMaxChildren(args.getMaxChildren());
+	optim.searchOptimum(data, args);
+	*/
+	std::clock_t start;
+    double duration;
+    start = std::clock();
+    std::cout << "\nTraining decision tree...\n";
+	Tree tree = Tree(data, args);
+	tree.grow();
+	duration = (std::clock() - start) / (double) CLOCKS_PER_SEC;
 	
-	//tree.freeNodeMemory();
+	tree.summary(); 
+    std::cout << "Training complete. Duration: "<< duration << "sec\n";
+
+	tree.freeNodeMemory();
 	
 	return EXIT_SUCCESS;
 }

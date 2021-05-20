@@ -17,6 +17,7 @@ class Optimizer {
 	int max_children;
   
     Optimizer(); 
+    virtual void summary() = 0;
 	virtual Split searchOptimum(Data data, Arguments args) = 0;
 	int getMinNodeSize();
 	void setMinNodeSize(int min_node_size);
@@ -32,12 +33,14 @@ class Optimizer {
 class OptimExhaustSearchRegr: public Optimizer {
 	public:
 		OptimExhaustSearchRegr();
+		void summary();
 		Split searchOptimum(Data data, Arguments args);
 };
 
 class OptimExhaustSearchClassif: public Optimizer {
 	public:
 		OptimExhaustSearchClassif();
+		void summary();
 		Split searchOptimum(Data data, Arguments args);
 };
 

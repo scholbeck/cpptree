@@ -58,10 +58,7 @@ void ModelMajorityVote::train() {
 	int target_index = this->training_data.getTargetIndex();
 	int n_obs = this->training_data.nrows();
 	std::vector<double> target_values = this->training_data.col(target_index);
-	std::cout << "debug this1\n";
-	this->training_data.summary();
 	std::map<std::string, int> levels = this->training_data.getCategEncodings().at(target_index);
-	std::cout << "debug this2\n";
 	std::map<int, double> probs;
 	int max_ix, l;
 	double max_cnt, level_cnt;

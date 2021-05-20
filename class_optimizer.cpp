@@ -53,7 +53,8 @@ bool Optimizer::checkNodeSize(std::vector<Data> split_data) {
 }
 
 Model* Optimizer::buildModel(Data data, Arguments args) {
-	Model* m = NULL;
+	Model* m;
+	
 	if (args.getModel() == "mean") {
 		m = new ModelAverage();
 	} else if (args.getModel() == "majorvote") {
@@ -64,10 +65,15 @@ Model* Optimizer::buildModel(Data data, Arguments args) {
 	return m;
 }
 
+
 // OptimExhaustSearchRegr
 
 OptimExhaustSearchRegr::OptimExhaustSearchRegr() {
 	
+}
+
+void OptimExhaustSearchRegr::summary() {
+	std::cout << "Optimizer of class <OptimExhaustSearchRegr>\n";
 }
 
 
@@ -126,9 +132,14 @@ OptimExhaustSearchClassif::OptimExhaustSearchClassif() {
 	
 }
 
+void OptimExhaustSearchClassif::summary() {
+	std::cout << "Optimizer of class <OptimExhaustSearchClassif>\n";
+}
+
 Split OptimExhaustSearchClassif::searchOptimum(Data data, Arguments args) {
 	// only implemented for binary splits and model average
 	// IMPLEMENT FOR ANY NUMBER OF SPLITS (RECURSIVELY?) AND LINEAR MODELS
+	
 
 	std::vector<Model*> child_node_models;	
 	Model* mod = this->buildModel(data, args);
@@ -142,13 +153,12 @@ Split OptimExhaustSearchClassif::searchOptimum(Data data, Arguments args) {
 	current_split.child_node_models = child_node_models;
 	std::vector<Data> split_data;
 	bool geq_min_node_size = true;
-	/*
+	
 	for (int col = 0; col < n_cols; col++) {
 		if (col == data.getTargetIndex()) {
 			continue;
 		}
 		for (int row = 0; row < n_rows; row++) {
-			std::cout << row;
 			current_split.setFeatureIndex(col);
 			current_split.addSplitValue(data.elem(row, col));
 			split_data = data.split(current_split);
@@ -173,6 +183,6 @@ Split OptimExhaustSearchClassif::searchOptimum(Data data, Arguments args) {
 			current_split.clear();
 		}
 	}
-	* */
+	
 	return best_split;
 }

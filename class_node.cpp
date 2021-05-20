@@ -15,26 +15,6 @@ Node::Node(std::string id, Data data, Tree* tree) {
 	this->is_leaf = false;
 }
 
-Optimizer* Node::createOptimizer(Arguments args) {
-	Optimizer* optim = NULL;
-	Objective* obj = NULL;
-	if (args.getAlgorithm() == "exhaustive") {
-		if (args.getTask() == "regr") {
-			optim = new OptimExhaustSearchRegr();
-		} else if (args.getTask() == "classif") {
-			optim = new OptimExhaustSearchClassif();
-		}
-	}
-	if (args.getObjective() == "sse") {
-		obj = new ObjectiveSSE();
-	} else if (args.getObjective() == "gini") {
-		obj = new ObjectiveGini();
-	}
-	optim->setObjective(obj);
-	optim->setMinNodeSize(args.getMinNodeSize());
-	optim->setMaxChildren(args.getMaxChildren());
-	return optim;
-}
 
 void Node::setSplit(Split s) {
 	this->split_data = s;
@@ -60,20 +40,43 @@ void Node::addChild(Node* child) {
 	this->child_cnt++;
 }
 
-void Node::summary() {	
-	std::cout << "\nnode summary:\n\n";
-	std::cout << "node ID: " << this->id << "\n";
+void Node::summary() {
+	std::cout << "------------------------------------------------------\n";
+	std::cout << "NODE SUMMARY\n";
+	std::cout << "\tnode ID: " << this->id << "\n";
 	if (this->is_leaf == true) {
-		std::cout << "is leaf: yes\n";
+		std::cout << "\tis leaf: yes\n";
 	} else {
-		std::cout << "is leaf: no\n";
+		std::cout << "\tis leaf: no\n";
 	}
 	this->data.summary();
 	this->mod->summary();
+	std::cout << "------------------------------------------------------\n";
 }
 
 bool Node::isLeaf() {
 	return this->is_leaf;
+}
+
+Optimizer* Node::createOptimizer(Arguments args) {
+	Optimizer* optim = NULL;
+	Objective* obj = NULL;
+	if (args.getAlgorithm() == "exhaustive") {
+		if (args.getTask() == "regr") {
+			optim = new OptimExhaustSearchRegr();
+		} else if (args.getTask() == "classif") {
+			optim = new OptimExhaustSearchClassif();
+		}
+	}
+	if (args.getObjective() == "sse") {
+		obj = new ObjectiveSSE();
+	} else if (args.getObjective() == "gini") {
+		obj = new ObjectiveGini();
+	}
+	optim->setObjective(obj);
+	optim->setMinNodeSize(args.getMinNodeSize());
+	optim->setMaxChildren(args.getMaxChildren());
+	return optim;
 }
 
 std::vector<Node*> Node::split() {

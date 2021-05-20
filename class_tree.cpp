@@ -27,7 +27,7 @@ void Tree::addNode(Node* node) {
 
 void Tree::grow() {
 	Optimizer* optim = this->root->createOptimizer(args);
-	this->root->setModel(optim->buildModel(this->data, args));
+	this->root->setModel(optim->buildModel(this->root->data, args));
 	this->root->recursiveSplit();
 }
 
@@ -40,11 +40,13 @@ void Tree::freeNodeMemory() {
 }
 
 void Tree::summary() {
-	std::cout << "tree summary:\n";
-	std::cout << this->node_cnt << " nodes\n";
-	std::cout << this->leafnode_cnt << " leaf nodes\n";
+	std::cout << "------------------------------------------------------\n";
+	std::cout << "TREE SUMMARY\n";
+	std::cout << "\t" << this->node_cnt << " nodes\n";
+	std::cout << "\t" << this->leafnode_cnt << " leaf nodes\n";
 	for (int i = 0; i < this->node_cnt; i++) {
 		this->nodes[i]->summary();
 	}
+	std::cout << "------------------------------------------------------\n";
 }
 

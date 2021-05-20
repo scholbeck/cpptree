@@ -118,22 +118,24 @@ void Data::print() {
 }
 
 void Data::summary() {
-	std::cout << "data summary : \n";
+	std::cout << "DATA SUMMARY\n";
 	std::cout << "\tmatrix of dimension : " << this->nrows() << " x " << this->ncols() << "\n";
 	std::cout << "\ttarget : column " << this->getTargetIndex() << " \n";
 	std::cout << "\tcolumn types : ";
 	std::vector<std::string> types = this->getColTypes();
 	std::map<std::string, int> levels;
+	std::cout << "| ";
 	for (int j = 0; j < this->ncols(); j++) {
-		std::cout << types[j] << " ";
+		std::cout << "(" << j << " : "<< types[j] << ") | ";
 	}
 	std::cout << "\n";
 	std::cout << "\tcategorial encodings :\n";
 	for (int j = 0; j < this->ncols(); j++) {
 		if (types[j] == "categ") {
+			std::cout << "\t\tcolumn " << j << " : \n";
 			levels = this->categ_encodings.at(j);
 			for (auto it = levels.begin(); it != levels.end(); ++it) {
-				std::cout << "\t\t" << it->first << " = " << it->second << "\n";
+				std::cout << "\t\t\t" << it->first << " = " << it->second << "\n";
 			}
 		}
 	}
@@ -152,9 +154,10 @@ Data Data::subset(std::vector<int> rows, std::vector<int> cols) {
 	int n_rows_subset = rows.size();
 	int n_cols_subset = cols.size();
 	Data subset;
-	subset.setCategEncodings(this->getCategEncodings());
 	subset.init(n_rows_subset, n_cols_subset);
-	subset.setTargetIndex(this->getTargetIndex());
+	subset.setCategEncodings(this->categ_encodings);
+	subset.setTargetIndex(this->target_index);
+	subset.setColTypes(this->coltypes);
 	for (int i = 0; i < n_rows_subset; i++) {
 		for (int j = 0; j < n_cols_subset; j++) {
 			(subset.rows[i])[j] = this->elem(rows[i], cols[j]);
