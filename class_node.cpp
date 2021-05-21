@@ -61,19 +61,8 @@ void Node::summary() {
 	} else {
 		std::cout << "\tis leaf: no\n";
 	}
-	if (this->is_leaf == false) {
-		std::cout << "\tsplit feature: " << this->split_data.getSplitFeatureIndex() << "\n";
-		std::cout << "\tfeature type: " << this->split_data.getSplitType() << "\n";
-		if (this->split_data.getSplitType() == "num") {
-			std::cout << "split values: ";
-		}
-		int n_splits = this->split_data.getSplitValues().size();
-		for (int i = 0; i < n_splits; i++) {
-			std::cout << this->split_data.getSplitValues()[i] << " , ";
-		}
-		std::cout << "\n";
-	}
-	this->data.summary();
+	std::cout << "\tdecision rule: " << this->decision_rule << "\n";
+	this->data.sizeSummary();
 	this->mod->summary();
 	std::cout << "------------------------------------------------------\n";
 }

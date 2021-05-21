@@ -117,6 +117,11 @@ void Data::print() {
 	}
 }
 
+void Data::sizeSummary() {
+	std::cout << "DATA SUMMARY\n";
+	std::cout << "\tmatrix of dimension : " << this->nrows() << " x " << this->ncols() << "\n";
+}
+
 void Data::summary() {
 	std::cout << "DATA SUMMARY\n";
 	std::cout << "\tmatrix of dimension : " << this->nrows() << " x " << this->ncols() << "\n";
