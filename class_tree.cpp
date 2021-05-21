@@ -43,10 +43,12 @@ void Tree::sortNodesAsc() {
 	
 }
 
-void Tree::grow() {
+int Tree::grow() {
+	int ret;
 	Optimizer* optim = this->root->createOptimizer(args);
 	this->root->setModel(optim->buildModel(this->root->data, args));
-	this->root->recursiveSplit();
+	ret = this->root->recursiveSplit();
+	return ret;
 }
 
 void Tree::freeNodeMemory() {
@@ -72,7 +74,7 @@ void Tree::summary() {
 void printSubTree(Node* node) {
 	int level = node->getId().length() - 1;
 	if (level == 0) {
-		std::cout << "├──[" << node->getId() << "]\n";
+		std::cout << "└──[" << node->getId() << "]\n";
 	} else {
 		if (node->isLeaf()) {
 			std::cout << std::string((level * 4) , ' ') << "├──<" << node->getDecisionRule() << ">──[*" << node->getId() << "]\n";
@@ -94,12 +96,3 @@ void Tree::print() {
 // ├──
 
 // └──
-
-/*
- * 
- * 
- * if (node->isLeaf()) {
-		std::cout << std::string((level * 4) , ' ') << "├──[*" << node->getId() << "]\n";
-	} else {
-		std::cout << std::string((level * 4) , ' ') << "├──[" << node->getId() << "]\n";
-	}*/

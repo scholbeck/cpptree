@@ -127,9 +127,8 @@ int main(int argc, char *argv[]) {
 	std::clock_t start;
     double duration;
     start = std::clock();
-    std::cout << "\nTraining decision tree...\n";
 	Tree tree = Tree(data, args);
-	tree.grow();
+	int ret = tree.grow();
 	duration = (std::clock() - start) / (double) CLOCKS_PER_SEC;
 	//tree.sortNodesAsc();
 	tree.summary();

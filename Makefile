@@ -11,4 +11,7 @@ iris:
 	./tree --filename data/iris.data --target 4 --sep , --task classif --algorithm exhaustive --objective gini --model majorvote --minsize 20 --children 2
 
 mushroom:
-	./tree --filename data/mushroom.data --target 0 --sep , --task classif --algorithm exhaustive --objective gini --model majorvote --minsize 20 --children 2
+	./tree --filename data/mushroom.data --target 1 --sep , --task classif --algorithm exhaustive --objective gini --model majorvote --minsize 20 --children 2
+
+gt:
+	./tree --filename data/gt_data.csv --target 0 --sep , --task regr --algorithm exhaustive --objective sse --model mean --minsize 100 --children 2

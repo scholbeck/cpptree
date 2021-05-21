@@ -34,7 +34,7 @@ class Node {
     Data getData();
     bool isLeaf();
     std::vector<Node*> split();
-    void recursiveSplit();
+    int recursiveSplit();
     std::vector<Node*> getChildNodes();
     void addChild(Node* child);
 	void setSplit(Split s);

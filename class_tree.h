@@ -20,7 +20,7 @@ class Tree {
     int leafnode_cnt;
     
     void addNode(Node* node);
-    void grow();
+    int grow();
     void summary();
     void freeNodeMemory();
     void print();

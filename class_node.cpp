@@ -1,4 +1,4 @@
-
+#include <sstream>
 #include <iostream>
 #include <string>
 #include "class_arguments.h"
@@ -6,6 +6,7 @@
 #include "class_optimizer.h"
 #include "class_model.h"
 #include "class_data.h"
+#include <iomanip>
 
 Node::Node(std::string id, Data data, Tree* tree, std::string decision_rule) {
 	this->tree = tree;
@@ -71,10 +72,9 @@ void Node::summary() {
 			std::cout << this->split_data.getSplitValues()[i] << " , ";
 		}
 		std::cout << "\n";
-		this->data.summary();
 	}
+	this->data.summary();
 	this->mod->summary();
-	
 	std::cout << "------------------------------------------------------\n";
 }
 
@@ -106,20 +106,30 @@ Optimizer* Node::createOptimizer(Arguments args) {
 std::string Node::createDecisionRule(Split s, int child_ix) {
 	int feature = s.getSplitFeatureIndex();
 	std::string rule;
+	
+	std::ostringstream sstream;
+	sstream << std::setprecision(2) << std::fixed;
+	
 	if (s.getSplitType() == "num") {
 		int n_splits = s.getSplitValues().size();
 		if (child_ix == 0) {
-			rule = std::string("col ") + std::to_string(feature) + std::string(" <= ") + std::to_string(s.getSplitValues()[0]); 
+			sstream << s.getSplitValues()[0];
+			rule = std::string("x") + std::to_string(feature) + std::string(" <= ") + sstream.str(); 
 		} else if (child_ix == n_splits) {
-			rule = std::string("col ") + std::to_string(feature) + std::string(" > ") + std::to_string(s.getSplitValues()[n_splits]); 	
+			sstream << s.getSplitValues()[n_splits];
+			rule = std::string("x") + std::to_string(feature) + std::string(" > ") + sstream.str();
 		} else {
-			rule = std::string("col ") + std::to_string(feature) + std::string(" ∈ ") + std::string("[") + std::to_string(s.getSplitValues()[child_ix - 1]) + std::string(" , ") + std::to_string(s.getSplitValues()[child_ix]) + std::string("]"); 
+			rule = std::string("x") + std::to_string(feature) + std::string(" ∈ ") + std::string("[");
+			sstream << s.getSplitValues()[child_ix - 1];
+			rule += sstream.str() + std::string(" , ");
+			sstream << s.getSplitValues()[child_ix];
+			rule += sstream.str() + std::string("]"); 
 		}
 	} else {
 		std::map<std::string, int> levels = this->data.getCategEncodings().at(feature);
 		for (auto it = levels.begin(); it != levels.end(); ++it) {
 			if (child_ix == it->second) {
-				rule = std::string("col ") + std::to_string(feature) + std::string(" == ") + std::to_string(child_ix);
+				rule = std::string("x") + std::to_string(feature) + std::string(" = ") + std::to_string(child_ix);
 			}
 		}
 	}
@@ -147,17 +157,20 @@ std::vector<Node*> Node::split() {
 	return child_nodes;
 }
 
-void Node::recursiveSplit() {
+int Node::recursiveSplit() {
 	std::vector<Node*> child_nodes = this->split();
 	this->child_nodes = child_nodes;
+	int n_child_nodes = 0; 
+	int ret = 0;
 	if (child_nodes.empty() == false) {
-		int n_splits = child_nodes.size();
-		for (int i = 0; i < n_splits; i++) {
-			child_nodes[i]->recursiveSplit();	
+		n_child_nodes = child_nodes.size();
+		for (int i = 0; i < n_child_nodes; i++) {
+			ret += child_nodes[i]->recursiveSplit();	
 		}
 	} else {
 		this->is_leaf = true;
 	}
 	this->tree->addNode(this);
+	return 1;
 }
 
