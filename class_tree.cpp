@@ -11,7 +11,7 @@
 
 
 Tree::Tree(Data data, Arguments args) {
-	this->root = new Node("0", data, this);
+	this->root = new Node("0", data, this, "root");
 	this->addNode(root);
 	this->args = args,
 	this->node_cnt = 0;
@@ -62,26 +62,29 @@ void Tree::summary() {
 	std::cout << "TREE SUMMARY\n";
 	std::cout << "\t" << this->node_cnt << " nodes\n";
 	std::cout << "\t" << this->leafnode_cnt << " leaf nodes\n";
-	this->print();
 	for (int i = 0; i < this->node_cnt; i++) {
 		this->nodes[i]->summary();
 	}
+	this->print();
 	std::cout << "------------------------------------------------------\n";
 }
 
 void printSubTree(Node* node) {
 	int level = node->getId().length() - 1;
-	if (node->isLeaf()) {
-		std::cout << std::string((level * 3) , ' ') << "├──<" << node->getId() << ">\n";
+	if (level == 0) {
+		std::cout << "├──[" << node->getId() << "]\n";
 	} else {
-		std::cout << std::string((level * 3) , ' ') << "├──" << node->getId() << "\n";
+		if (node->isLeaf()) {
+			std::cout << std::string((level * 4) , ' ') << "├──<" << node->getDecisionRule() << ">──[*" << node->getId() << "]\n";
+		} else {
+			std::cout << std::string((level * 4) , ' ') << "├──<" << node->getDecisionRule() << ">──[" << node->getId() << "]\n";
+		}
 	}
 	std::vector<Node*> child_nodes = node->getChildNodes();
 	int n_children = child_nodes.size();
 	for (int i = 0; i < n_children; i++) {
 		printSubTree(child_nodes[i]);
 	}
-	
 }
 
 void Tree::print() {
@@ -92,3 +95,11 @@ void Tree::print() {
 
 // └──
 
+/*
+ * 
+ * 
+ * if (node->isLeaf()) {
+		std::cout << std::string((level * 4) , ' ') << "├──[*" << node->getId() << "]\n";
+	} else {
+		std::cout << std::string((level * 4) , ' ') << "├──[" << node->getId() << "]\n";
+	}*/

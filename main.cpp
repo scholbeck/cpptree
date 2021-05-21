@@ -30,7 +30,8 @@ int processArguments(int argc, char** argv, Arguments *arguments)
             {"model", required_argument, nullptr, 1500},
             {"task", required_argument, nullptr, 1600},
             {"sep", required_argument, nullptr, 1700},
-            {"help", no_argument, nullptr, 1800}
+            {"target", required_argument, nullptr, 1800},
+            {"help", no_argument, nullptr, 1900}
     };
 	
     while (true)
@@ -67,6 +68,9 @@ int processArguments(int argc, char** argv, Arguments *arguments)
             arguments->setSep(*optarg);
             break;
         case 1800:
+            arguments->setTargetIndex((int) atol(optarg));
+            break;
+        case 1900:
             printHelp();
             break;
         case '?': // Unrecognized option
@@ -118,21 +122,8 @@ int main(int argc, char *argv[]) {
 		return EXIT_FAILURE;
 	}
 	data = reader.read(args.getFilename(), args.getSep());
-	//data.print();
-	data.setTargetIndex(4);
-	//data.summary();
-	// int n = 200;
-	// data.initRandom(n, 5);
-	// data.setTargetIndex(0);
+	data.setTargetIndex(args.getTargetIndex());
 	
-	/*
-	OptimExhaustSearchClassif optim;
-	ObjectiveGini obj;
-	optim.setObjective(&obj);
-	optim.setMinNodeSize(args.getMinNodeSize());
-	optim.setMaxChildren(args.getMaxChildren());
-	optim.searchOptimum(data, args);
-	*/
 	std::clock_t start;
     double duration;
     start = std::clock();
@@ -140,8 +131,7 @@ int main(int argc, char *argv[]) {
 	Tree tree = Tree(data, args);
 	tree.grow();
 	duration = (std::clock() - start) / (double) CLOCKS_PER_SEC;
-	
-	tree.sortNodesAsc();
+	//tree.sortNodesAsc();
 	tree.summary();
     std::cout << "Training complete. Duration: "<< duration << "sec\n";
 

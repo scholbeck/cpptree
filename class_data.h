@@ -43,6 +43,7 @@ class Data {
 		void initRandom(int n_rows, int n_cols);
 		void summary();		
 		Data subset(std::vector<int> rows, std::vector<int> cols);
+		std::vector<Data> splitCateg(int col_index);
 		std::vector<Data> splitBinary(double split_value, int col_index);
 		std::vector<Data> split(Split split);
 };

@@ -16,6 +16,13 @@ void Arguments::setFilename(std::string filename) {
   this->filename = filename;
 }
 
+int Arguments::getTargetIndex() {
+	return this->target;
+}
+void Arguments::setTargetIndex(int target) {
+	this->target = target;
+}
+
 int Arguments::getMaxChildren() {
 	return this->max_children;
 }

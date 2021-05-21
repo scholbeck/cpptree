@@ -11,6 +11,7 @@ class Arguments {
     Arguments();
     
     std::string filename;
+    int target;
     int max_children;
     int min_node_size;
     std::string algorithm;
@@ -21,6 +22,9 @@ class Arguments {
     
     std::string getFilename();
     void setFilename(std::string);
+	
+	int getTargetIndex();
+	void setTargetIndex(int target);
 	
 	int getMaxChildren();
 	void setMaxChildren(int max_children);

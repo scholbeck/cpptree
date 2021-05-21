@@ -8,4 +8,7 @@ clean:
 	rm -f main
 
 iris:
-	./tree --filename data/iris.data --sep , --task classif --algorithm exhaustive --objective gini --model majorvote --minsize 20 --children 2
+	./tree --filename data/iris.data --target 4 --sep , --task classif --algorithm exhaustive --objective gini --model majorvote --minsize 20 --children 2
+
+mushroom:
+	./tree --filename data/mushroom.data --target 0 --sep , --task classif --algorithm exhaustive --objective gini --model majorvote --minsize 20 --children 2

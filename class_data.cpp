@@ -167,6 +167,31 @@ Data Data::subset(std::vector<int> rows, std::vector<int> cols) {
 }
 
 
+std::vector<Data> Data::splitCateg(int col_index) {
+	std::vector<int> cols = initVectorSeq(0, (this->ncols()) - 1); // init vector from 0 to highest column index
+	std::vector<int> level_rows;
+	std::vector<Data> data_partitioned;
+	std::map<std::string, int> levels = this->categ_encodings.at(col_index);
+	double element;
+	int n_levels = levels.size();
+	int level;
+	int n_elements = this->nrows();
+	
+	for (auto it = levels.begin(); it != levels.end(); ++it) {
+		level = it->second;
+		for (int i = 0; i < n_elements; i++) {
+			element = this->elem(i, col_index);
+			if (element == level) {
+				level_rows.push_back(i);
+			}
+		}
+		Data subset = this->subset(level_rows, cols);
+		data_partitioned.push_back(subset);
+		level_rows.clear();
+	}
+	return data_partitioned;
+}
+
 std::vector<Data> Data::splitBinary(double split_value, int col_index) {
 	std::vector<int> rows_left;
 	std::vector<int> rows_right;
@@ -195,22 +220,25 @@ std::vector<Data> Data::splitBinary(double split_value, int col_index) {
 
 std::vector<Data> Data::split(Split split) {
 	
-	std::vector<double> split_values = split.getSplitValues();
-	std::sort(split_values.begin(), split_values.end());
-	int n_splits = split_values.size();
-	int feature = split.getSplitFeatureIndex();
 	std::vector<Data> split_multiway;
-	std::vector<Data> split_binary;
-	split_binary = this->splitBinary(split_values[0], feature);
-	split_multiway.push_back(split_binary[0]);
-	split_multiway.push_back(split_binary[1]);
-	
-	for (int i = 1; i < n_splits; i++) {
-		split_binary = (split_binary[1]).splitBinary(split_values[i], feature); // split last element in two
-		split_multiway.pop_back(); // remove last element which was split in two
-		split_multiway.push_back(split_binary[0]); // add resulting splits
+	if (split.getSplitType() == "num") {
+		std::vector<double> split_values = split.getSplitValues();
+		std::sort(split_values.begin(), split_values.end());
+		int n_splits = split_values.size();
+		int feature = split.getSplitFeatureIndex();
+		std::vector<Data> split_binary;
+		split_binary = this->splitBinary(split_values[0], feature);
+		split_multiway.push_back(split_binary[0]);
 		split_multiway.push_back(split_binary[1]);
+		
+		for (int i = 1; i < n_splits; i++) {
+			split_binary = (split_binary[1]).splitBinary(split_values[i], feature); // split last element in two
+			split_multiway.pop_back(); // remove last element which was split in two
+			split_multiway.push_back(split_binary[0]); // add resulting splits
+			split_multiway.push_back(split_binary[1]);
+		}
+	} else {
+		split_multiway = this->splitCateg(split.getSplitFeatureIndex());
 	}
-	
 	return split_multiway;
 }
