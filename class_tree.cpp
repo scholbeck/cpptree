@@ -8,7 +8,7 @@
 #include "class_node.h"
 #include "class_optimizer.h"
 #include "class_arguments.h"
-
+#include <iomanip>
 
 Tree::Tree(Data data, Arguments args) {
 	this->root = new Node("0", data, this, "root");
@@ -102,13 +102,16 @@ std::string repeatString(int n, std::string s) {
 
 void Tree::printSubTree(Node* node) {
 	int level = node->getId().length() - 1;
+		std::ostringstream sstream;
+		sstream << std::setprecision(2) << std::fixed << node->getObjValue(); // obj printout with 2 decimal places
 	if (level == 0) {
-		std::cout << "└──[" << node->getId() << "] (" << node->getModel()->getShortSummary() << " | obj = " << std::to_string(node->getObjValue()) << ")\n";
+		std::cout << "└──[" << node->getId() << "] (" << node->getModel()->getShortSummary() << " | obj = " << sstream.str() << ")\n";
 	} else {
 		if (node->isLeaf()) {
-			std::cout << std::string((level * 4) , ' ') << "├──" << repeatString((((this->depth) - level) * 4) + depth * 2, "─") << "<" << node->getDecisionRule() << ">──[*" << node->getId() << "] (" << node->getModel()->getShortSummary() << " | obj = " << std::to_string(node->getObjValue()) << ")\n";
+			
+			std::cout << std::string((level * 4) , ' ') << "├──" << repeatString((((this->depth) - level) * 4) + depth * 2, "─") << "<" << node->getDecisionRule() << ">──[*" << node->getId() << "] (" << node->getModel()->getShortSummary() << " | obj = " << sstream.str() << ")\n";
 		} else {
-			std::cout << std::string((level * 4) , ' ') << "├──<" << node->getDecisionRule() << ">──[" << node->getId() << "] (" << node->getModel()->getShortSummary() << " | obj = " << std::to_string(node->getObjValue()) << ")\n";
+			std::cout << std::string((level * 4) , ' ') << "├──<" << node->getDecisionRule() << ">──[" << node->getId() << "] (" << node->getModel()->getShortSummary() << " | obj = " << sstream.str() << ")\n";
 		}
 	}
 	std::vector<Node*> child_nodes = node->getChildNodes();
