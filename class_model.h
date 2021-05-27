@@ -16,6 +16,7 @@ class Model {
 		void checkTrained();
 		virtual void train() = 0;
 		virtual void summary() = 0;
+		virtual std::string getShortSummary() = 0;
 		virtual std::vector<double> predict(Data data) = 0;
 		virtual double evaluate(Data data, Objective* obj);
 };
@@ -29,6 +30,7 @@ class ModelAverage: public Model {
 		ModelAverage();
 		void train();
 		void summary();
+		std::string getShortSummary();
 		std::vector<double> predict(Data data);
 };
 
@@ -48,6 +50,7 @@ class ModelMajorityVote: public Model {
 		ModelMajorityVote();
 		void train();
 		void summary();
+		std::string getShortSummary();
 		std::vector<double> predict(Data data);
 };
 

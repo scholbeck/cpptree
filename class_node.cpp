@@ -17,15 +17,13 @@ Node::Node(std::string id, Data data, Tree* tree, std::string decision_rule) {
 	this->is_leaf = false;
 }
 
-
-void Node::setSplit(Split s) {
-	this->split_data = s;
+double Node::getObjValue() {
+	return this->obj_val;
 }
 
 std::string Node::getId() {
 	return id;
 }
-
 Data Node::getData() {
 	return this->data;
 }
@@ -40,18 +38,16 @@ void Node::setModel(Model* mod) {
 std::vector<Node*> Node::getChildNodes() {
 	return this->child_nodes;
 }
+
 void Node::addChild(Node* child) {
 	child_nodes.push_back(child);
 	this->child_cnt++;
 }
 
-Split Node::getSplitData() {
-	return this->split_data;
-}
-
 std::string Node::getDecisionRule() {
 	return this->decision_rule;
 }
+
 void Node::summary() {
 	std::cout << "------------------------------------------------------\n";
 	std::cout << "NODE SUMMARY\n";
@@ -71,24 +67,32 @@ bool Node::isLeaf() {
 	return this->is_leaf;
 }
 
-Optimizer* Node::createOptimizer(Arguments args) {
+void Node::trainModel() {
+	Model* m;
+	if (this->tree->getArgs().getModel() == "mean") {
+		m = new ModelAverage();
+	} else if (this->tree->getArgs().getModel() == "majorvote") {
+		m = new ModelMajorityVote();
+	}
+	m->setTrainingData(this->data);
+	m->train();
+	this->mod = m;
+}
+
+Optimizer* Node::createOptimizer() {
 	Optimizer* optim = NULL;
 	Objective* obj = NULL;
-	if (args.getAlgorithm() == "exhaustive") {
-		if (args.getTask() == "regr") {
-			optim = new OptimExhaustSearchRegr();
-		} else if (args.getTask() == "classif") {
-			optim = new OptimExhaustSearchClassif();
-		}
+	if (this->tree->getArgs().getAlgorithm() == "exhaustive") {
+		optim = new OptimExhaustSearch();
 	}
-	if (args.getObjective() == "sse") {
+	if (this->tree->getArgs().getObjective() == "sse") {
 		obj = new ObjectiveSSE();
-	} else if (args.getObjective() == "gini") {
+	} else if (this->tree->getArgs().getObjective() == "gini") {
 		obj = new ObjectiveGini();
 	}
 	optim->setObjective(obj);
-	optim->setMinNodeSize(args.getMinNodeSize());
-	optim->setMaxChildren(args.getMaxChildren());
+	optim->setMinNodeSize(this->tree->getArgs().getMinNodeSize());
+	optim->setMaxChildren(this->tree->getArgs().getMaxChildren());
 	return optim;
 }
 
@@ -105,7 +109,7 @@ std::string Node::createDecisionRule(Split s, int child_ix) {
 			sstream << s.getSplitValues()[0];
 			rule = std::string("x") + std::to_string(feature) + std::string(" <= ") + sstream.str(); 
 		} else if (child_ix == n_splits) {
-			sstream << s.getSplitValues()[n_splits];
+			sstream << s.getSplitValues()[n_splits - 1];
 			rule = std::string("x") + std::to_string(feature) + std::string(" > ") + sstream.str();
 		} else {
 			rule = std::string("x") + std::to_string(feature) + std::string(" ∈ ") + std::string("[");
@@ -126,11 +130,12 @@ std::string Node::createDecisionRule(Split s, int child_ix) {
 }
 
 std::vector<Node*> Node::split() {
-	Optimizer* optim = createOptimizer(this->tree->args);
+	Optimizer* optim = this->createOptimizer();
 	std::vector<Node*> child_nodes;
 	Split s;
 	s = optim->searchOptimum(this->data, this->tree->args);
-	this->setSplit(s);
+	this->obj_val = this->mod->evaluate(this->data, optim->getObjective());
+	
 	if (s.getSplitFeatureIndex() != -1) {
 		std::vector<Data> child_node_data = this->data.split(s);
 		int n_child_nodes = child_node_data.size();
@@ -138,7 +143,7 @@ std::vector<Node*> Node::split() {
 			std::string child_id = this->id + std::to_string(i);
 			std::string rule = this->createDecisionRule(s, i);
 			Node* child = new Node(child_id, child_node_data[i], this->tree, rule);
-			child->setModel(s.getChildNodeModels()[i]);
+			child->trainModel();
 			child_nodes.push_back(child);
 		}
 	}

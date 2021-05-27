@@ -18,13 +18,17 @@ class Tree {
     std::vector<Node*> nodes;
     int node_cnt;
     int leafnode_cnt;
+    int depth;
     
     void addNode(Node* node);
+    Arguments getArgs();
     int grow();
     void summary();
     void freeNodeMemory();
     void print();
+    void printSubTree(Node* node);
     void sortNodesAsc();
+    void computeTreeDepth();
 };
 
 

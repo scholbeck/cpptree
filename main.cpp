@@ -130,7 +130,6 @@ int main(int argc, char *argv[]) {
 	Tree tree = Tree(data, args);
 	int ret = tree.grow();
 	duration = (std::clock() - start) / (double) CLOCKS_PER_SEC;
-	//tree.sortNodesAsc();
 	tree.summary();
     std::cout << "Training complete. Duration: "<< duration << "sec\n";
 

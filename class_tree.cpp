@@ -26,7 +26,24 @@ void Tree::addNode(Node* node) {
 	}
 }
 
+void Tree::computeTreeDepth() {
+	int max_length = 1;
+	int current_length;
+	for (int i = 0; i < this->node_cnt; i++) {
+		current_length = this->nodes[i]->getId().length();
+		if (current_length > max_length) {
+			max_length = current_length;
+		}
+	}
+	this->depth = max_length;
+}
+
+Arguments Tree::getArgs() {
+	return this->args;
+}
+
 void Tree::sortNodesAsc() {
+	// not sure this is working perfectly fine
 	std::string left_id, current_id;
 	Node* node_pntr_tmp = NULL;
 	for (int i = 0; i < this->node_cnt; i++) {
@@ -45,9 +62,9 @@ void Tree::sortNodesAsc() {
 
 int Tree::grow() {
 	int ret;
-	Optimizer* optim = this->root->createOptimizer(args);
-	this->root->setModel(optim->buildModel(this->root->data, args));
+	this->root->trainModel();
 	ret = this->root->recursiveSplit();
+	this->computeTreeDepth();
 	return ret;
 }
 
@@ -60,26 +77,38 @@ void Tree::freeNodeMemory() {
 }
 
 void Tree::summary() {
+	this->root->getData().summary();
 	std::cout << "------------------------------------------------------\n";
 	std::cout << "TREE SUMMARY\n";
-	std::cout << "\t" << this->node_cnt << " nodes\n";
-	std::cout << "\t" << this->leafnode_cnt << " leaf nodes\n";
+	std::cout << "\tnodes: " << this->node_cnt << "\n";
+	std::cout << "\tleaf nodes: " << this->leafnode_cnt << "\n";
+	std::cout << "\tdepth : " << this->depth << "\n\n";
+	this->print();
+	/*
 	for (int i = 0; i < this->node_cnt; i++) {
 		this->nodes[i]->summary();
 	}
-	this->print();
+	*/
 	std::cout << "------------------------------------------------------\n";
 }
 
-void printSubTree(Node* node) {
+
+std::string repeatString(int n, std::string s) {
+    std::ostringstream os;
+    for(int i = 0; i < n; i++)
+        os << s;
+    return os.str();
+}
+
+void Tree::printSubTree(Node* node) {
 	int level = node->getId().length() - 1;
 	if (level == 0) {
-		std::cout << "└──[" << node->getId() << "]\n";
+		std::cout << "└──[" << node->getId() << "] (" << node->getModel()->getShortSummary() << " | obj = " << std::to_string(node->getObjValue()) << ")\n";
 	} else {
 		if (node->isLeaf()) {
-			std::cout << std::string((level * 4) , ' ') << "├──<" << node->getDecisionRule() << ">──[*" << node->getId() << "]\n";
+			std::cout << std::string((level * 4) , ' ') << "├──" << repeatString((((this->depth) - level) * 4) + depth * 2, "─") << "<" << node->getDecisionRule() << ">──[*" << node->getId() << "] (" << node->getModel()->getShortSummary() << " | obj = " << std::to_string(node->getObjValue()) << ")\n";
 		} else {
-			std::cout << std::string((level * 4) , ' ') << "├──<" << node->getDecisionRule() << ">──[" << node->getId() << "]\n";
+			std::cout << std::string((level * 4) , ' ') << "├──<" << node->getDecisionRule() << ">──[" << node->getId() << "] (" << node->getModel()->getShortSummary() << " | obj = " << std::to_string(node->getObjValue()) << ")\n";
 		}
 	}
 	std::vector<Node*> child_nodes = node->getChildNodes();

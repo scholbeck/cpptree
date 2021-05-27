@@ -30,16 +30,9 @@ class Optimizer {
 	Model* buildModel(Data data, Arguments args);
 };
 
-class OptimExhaustSearchRegr: public Optimizer {
+class OptimExhaustSearch: public Optimizer {
 	public:
-		OptimExhaustSearchRegr();
-		void summary();
-		Split searchOptimum(Data data, Arguments args);
-};
-
-class OptimExhaustSearchClassif: public Optimizer {
-	public:
-		OptimExhaustSearchClassif();
+		OptimExhaustSearch();
 		void summary();
 		Split searchOptimum(Data data, Arguments args);
 };

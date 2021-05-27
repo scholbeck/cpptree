@@ -17,14 +17,14 @@ class Node {
     std::string id;
     Data data;
     std::string decision_rule; // rule that was used to to get from parent to this object
-    Split split_data; // data to split this object
     Tree* tree;
     Model* mod;
+    double obj_val;
     int child_cnt;
     std::vector<Node*> child_nodes;
     bool is_leaf;
-    double obj_val;
     
+    double getObjValue();
     std::string getDecisionRule();
     std::string getId();
     Model* getModel();
@@ -39,8 +39,8 @@ class Node {
     void addChild(Node* child);
 	void setSplit(Split s);
 	std::string createDecisionRule(Split s, int child_ix);
-    Optimizer* getOptimizer();
-    Optimizer* createOptimizer(Arguments args);
+    void trainModel();
+    Optimizer* createOptimizer();
 
     
 };

@@ -41,6 +41,12 @@ void ModelAverage::summary() {
 	std::cout << "mean target value = " << this->mean_prediction << "\n"; 
 }
 
+std::string ModelAverage::getShortSummary() {	
+	std::string s;
+	s = std::string("y = ") + std::to_string(this->mean_prediction);
+	return s;
+}
+
 std::vector<double> ModelAverage::predict(Data data) {
 	this->checkTrained();
 	int n = data.nrows();
@@ -79,6 +85,12 @@ void ModelMajorityVote::train() {
 void ModelMajorityVote::summary() {
 	std::cout << "MODEL SUMMARY\n\tclass <Majority Vote>\n";	
 	std::cout << "\tmajority class: " << this->majority_class << "\n";
+}
+
+std::string ModelMajorityVote::getShortSummary() {	
+	std::string s;
+	s = std::string("class ") + std::to_string(this->majority_class);
+	return s;
 }
 
 std::vector<double> ModelMajorityVote::predict(Data data) {

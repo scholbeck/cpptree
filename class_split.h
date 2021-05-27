@@ -11,6 +11,7 @@ class Split {
 	public:
 		Split();
 		
+		double node_obj_val;
 		int feature_index;
 		std::string split_type;
 		int split_cnt;
