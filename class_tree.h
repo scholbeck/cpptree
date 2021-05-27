@@ -4,6 +4,7 @@
 #include "class_data.h"
 #include "class_optimizer.h"
 #include "class_node.h"
+#include "class_factory.h"
 
 class Node;
 
@@ -13,6 +14,7 @@ class Tree {
     Tree(Data data, Arguments args);
     
     Arguments args;
+    Factory factory;
     Data data;
     Node* root;
     std::vector<Node*> nodes;
@@ -21,6 +23,7 @@ class Tree {
     int depth;
     
     void addNode(Node* node);
+    Factory getFactory();
     Arguments getArgs();
     int grow();
     void summary();
@@ -28,7 +31,7 @@ class Tree {
     void print();
     void printSubTree(Node* node);
     void sortNodesAsc();
-    void computeTreeDepth();
+    void gatherTreeInformation();
 };
 
 

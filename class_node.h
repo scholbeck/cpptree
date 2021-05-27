@@ -39,7 +39,7 @@ class Node {
     void addChild(Node* child);
 	void setSplit(Split s);
 	std::string createDecisionRule(Split s, int child_ix);
-    void trainModel();
+    void buildModel();
     Optimizer* createOptimizer();
 
     

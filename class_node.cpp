@@ -15,6 +15,13 @@ Node::Node(std::string id, Data data, Tree* tree, std::string decision_rule) {
 	this->decision_rule = decision_rule;
 	this->child_cnt = 0;
 	this->is_leaf = false;
+	
+	this->mod = tree->getFactory().createModel();
+	this->mod->setTrainingData(data);
+	this->mod->train();
+	this->obj_val = this->mod->evaluate(data, tree->getFactory().createObjective());
+	
+	this->tree->addNode(this);
 }
 
 double Node::getObjValue() {
@@ -67,35 +74,6 @@ bool Node::isLeaf() {
 	return this->is_leaf;
 }
 
-void Node::trainModel() {
-	Model* m;
-	if (this->tree->getArgs().getModel() == "mean") {
-		m = new ModelAverage();
-	} else if (this->tree->getArgs().getModel() == "majorvote") {
-		m = new ModelMajorityVote();
-	}
-	m->setTrainingData(this->data);
-	m->train();
-	this->mod = m;
-}
-
-Optimizer* Node::createOptimizer() {
-	Optimizer* optim = NULL;
-	Objective* obj = NULL;
-	if (this->tree->getArgs().getAlgorithm() == "exhaustive") {
-		optim = new OptimExhaustSearch();
-	}
-	if (this->tree->getArgs().getObjective() == "sse") {
-		obj = new ObjectiveSSE();
-	} else if (this->tree->getArgs().getObjective() == "gini") {
-		obj = new ObjectiveGini();
-	}
-	optim->setObjective(obj);
-	optim->setMinNodeSize(this->tree->getArgs().getMinNodeSize());
-	optim->setMaxChildren(this->tree->getArgs().getMaxChildren());
-	return optim;
-}
-
 std::string Node::createDecisionRule(Split s, int child_ix) {
 	int feature = s.getSplitFeatureIndex();
 	std::string rule;
@@ -126,15 +104,14 @@ std::string Node::createDecisionRule(Split s, int child_ix) {
 			}
 		}
 	}
+	
 	return rule;
 }
 
 std::vector<Node*> Node::split() {
-	Optimizer* optim = this->createOptimizer();
 	std::vector<Node*> child_nodes;
-	Split s;
-	s = optim->searchOptimum(this->data, this->tree->args);
-	this->obj_val = this->mod->evaluate(this->data, optim->getObjective());
+	Optimizer* optim = this->tree->getFactory().createOptimizer();
+	Split s = optim->searchOptimum(this->data, this->tree->args, this->obj_val);
 	
 	if (s.getSplitFeatureIndex() != -1) {
 		std::vector<Data> child_node_data = this->data.split(s);
@@ -143,11 +120,11 @@ std::vector<Node*> Node::split() {
 			std::string child_id = this->id + std::to_string(i);
 			std::string rule = this->createDecisionRule(s, i);
 			Node* child = new Node(child_id, child_node_data[i], this->tree, rule);
-			child->trainModel();
 			child_nodes.push_back(child);
 		}
 	}
 	free(optim);
+	
 	return child_nodes;
 }
 
@@ -156,6 +133,7 @@ int Node::recursiveSplit() {
 	this->child_nodes = child_nodes;
 	int n_child_nodes = 0; 
 	int ret = 0;
+	
 	if (child_nodes.empty() == false) {
 		n_child_nodes = child_nodes.size();
 		for (int i = 0; i < n_child_nodes; i++) {
@@ -164,7 +142,7 @@ int Node::recursiveSplit() {
 	} else {
 		this->is_leaf = true;
 	}
-	this->tree->addNode(this);
-	return 1;
+	
+	return ret;
 }
 

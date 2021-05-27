@@ -75,7 +75,7 @@ void OptimExhaustSearch::summary() {
 	std::cout << "Optimizer of class <OptimExhaustSearch>\n";
 }
 
-Split OptimExhaustSearch::searchOptimum(Data data, Arguments args) {
+Split OptimExhaustSearch::searchOptimum(Data data, Arguments args, double node_obj_val) {
 	// only implemented for binary splits and model average
 	// IMPLEMENT FOR ANY NUMBER OF SPLITS (RECURSIVELY?) AND LINEAR MODELS
 	
@@ -93,8 +93,7 @@ Split OptimExhaustSearch::searchOptimum(Data data, Arguments args) {
 	int n_cols_num = col_ix_num.size();
 	int n_cols_categ = col_ix_categ.size();
 	
-	Model* mod = this->buildModel(data, args);
-	double best_obj_val = mod->evaluate(data, obj);
+	double best_obj_val = node_obj_val;
 	double current_obj_val = best_obj_val;
 	
 	Split current_split, best_split;

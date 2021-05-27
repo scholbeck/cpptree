@@ -8,32 +8,34 @@
 #include "class_node.h"
 #include "class_optimizer.h"
 #include "class_arguments.h"
+#include "class_factory.h"
 #include <iomanip>
 
-Tree::Tree(Data data, Arguments args) {
-	this->root = new Node("0", data, this, "root");
-	this->addNode(root);
-	this->args = args,
+Tree::Tree(Data data, Arguments args) : factory(args) {
 	this->node_cnt = 0;
 	this->leafnode_cnt = 0;
+	this->args = args;
+	this->root = new Node("0", data, this, "root");
 }
 
 void Tree::addNode(Node* node) {
 	this->nodes.push_back(node);
 	this->node_cnt++;
-	if (node->isLeaf()) {
-		this->leafnode_cnt++;
-	}
 }
 
-void Tree::computeTreeDepth() {
+void Tree::gatherTreeInformation() {
 	int max_length = 1;
 	int current_length;
 	for (int i = 0; i < this->node_cnt; i++) {
+		if (this->nodes[i]->isLeaf()) {
+			this->leafnode_cnt++;
+		}
+		// gather leaf node count
 		current_length = this->nodes[i]->getId().length();
 		if (current_length > max_length) {
 			max_length = current_length;
 		}
+		// gather tree depth
 	}
 	this->depth = max_length;
 }
@@ -61,17 +63,15 @@ void Tree::sortNodesAsc() {
 }
 
 int Tree::grow() {
-	int ret;
-	this->root->trainModel();
-	ret = this->root->recursiveSplit();
-	this->computeTreeDepth();
+	int ret = this->root->recursiveSplit();
+	this->gatherTreeInformation();
 	return ret;
 }
 
 void Tree::freeNodeMemory() {
-	for (int i = 0; i < node_cnt; i++) {
-		free(this->nodes.back()->getModel());
-		free(this->nodes.back());
+	while (this->nodes.empty() == false) {
+		delete(this->nodes.back()->getModel());
+		delete(this->nodes.back());
 		this->nodes.pop_back();
 	}
 }
@@ -92,6 +92,10 @@ void Tree::summary() {
 	std::cout << "------------------------------------------------------\n";
 }
 
+
+Factory Tree::getFactory() {
+	return this->factory;
+}
 
 std::string repeatString(int n, std::string s) {
     std::ostringstream os;
