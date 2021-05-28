@@ -83,6 +83,7 @@ std::string Node::createDecisionRule(Split s, int child_ix) {
 	
 	if (s.getSplitType() == "num") {
 		int n_splits = s.getSplitValues().size();
+		// n split values = n+1 child nodes
 		if (child_ix == 0) {
 			sstream << s.getSplitValues()[0];
 			rule = std::string("x") + std::to_string(feature) + std::string(" <= ") + sstream.str(); 
@@ -90,9 +91,12 @@ std::string Node::createDecisionRule(Split s, int child_ix) {
 			sstream << s.getSplitValues()[n_splits - 1];
 			rule = std::string("x") + std::to_string(feature) + std::string(" > ") + sstream.str();
 		} else {
-			rule = std::string("x") + std::to_string(feature) + std::string(" ∈ ") + std::string("[");
+			rule = std::string("x") + std::to_string(feature) + std::string(" ∈ ") + std::string(" ]");
 			sstream << s.getSplitValues()[child_ix - 1];
 			rule += sstream.str() + std::string(" , ");
+			sstream.str(std::string());
+			sstream.clear();
+			// clear string stream
 			sstream << s.getSplitValues()[child_ix];
 			rule += sstream.str() + std::string("]"); 
 		}

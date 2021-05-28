@@ -10,6 +10,9 @@ clean:
 iris:
 	./tree --filename data/iris.data --target 4 --sep , --task classif --algorithm exhaustive --objective gini --model majorvote --minsize 20 --children 2
 
+iris3way:
+	./tree --filename data/iris_10.data --target 4 --sep , --task classif --algorithm exhaustive --objective gini --model majorvote --minsize 1 --children 3
+
 mushroom:
 	./tree --filename data/mushroom.data --target 1 --sep , --task classif --algorithm exhaustive --objective gini --model majorvote --minsize 20 --children 2
 

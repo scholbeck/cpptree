@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <getopt.h>
 #include <iostream>
+#include <algorithm>
 #include "class_data.h"
 #include "class_arguments.h"
 #include "class_split.h"
@@ -110,6 +111,10 @@ int processArguments(int argc, char** argv, Arguments *arguments)
     return 0;
     
 }
+
+
+
+ 
 
 int main(int argc, char *argv[]) {
 	

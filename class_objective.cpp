@@ -28,6 +28,10 @@ double ObjectiveSSE::compute(Data data, std::vector<double> target_preds) {
 	return cumsum;
 }
 
+void ObjectiveSSE::summary() {
+	std::cout << "Objective: Sum of Squared Errors>\n" << "class <SSE>\n";
+}
+
 // ObjectiveGini
 
 ObjectiveGini::ObjectiveGini() {
@@ -47,4 +51,8 @@ double ObjectiveGini::compute(Data data, std::vector<double> target_preds) {
 	}
 	gini = 1 - gini;
 	return gini;
+}
+
+void ObjectiveGini::summary() {
+	std::cout << "Objective: Gini Impurity>\n";
 }

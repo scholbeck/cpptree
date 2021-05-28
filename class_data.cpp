@@ -228,7 +228,7 @@ std::vector<Data> Data::split(Split split) {
 	std::vector<Data> split_multiway;
 	if (split.getSplitType() == "num") {
 		std::vector<double> split_values = split.getSplitValues();
-		std::sort(split_values.begin(), split_values.end());
+		// split values have to be sorted and duplicates removed in split first!
 		int n_splits = split_values.size();
 		int feature = split.getSplitFeatureIndex();
 		std::vector<Data> split_binary;

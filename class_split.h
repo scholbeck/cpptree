@@ -9,12 +9,13 @@ class Model;
 class Split {
 
 	public:
-		Split();
+		Split(int max_splits);
 		
 		double node_obj_val;
 		int feature_index;
 		std::string split_type;
 		int split_cnt;
+		int max_splits;
 		std::vector<double> split_values;
 		std::vector<Model*> child_node_models;
 		
@@ -28,6 +29,7 @@ class Split {
 		std::vector<Model*> getChildNodeModels();
 		void clear();
 		void summary();
+		void sortSplitValues();
 };
 
 
