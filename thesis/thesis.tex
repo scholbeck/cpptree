@@ -47,7 +47,7 @@ This thesis provides a software package for extensible decision trees written in
 \setcounter{page}{1}
 \section{Introduction}
 
-Decision trees are one of the most fundamental techniques in machine learning for both regression and classification tasks. They exist in different variants, which differ with respect to split criteria and objective functions. Popular variants include C4.5 \cite{quinlan_c45}, classification and regression trees (CART) \cite{cart_1, cart_2, cart_3}, and model-based recursive partitioning (MOB) \cite{zeileis_mob}.
+Decision trees are one of the most fundamental techniques in machine learning. They exist in different variants, which differ with respect to split criteria and objective functions. Popular variants include C4.5 \cite{quinlan_c45}, classification and regression trees (CART) \cite{cart_1, cart_2, cart_3}, and model-based recursive partitioning (MOB) \cite{zeileis_mob}.
 \par
 Decision trees are frequently preferred over more complex models due to their intelligibility in the form of decision rules. Their most critical drawback is a high variance under perturbations of the training data \cite{hastie_elemstatlearn}. This has led to the development of tree ensembles such as random forests \cite{breiman_randomforests}, which reduce variance to the detriment of losing interpretability.
 \par
@@ -58,7 +58,7 @@ The possibilities of applying decision trees in further contexts such as interpr
 Exploring such tasks requires an efficient and extensible software implementation of decision trees. Efficient, as the computational demand of optimizing splits grows considerably with more complex setups such as multiway splits. Extensible, as different applications require entirely different node models, split algorithms or objective functions.
 \par
 
-\subsection{Contributions} The central contribution of this thesis is a from-the-ground-up implementation of extensible decision trees as an open-source software package written in \texttt{C++}. The language choice stems from a high degree of computational efficiency, while preserving object-oriented principles and portability to other programming languages. The package follows modular design principles to achieve a maximum degree of extensibility.
+\subsection{Contributions} The central contribution of this thesis is a from-the-ground-up implementation of extensible decision trees as an open-source software package. The package is written in \texttt{C++} to achieve a high degree of computational efficiency, while preserving object-oriented principles and portability to other programming languages. The package follows modular design principles to achieve a maximum degree of extensibility.
 \par
 The written thesis provides a compact literature review of decision trees and smart splitting. Furthermore, it describes the software design and extensibility to support other applications, and demonstrates the package on simulated and real data.
 
@@ -78,7 +78,18 @@ The software package \texttt{ranger} \cite{ranger_package} provides a fast imple
 
 \section{Theory}
 
-\subsection{Decision Trees}
+Decision tree learning algorithms recursively partition the data to optimize an objective in a greedy way. Subsequent partitionings can be visualized as a series of decision rules, which together form a tree graph. Each partitioning of the data is referred to as a node, whereas a final partitioning is referred to as a leaf node. The starting point of a decision tree, which encompasses the entire, unpartitioned data, corresponds to the root node. 
+The decision tree can be used to make a prediction by sending an observation through the tree from the root node to a leaf node.
+
+
+\subsection{Decision Tree Variants}
+
+An encompassing review of decision tree publications is provided in \cite{loh_trees_review}. 
+
+
+on automatic interaction detection (AID) \cite{morgan_sonquist_trees}.
+
+Both CART and C4.5 represent landmark publications in decision tree learning. However, first publications date back 
 
 \subsection{Smart Splitting}
 
