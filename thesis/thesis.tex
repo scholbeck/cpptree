@@ -7,7 +7,7 @@
 
 \begin{document}
 
-\title{A Software Package for Extensible Decision Trees in C++}
+\title{A Software Package for Extendable Decision Trees in C++}
 
 \begin{titlepage}
 	\centering
@@ -18,7 +18,7 @@
 	\vspace{0.5cm}
 	{\scshape\Large Bachelor Thesis in Computer Science\par}
 	\vspace{1.5cm}
-	{\huge\bfseries treelib - A Software Package for Extensible Decision Trees in C++\par}
+	{\huge\bfseries treelib - A Software Package for Extendable Decision Trees in C++\par}
 	\vspace{2cm}
 	{\Large\itshape Christian Alexander Scholbeck\par}
 	\vfill
@@ -38,7 +38,7 @@
 
 \vspace*{4cm}
 \begin{abstract}
-This thesis provides a software package for extensible decision trees written in C++. The package follows object-oriented and modular design principles. It works as a standalone application, or can be called by other programming languages. It supports both binary and multiway splitting, and can be extended with new optimizing algorithms, split criteria, models, and objectives. Supported application areas include classic predictive modeling with decision trees such as CART or C4.5, and advanced modeling such as model-based recursive partitioning. Furthermore, the modular design principle allows the extension of the package to support novel applications such as surrogate modeling for interpretable machine learning.
+This thesis provides a software package for extendable decision trees written in C++. The package follows object-oriented and modular design principles. It works as a standalone application, or can be called by other programming languages. It supports both binary and multiway splitting, and can be extended with new optimizing algorithms, split criteria, models, and objectives. Supported application areas include classic predictive modeling with decision trees such as CART or C4.5, and advanced modeling such as model-based recursive partitioning. Furthermore, the modular design principle allows the extension of the package to support novel applications such as surrogate modeling for interpretable machine learning.
 
 \end{abstract}
 \vspace{2cm}
@@ -47,7 +47,7 @@ This thesis provides a software package for extensible decision trees written in
 \setcounter{page}{1}
 \section{Introduction}
 
-Decision trees are one of the most fundamental techniques in machine learning. They are frequently preferred over more complex models due to their intelligibility in the form of decision rules, e.g., in medical applications \cite{podgorelec_trees_medicine}. A decision tree recursively partitions the data and fits a model inside each partition. Tree learning algorithms are numerous and differ regarding split criteria, model choices and pruning \cite{loh_trees_review}.
+Decision trees are one of the most fundamental techniques in machine learning. They are frequently preferred over more complex models due to their intelligibility in the form of decision rules, e.g., in medical applications \cite{podgorelec_trees_medicine}. Tree learning algorithms are numerous and differ regarding split criteria, model choices and pruning \cite{loh_trees_review}. Popular variants include classification and regression trees (CART) \cite{cart_1}, C4.5 \cite{quinlan_c45}, and model-based recursive partitioning \cite{zeileis_mob}.
 \par
 %Their most critical drawback is a high variance under perturbations of the training data \cite{hastie_elemstatlearn}. This has led to the development of tree ensembles such as random forests \cite{breiman_randomforests}, which reduce variance to the detriment of losing interpretability.
 
@@ -55,10 +55,10 @@ Decision trees are one of the most fundamental techniques in machine learning. T
 %\par
 %The possibilities of applying decision trees in contexts other than such as interpretable machine learning are numerous. For instance, due to their intelligibility, decision trees are especially suited as a surrogate model for black box models, where the black box predictions are approximated by interpretable functions inside the leaf nodes.
 \par
-Applications for decision trees are numerous, e.g., predictive modeling, surrogate modeling, or density estimation. This creates a requirement for an accessible, efficient, and extensible software implementation of decision trees. Accessible, to benefit a broad scientific community. Efficient, as the computational demand of optimizing splits grows considerably with the tree's complexity. Extensible, as different applications require entirely different decision tree setups.
+Applications for decision trees are diverse, e.g., predictive modeling \cite{hastie_elemstatlearn}, surrogate modeling \cite{schaaf_surrogate_tree}, or density estimation \cite{ram_density_estimation_tree}. This creates a requirement for an accessible, efficient, and extendable software implementation of decision trees. Accessible, to benefit a broad scientific community. Efficient, as the computational demand of optimizing splits grows considerably with the tree's complexity. Extendable, as different applications require different decision tree setups.
 \par
 
-\subsection{Contributions} The central contribution of this thesis is a from-the-ground-up implementation of extensible decision trees as an open-source software package. The package is written in \texttt{C++} to achieve a high degree of computational efficiency, while preserving object-oriented principles and portability to other programming languages. The package follows modular design principles to achieve a maximum degree of extensibility.
+\subsection{Contributions} The central contribution of this thesis is a from-the-ground-up implementation of extendable decision trees as an open-source software package. The package is written in \texttt{C++} to achieve a high degree of computational efficiency, while preserving object-oriented principles and portability to other programming languages. The package follows modular design principles to achieve a maximum degree of extensibility.
 \par
 The written thesis provides a compact literature review of decision trees and smart splitting. Furthermore, it describes the software design and extensibility to support other applications, and demonstrates the package on simulated and real data.
 
@@ -70,61 +70,65 @@ new optimizing algorithms, split criteria, node models, and objectives.
 
 \section{Theory}
 
-Decision tree learning algorithms recursively partition the data by optimizing an objective in a greedy way. Subsequent partitionings can be visualized as a series of decision rules, which together form a tree graph (see Fig. \ref{fig:tree_structure}). Each partitioning of the data is referred to as a node, whereas a final partitioning is referred to as a leaf node. The starting point of a decision tree, which encompasses the entire, unpartitioned data, corresponds to the root node.
+Decision tree learning algorithms recursively partition the data through greedy optimization of an objective function. Subsequent partitionings can be visualized as a series of decision rules, which together form a tree graph (see Fig. \ref{fig:tree_structure}). Each partitioning of the data is referred to as a node, whereas a final partitioning is referred to as a leaf node. The starting point of a decision tree, which encompasses the entire, unpartitioned data, corresponds to the root node.
 \par
 A predictive model is trained inside each node.
 The decision tree predicts by sending an observation through the tree from the root node to a leaf node, and using the leaf node model to predict.
 Decision trees are referred to as regression trees if the target is numeric, and classification trees, if the target is categorical.
 \par
-A critical drawback of decision trees is a high variance under perturbations of the training data \cite{hastie_elemstatlearn}. This has led to the development of tree ensembles such as random forests \cite{breiman_randomforests}, which reduce variance to the detriment of losing interpretability. The focus of this thesis and the software package lies on single decision trees.
+A critical drawback of decision trees is a high variance under perturbations of the training data \cite{hastie_elemstatlearn}. This has led to the development of tree ensembles such as random forests \cite{breiman_randomforests}, which reduce variance to the detriment of losing interpretability.
 
 
 \begin{figure}
     \centering
-    \includegraphics[width = 0.5 \linewidth]{thesis/figure/tree_structure.png}
+    \includegraphics[width = 0.6 \linewidth]{thesis/figure/tree_structure.png}
     \caption{General decision tree structure comprising a root node, regular nodes, and leaf nodes.}
     \label{fig:tree_structure}
 \end{figure}
-
-\subsection{General Setup}
-
-Each decision tree has five common components:
-\begin{enumerate}
-    \item \textbf{Node model choice:} What types of models are trained inside each node?
-    \item \textbf{Objective function:} What objective function is to be optimized to find the best split?
-    \item \textbf{Optimization:} How are possible split points generated to be tested for improvements?
-    \item \textbf{Stopping:} When do we stop splitting?
-    \item \textbf{Pruning:} How is the tree pruned post-hoc to avoid overfitting?
-\end{enumerate}
 
 \subsection{Variants}
 
 An encompassing review of various decision tree variants is provided in \cite{loh_trees_review}. 
 Classification and regression trees (CART) \cite{cart_1, cart_2, cart_3} and C4.5 \cite{quinlan_c45} are commonly used ones \cite{hastie_elemstatlearn} and date back several decades. Recent developments include conditional inference trees (CTREE) \cite{hothorn_ctree} and model-based recursive partitioning (MOB) \cite{zeileis_mob}.
 
-\subsubsection{CART}
+\subsubsection{Model-Free}
 
-CART is restricted to binary splits.
-For regression trees, CART fits a constant inside each node. The objective corresponds to the weighted sum of child node squared deviations from the fitted constant. The constant that minimizes the objective is the mean target value inside the node.
-For classification trees, Gini impurity is minimized, which is based on the relative probabilities of the target classes inside the node. This spares the need for fitting a model, except for the leaf nodes, where CART uses a majority class vote. 
+The goal of CART is to partition the data, such that the impurity of target values inside each node is minimized. For regression trees, CART fits a constant (the mean target value) inside each node. The objective corresponds to the sum of squared deviations between the target values and the constant. For classification trees, CART minimizes Gini impurity, which summarizes the distribution of relative target class probabilities. This spares the need for fitting a model, except for the leaf nodes, where CART uses a majority class vote. CART uses binary splits. For continuous split variables, the algorithm selects a threshold value to bin the observations. For categorical ones, the data is binned according to every possible permutation of split feature categories into two sets. The tree is fully grown until a pre-specified minimum node size criterion would be violated when splitting further. The tree height is pruned post-hoc according to a complexity parameter to avoid overfitting. The complexity parameter is estimated via cross-validation \cite{hastie_elemstatlearn}.
 \par
-The tree is fully grown until a pre-specified minimum node size criterion would be violated when splitting further. The tree height is pruned post-hoc according to a complexity parameter to avoid overfitting. The complexity parameter is estimated via cross-validation \cite{hastie_elemstatlearn}.
+C4.5 is similar to CART, but is restricted to classification trees. It uses an information-theoretic measure of node impurity called gain ratio, which corresponds to the quotient between information gain and entropy. C4.5 conducts multiway splits for categorical variables, i.e., all observations of the same category are binned together.
 
-\subsubsection{C4.5}
+\subsubsection{Model-Based}
 
-C4.5 is restricted to classification trees. It uses an information-theoretic measure of node impurity based on entropy called gain ratio. C4.5  
+The model tree \cite{quinlan_model_tree} extends the concept of recursive partitioning to linear leaf node models. It is trained in two stages. First, a model-free decision tree is grown. Second, the tree is pruned by replacing subtrees with linear regression functions. 
+
+
+Training more complex models inside the nodes such as (generalized) linear models increases the predictive performance of the decision tree, but increases computational costs. Training a complex model for every potential split is infeasible in practice. 
 
 
 
-\subsection{Smart Splitting}
+
+\subsection{General Setup}
+
+Each decision tree has five common components:
+\begin{enumerate}
+    \item \textbf{Node model choice:} A node model can be of any type, e.g., a constant, a (generalized) linear model, or a generalized additive model. The model type can vary across nodes. If the objective function such as the Gini impurity does not require a prediction, training a node model is only required for leaf nodes.
+    \item \textbf{Objective function:} 
+    The objective function determines the selection of a split. Its characteristics depend on the purpose of the decision tree. In predictive modeling we might choose the L2 loss, whereas for density estimation, the integrated squared error or Kullback-Leibler divergence are suitable objective functions. The objective may vary across nodes, e.g., computational costs can be decreased by using a heuristic for initial splits with many observations. 
+    \item \textbf{Optimization:} For each node, we need to find one or multiple split points that improve the objective given certain hyperparameters such as the minimum node size.
+    \item \textbf{Stopping:} We may either split the tree down as far as possible, or use an early stopping criterion.
+    \item \textbf{Pruning:} To avoid overfitting, the tree can be pruned post-hoc.
+\end{enumerate}
+
+
+\subsection{Optimization}
 
 
 \section{Related Work}
 
-An initial software implementation of MOB was published as part of the \texttt{party} package \cite{party_package} for the \texttt{R} programming languge for statistical computing \cite{r_citation}. A more flexible version, which supports more inference options and is extensible to new models, was introduced in the \texttt{partykit} package \cite{partykit_package}. 
+An initial software implementation of MOB was published as part of the \texttt{party} package \cite{party_package} for the \texttt{R} programming languge for statistical computing \cite{r_citation}. A more flexible version, which supports more inference options and is extendable to new models, was introduced in the \texttt{partykit} package \cite{partykit_package}. 
 \par
 The \texttt{R} language is able to directly call \texttt{C} or \texttt{C++} code, which warrants significant speedups in computational execution time \cite{eddelbuettel_rcpp}. However, software implementations which are solely written in \texttt{R} code such as \texttt{partykit} pose a considerable bottleneck in computational speed.
-The software package \texttt{ranger} \cite{ranger_package} provides a fast implementation of random forests in \texttt{C++} and can be directly called from the identically named \texttt{R} package. However, it is restricted to random forests or simple regression trees, and not extensible to support arbitrary setups of decision trees.
+The software package \texttt{ranger} \cite{ranger_package} provides a fast implementation of random forests in \texttt{C++} and can be directly called from the identically named \texttt{R} package. However, it is restricted to random forests and intextendable regression trees.
 
 
 \section{Software Design}
