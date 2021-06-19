@@ -47,11 +47,10 @@ This thesis provides a software package for extendable decision trees written in
 \setcounter{page}{1}
 \section{Introduction}
 
-Decision trees are one of the most fundamental techniques in machine learning. They are frequently preferred over more complex models due to their intelligibility in the form of decision rules, e.g., in medical applications \cite{podgorelec_trees_medicine}. Tree learning algorithms are numerous and differ regarding split criteria, model choices, stopping rules and pruning \cite{loh_trees_review}.
+Decision trees are one of the most fundamental techniques in machine learning. They are frequently preferred over more complex models due to their intelligibility in the form of decision rules, e.g., in medical applications \cite{podgorelec_trees_medicine}. Tree learning algorithms are numerous and differ regarding split criteria, model choices, stopping rules and pruning. \par
+Ideas for decision tree learning originate in supervised learning and date back as far as linear discriminant analysis \cite{fisher_lda}. A large variety of decision tree algorithms has been published, such as Automatic Interaction Detection (AID) \cite{hawkins_AID}, Theta AID \cite{ messenger_mandell_thaid}, Chi-Squared AID \cite{kass_chaid}, Classification and Regression Trees (CART) \cite{cart_1, hastie_elemstatlearn}, C4.5 \cite{quinlan_c45}, and many more \cite{loh_trees_review}.
 \par
-Ideas for decision tree learning originate in supervised learning and date back as far as linear discriminant analysis \cite{fisher_lda}. A large variety of decision tree algorithms has been published, such as Automatic Interaction Detection (AID) \cite{hawkins_AID}, Theta AID \cite{ messenger_mandell_thaid}, Chi-Squared AID, Fast and Accurate Classification Tree (FACT), Classification and Regression Trees (CART) \cite{cart_1, hastie_elemstatlearn}, and C4.5 \cite{quinlan_c45}.
-\par
-A succeeding generation of decision trees, often termed hybrid, model, or functional trees \cite{zeileis_mob}, has added capabilities such as fitting node models \cite{quinlan_model_tree}, or using linear combinations of variables for splits. Hybrid trees are also capable of unsupervised learning, e.g., by training kernel density estimators inside the nodes \cite{ram_density_estimation_tree}.
+So-called hybrid, model, or functional trees \cite{zeileis_mob} have added capabilities such as fitting node models \cite{quinlan_model_tree}, or using linear combinations of variables for splits \cite{brodley_multivariate_trees}. Hybrid trees are also capable of unsupervised learning, e.g., by training kernel density estimators inside the nodes \cite{ram_density_estimation_tree}.
 Recent developments have embedded hybrid trees into frameworks for  statistical inference, e.g., conditional inference trees \cite{hothorn_ctree} and model-based recursive partitioning (MOB) \cite{zeileis_mob}.
 \par
 A critical drawback of decision trees is a high variance under perturbations of the training data \cite{hastie_elemstatlearn}. This has led to the development of tree ensembles such as random forests \cite{breiman_randomforests}, which reduce variance to the detriment of losing interpretability.
@@ -77,6 +76,13 @@ The software can be run as a standalone application, and supports console output
 The package is equipped with two types of objective functions; sum of squared errors (SSE) for regression tasks, and the Gini impurity for classification tasks. Node models include: majority vote (classification), mean target value (regression), and linear regression model (regression and classification).
 The modular structure allows for the extension with 
 new optimizing algorithms, split criteria, node models, and objectives. 
+
+\section{Related Work}
+
+An initial software implementation of MOB was published as part of the \texttt{party} package \cite{party_package} for the \texttt{R} programming languge for statistical computing \cite{r_citation}. A more flexible version, which supports more inference options and is extendable to new models, was introduced in the \texttt{partykit} package \cite{partykit_package}. 
+\par
+The \texttt{R} language is able to directly call \texttt{C} or \texttt{C++} code, which warrants significant speedups in computational execution time \cite{eddelbuettel_rcpp}. However, software implementations which are solely written in \texttt{R} code such as \texttt{partykit} pose a considerable bottleneck in computational speed.
+The software package \texttt{ranger} \cite{ranger_package} provides a fast implementation of random forests in \texttt{C++} and can be directly called from the identically named \texttt{R} package. However, it is restricted to random forests and intextendable regression trees.
 
 \section{Theory}
 
@@ -113,20 +119,25 @@ Decision tree learning algorithms recursively partition the data through greedy 
 
 \par
 With a growing complexity, e.g., due to the cost of training node models for every split or multiway splitting, the computational cost of decision trees grows considerably. This puts a great importance on an efficient split search, which can be achieved in multiple ways.
-First, computations can be parallelized. After splitting a node, the computations in all child nodes are independent of each other and can run in parallel.
-Another option is to divide the value range of continuous features into parallely explored intervals, e.g., quantiles.
+First, computations can be parallelized, e.g., after splitting a node, the computations in all child nodes are independent of each other and can run in parallel.
 Second, we can evaluate a subset of values, e.g., if the split variable is continuous, close values can be omitted from the search.
-Third, both model and objective can be computed incrementally, i.e., instead of recomputing the entire model and objective for each split, an update mechanism reduces computational costs.
+Third, for each node there is a large number of split points to be evaluated. Instead of recomputing the objective for each split, computations may be sped up by an update mechanism.
+Fourth, an intelligently constructed split point generator can suggest split points with a higher probability of improving the objective than others.
 \par
-The third mechanism to speed up the training process, incremental computations, depends on the objective and node model types. In the following, incremental computations are described for both the SSE and linear model trees, which are both implemented in the software package. 
+In the following, we explore the third and fourth option, i.e., update mechanisms for objective functions and split point generation.
+
+\subsection{Updating Objective Functions}
+
+\subsubsection{Total Sum of Squares}
+CART is a commonly used decision tree variant \cite{hastie_elemstatlearn}, which does not train models inside the leaf nodes. For regression trees, CART minimizes the weighted sum of squared deviations between the child node target values and the corresponding mean value, i.e., the total sum of squares (TSS). The TSS is equivalent to the sum of squared errors (SSE) if the trained model corresponds to the mean target value.
+For classification trees, CART minimizes Gini impurity, which summarizes the distribution of relative target class frequencies. 
+%CART is restricted to binary splits. The tree is fully grown until a pre-specified minimum node size criterion would be violated when splitting further. The tree height is pruned post-hoc according to a complexity parameter to avoid overfitting, which is estimated via cross-validation. Missing values are handled via surrogate splits.
 
 
-\subsection{CART}
-CART is a commonly used decision tree variant \cite{hastie_elemstatlearn}, which does not train models inside the leaf nodes. For regression trees, CART minimizes the weighted sum of squared errors (i.e., the L2 loss) between the child node target values and the corresponding mean value. For classification trees, CART minimizes Gini impurity, which summarizes the distribution of relative target class frequencies. CART is restricted to binary splits. The tree is fully grown until a pre-specified minimum node size criterion would be violated when splitting further. The tree height is pruned post-hoc according to a complexity parameter to avoid overfitting, which is estimated via cross-validation. Missing values are handled via surrogate splits.
 %\par
 %C4.5 is similar to CART, but is restricted to classification trees. It uses an information-theoretic measure of node impurity called gain ratio, which corresponds to the quotient between information gain and entropy. C4.5 conducts multiway splits for categorical variables, i.e., all observations of the same category are binned together. Additional differences between CART and C4.5 can be found for missing values, which requires surrogate splitting.
 \par
-Given a split which partitions a node into two subsets with $n_1$ and $n_2$ observations, and child node L2 losses $L_1$ and $L_2$. The left node L2 loss $L_1$ with $n_1$ observations and target vector $y_1$ can be decomposed as:
+Consider a binary split which partitions a node into two subsets with $n_1$ and $n_2$ observations, and child node TSS $L_1$ and $L_2$. The left node TSS with $n_1$ observations and target vector $y_1$ can be decomposed as:
 $$
 L_1^{(0)}(y_1) = \sum_{i = 1}^{n_1} \left(y_1^{(i)} - \overline{y_1}\right) = \sum_{i = 1}^{n_1} \left(y_1^{(i)}\right)^2 - \sum_{i = 1}^{n_1} y_1^{(i)} 
 $$
@@ -140,21 +151,17 @@ L_1^{(1)}(y_1) = L_1^{(0)} - y_{1}^{(n_1)} + y_{1}^{(n_1)}
 $$
 
 
-\subsection{Linear Model Trees}
+\subsubsection{Linear Model Trees}
 
 The algorithm M5 \cite{quinlan_model_tree} was the first extension of ordinary decision trees to incorporate leaf node models.
-M5 starts with growing a decision tree by selecting splits that maximize the reduction of target value standard deviation. It then adds linear regression models to the leaf nodes, and prunes the tree. 
+M5 starts with growing a decision tree by selecting splits that minimize the standard deviation of target values. It then adds linear regression models to the leaf nodes, and prunes the tree. 
 \par
 Training linear leaf node models, whereas the splits have been determined via reduction of target variance creates a discrepancy in model fit. In \cite{potts_incremental_model_tree}, the authors propose to incrementally estimate the leaf node models through each split.
 
+\subsection{Split Point Generation}
 
 
-\section{Related Work}
 
-An initial software implementation of MOB was published as part of the \texttt{party} package \cite{party_package} for the \texttt{R} programming languge for statistical computing \cite{r_citation}. A more flexible version, which supports more inference options and is extendable to new models, was introduced in the \texttt{partykit} package \cite{partykit_package}. 
-\par
-The \texttt{R} language is able to directly call \texttt{C} or \texttt{C++} code, which warrants significant speedups in computational execution time \cite{eddelbuettel_rcpp}. However, software implementations which are solely written in \texttt{R} code such as \texttt{partykit} pose a considerable bottleneck in computational speed.
-The software package \texttt{ranger} \cite{ranger_package} provides a fast implementation of random forests in \texttt{C++} and can be directly called from the identically named \texttt{R} package. However, it is restricted to random forests and intextendable regression trees.
 
 
 \section{Software Design}
