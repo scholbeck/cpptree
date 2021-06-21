@@ -4,7 +4,7 @@
             left=1in,right=1in,top=1in,bottom=1in,%
             footskip=.25in]{geometry}
 \usepackage[square, numbers]{natbib}
-
+\usepackage{amsmath}
 \begin{document}
 
 \title{A Software Package for Extendable Decision Trees in C++}
@@ -86,7 +86,8 @@ The software package \texttt{ranger} \cite{ranger_package} provides a fast imple
 
 \section{Theory}
 
-Decision tree learning algorithms recursively partition the data through greedy optimization of an objective function. Subsequent partitionings can be visualized as a series of decision rules, which together form a tree graph (see Fig. \ref{fig:tree_structure}). Each partitioning of the data is referred to as a node, whereas a final partitioning is referred to as a leaf node. The starting point of a decision tree, which encompasses the entire, unpartitioned data, corresponds to the root node. When decision trees are used for predictive modeling, they are commonly referred to as regression trees for continuous target variables, and classification trees for categorical ones.
+Decision tree learning algorithms recursively partition the data. The default approach is through greedy optimization of an objective function, although recent attempts have tried global optimization routines \cite{norouzi_nongreedy_tree}.
+Subsequent partitionings can be visualized as a series of decision rules, which together form a tree graph (see Fig. \ref{fig:tree_structure}). Each partitioning of the data is referred to as a node, whereas a final partitioning is referred to as a leaf node. The starting point of a decision tree, which encompasses the entire, unpartitioned data, corresponds to the root node. When decision trees are used for predictive modeling, they are commonly referred to as regression trees for continuous target variables, and classification trees for categorical ones.
 
 \begin{figure}
     \centering
@@ -121,46 +122,91 @@ Decision tree learning algorithms recursively partition the data through greedy 
 With a growing complexity, e.g., due to the cost of training node models for every split or multiway splitting, the computational cost of decision trees grows considerably. This puts a great importance on an efficient split search, which can be achieved in multiple ways.
 First, computations can be parallelized, e.g., after splitting a node, the computations in all child nodes are independent of each other and can run in parallel.
 Second, we can evaluate a subset of values, e.g., if the split variable is continuous, close values can be omitted from the search.
-Third, for each node there is a large number of split points to be evaluated. Instead of recomputing the objective for each split, computations may be sped up by an update mechanism.
-Fourth, an intelligently constructed split point generator can suggest split points with a higher probability of improving the objective than others.
-\par
-In the following, we explore the third and fourth option, i.e., update mechanisms for objective functions and split point generation.
+Third, for each node there is a large number of split points to be evaluated. Instead of recomputing the objective for each split, computations may be sped up by an update mechanism. For hybrid trees, the leaf node model contains a predictive model. Recomputing the model for each split is infeasible in practice. One option is to use a heuristic to split the tree and train the leaf node model post-hoc, which may result in a bad tree fit. Another option is to update the node model with a shrinking subset of observations at each split, and using the model fit as a basis for splitting the tree.
+Fourth, an intelligently constructed split point generator can suggest split points with a higher probability of improving the objective than other points.
+
+\subsection{Notation}
+
 
 \subsection{Updating Objective Functions}
 
-\subsubsection{Total Sum of Squares}
-CART is a commonly used decision tree variant \cite{hastie_elemstatlearn}, which does not train models inside the leaf nodes. For regression trees, CART minimizes the weighted sum of squared deviations between the child node target values and the corresponding mean value, i.e., the total sum of squares (TSS). The TSS is equivalent to the sum of squared errors (SSE) if the trained model corresponds to the mean target value.
-For classification trees, CART minimizes Gini impurity, which summarizes the distribution of relative target class frequencies. 
+Consider two sets of observations $\mathcal{D}_0$ and $\mathcal{D}_1$. An update mechanism decomposes the objective function $O(\mathcal{D})$ such that $O(\mathcal{D}_1)$ depends on $O(\mathcal{D}_0)$, as well as on additional observations $\mathcal{D}_1 \setminus \mathcal{D}_0$, and missing ones $\mathcal{D}_0 \setminus \mathcal{D}_1$. Updating an objective is only viable for a fixed number of child nodes per node, as the update rule always updates a single, fixed child node.
+
+
+\subsubsection{Sum of Squared Errors}
+
+The total sum of squares (TSS) corresponds to the the sum of squared deviations between target values and the target average:
+$$
+\text{TSS}(y) = \sum_{i = 1}^{n} \left(y^{(i)} - \overline{y}\right)^2
+$$
+The TSS is used by algorithms such as CART. It is equivalent to the sum of squared errors (SSE), also referred to as the L2 loss, if the trained model corresponds to the mean target value:
+\begin{align*}
+\text{SSE}(\mathcal{D}) &= \sum_{i = 1}^{n} \left(y^{(i)} - \hat{f}\left(x^{(i)}\right)\right)^2 \\
+&= \sum_{i = 1}^{n} \left[\left(y^{(i)}\right)^2 - 2\,y^{(i)} \hat{f}\left(x^{(i)}\right) + \hat{f}\left(x^{(i)}\right)^2\right] \\
+&= \sum_{i = 1}^{n} \left(y^{(i)}\right)^2 - 2 \sum_{i = 1}^{n} \,y^{(i)} \hat{f}\left(x^{(i)}\right) + \sum_{i = 1}^{n} \hat{f}\left(x^{(i)}\right)^2 \\
+\end{align*}
+Consider two multiway splits, each one partitioning a node into $k$ subsets. We update the left-most node, which contains $n_0^{(0)}$ observations in the first split, and $n_0^{(1)}$ in the second one. The corresponding SSEs are denoted by $\text{SSE}^{(0)}$ and $\text{SSE}^{(1)}$. The child node observations resulting from each split are denoted by $\mathcal{D}_0$ and $\mathcal{D}_1$.
+
+The SSE for the second split can be decomposed as:
+\begin{align}
+\text{SSE}^{(1)}\left(\mathcal{D}_0 \cup \mathcal{D}_1\right) &= \text{SSE}^{(0)}(\mathcal{D}_0) \nonumber \\
+&\phantom{{}={}} + \sum_{i \,:\, x^{(i)} \, \in \, \mathcal{D}_1 \setminus \mathcal{D}_0} \left(y^{(i)}\right)^2 - 2 \sum_{i \,:\, x^{(i)} \, \in \, \mathcal{D}_1 \setminus \mathcal{D}_0} \,y^{(i)} \hat{f}\left(x^{(i)}\right) + \sum_{i \,:\, x^{(i)} \, \in \, \mathcal{D}_1 \setminus \mathcal{D}_0} \hat{f}\left(x^{(i)}\right)^2 \nonumber \\
+&\phantom{{}={}} - \sum_{i \,:\, x^{(i)} \, \in \, \mathcal{D}_0 \setminus \mathcal{D}_1} \left(y^{(i)}\right)^2 + 2 \sum_{i \,:\, x^{(i)} \, \in \, \mathcal{D}_0 \setminus \mathcal{D}_1} \,y^{(i)} \hat{f}\left(x^{(i)}\right) - \sum_{i \,:\, x^{(i)} \, \in \, \mathcal{D}_0 \setminus \mathcal{D}_1} \hat{f}\left(x^{(i)}\right)^2 \label{eq:SSE_update}
+\end{align}
+
+%The child node SSEs are denoted by $SSE_1, \dots, SSE_k$. The SSE  with $n_1$ observations and target vector $y_1$ can be decomposed as:
+%$$
+%L_1^{(0)}(y_1) = \sum_{i = 1}^{n_1} \left(y_1^{(i)} - \overline{y_1}\right) = \sum_{i = 1}^{n_1} \left(y_1^{(i)}\right)^2 - \sum_{i = 1}^{n_1} y_1^{(i)} 
+%$$
+
+%For classification trees, CART minimizes Gini impurity, which summarizes the distribution of relative target class frequencies. 
 %CART is restricted to binary splits. The tree is fully grown until a pre-specified minimum node size criterion would be violated when splitting further. The tree height is pruned post-hoc according to a complexity parameter to avoid overfitting, which is estimated via cross-validation. Missing values are handled via surrogate splits.
 
 
 %\par
 %C4.5 is similar to CART, but is restricted to classification trees. It uses an information-theoretic measure of node impurity called gain ratio, which corresponds to the quotient between information gain and entropy. C4.5 conducts multiway splits for categorical variables, i.e., all observations of the same category are binned together. Additional differences between CART and C4.5 can be found for missing values, which requires surrogate splitting.
-\par
-Consider a binary split which partitions a node into two subsets with $n_1$ and $n_2$ observations, and child node TSS $L_1$ and $L_2$. The left node TSS with $n_1$ observations and target vector $y_1$ can be decomposed as:
-$$
-L_1^{(0)}(y_1) = \sum_{i = 1}^{n_1} \left(y_1^{(i)} - \overline{y_1}\right) = \sum_{i = 1}^{n_1} \left(y_1^{(i)}\right)^2 - \sum_{i = 1}^{n_1} y_1^{(i)} 
-$$
-For the next split value, there are two different partitionings with either $n_1 + 1$ and $n_2 - 1$, or $n_1 - 1$ and $n_2 + 1$ observations. For the first option, the loss can be updated as:
-$$
-L_1^{(1)}(y_1) = L_1^{(0)} + y_{1}^{(n_1 + 1)} - y_{1}^{(n_1 + 1)}
-$$
-For the second option, it can be updated as:
-$$
-L_1^{(1)}(y_1) = L_1^{(0)} - y_{1}^{(n_1)} + y_{1}^{(n_1)}
-$$
+%\par
+%Consider a binary split which partitions a node into two subsets with $n_1$ and $n_2$ observations, and child node TSS $L_1$ and $L_2$. The left node TSS with $n_1$ observations and target vector $y_1$ can be decomposed as:
+%$$
+%L_1^{(0)}(y_1) = \sum_{i = 1}^{n_1} \left(y_1^{(i)} - \overline{y_1}\right) = \sum_{i = 1}^{n_1} \left(y_1^{(i)}\right)^2 - \sum_{i = 1}^{n_1} y_1^{(i)} 
+%$$
+%For the next split value, there are two different partitionings with either $n_1 + 1$ and $n_2 - 1$, or $n_1 - 1$ and $n_2 + 1$ observations. For the first option, the loss can be updated as:
+%$$
+%L_1^{(1)}(y_1) = L_1^{(0)} + y_{1}^{(n_1 + 1)} - y_{1}^{(n_1 + 1)}
+%$$
+%For the second option, it can be updated as:
+%$$
+%L_1^{(1)}(y_1) = L_1^{(0)} - y_{1}^{(n_1)} + y_{1}^{(n_1)}
+%$$
+
+\subsection{Updating Models}
+
+\subsubsection{Mean Prediction}
+
+\subsubsection{Linear Regression Models}
+
+Given a set of training observations X and the target vector Y, the coefficients of a  linear regression model are estimated by:
+\begin{equation}
+\Theta = (X^TX)^{-1}X^TY
+\label{eq:linmod_beta}
+\end{equation}
+The model prediction is given by $y = x^T \Theta$. The residual between observed target value and model prediction is given by the squared error $\epsilon = (y - \hat{y})^2 = (y - x^T \Theta)^2$. Eq. (\ref{eq:linmod_beta}) can be recursively estimated for a series of observations \cite{potts_incremental_model_tree}: 
+\begin{align*}
+    \Theta_i &= \Theta_{i - 1} + \frac{(X^TX)^{-1}_{i-1} \, x_i \left(y_i - x_i^T\Theta_{i-1}\right)}{1 + x_i^T \, (X^T X)_{i-1} \, x_i} \\
+    (X^TX)^{-1}_i &= (X^TX)^{-1}_{i-1} - \frac{(X^TX)^{-1}_{i-1} \, x_i \, x_i^T \, (X^TX)^{-1}_{i-1}}{1 + x_i^T (X^TX)^{-1}_{i-1} x_i} \\
+    \text{SSE}_i &= \text{SSE}_{i-1} + \left(y_i - x_i^T \Theta_{i-1}\right) \left(y_i - x_i^T \Theta_i\right)
+\end{align*}
 
 
-\subsubsection{Linear Model Trees}
-
-The algorithm M5 \cite{quinlan_model_tree} was the first extension of ordinary decision trees to incorporate leaf node models.
-M5 starts with growing a decision tree by selecting splits that minimize the standard deviation of target values. It then adds linear regression models to the leaf nodes, and prunes the tree. 
-\par
-Training linear leaf node models, whereas the splits have been determined via reduction of target variance creates a discrepancy in model fit. In \cite{potts_incremental_model_tree}, the authors propose to incrementally estimate the leaf node models through each split.
 
 \subsection{Split Point Generation}
 
 
+The algorithm M5 \cite{quinlan_model_tree} was the first extension of ordinary decision trees to incorporate leaf node models.
+M5 starts with growing a decision tree by selecting splits that minimize the standard deviation of target values. It then adds linear regression models to the leaf nodes, and prunes the tree. Training linear leaf node models, whereas the splits have been determined via reduction of target variance creates a discrepancy in model fit.
+\par
+In \cite{potts_incremental_model_tree} linear leaf node models are estimated incrementally through each split. The authors argue that splitting a node and estimating multiple linear models always provides a better or equal fit compared to a single linear model. Therefore, the change in SSE does not represent a sensible tool to determine whether to split a node.
+Instead, the authors propose a statistical test based on the Chow test \cite{chow_inequality_test}.
 
 
 
