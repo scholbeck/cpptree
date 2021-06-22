@@ -87,10 +87,10 @@ An initial software implementation of MOB was published as part of the \texttt{p
 The \texttt{R} language is able to directly call \texttt{C} or \texttt{C++} code, which warrants significant speedups in computational execution time \cite{eddelbuettel_rcpp}. However, software implementations which are solely written in \texttt{R} code such as \texttt{partykit} pose a considerable bottleneck in computational speed.
 The software package \texttt{ranger} \cite{ranger_package} provides a fast implementation of random forests in \texttt{C++} and can be directly called from the identically named \texttt{R} package. However, it is restricted to random forests and intextendable regression trees.
 
-\section{Theory}
+\section{Notation and Preliminaries}
 
-Decision tree learning algorithms recursively partition the data. The default approach is through greedy optimization of an objective function, although recent attempts have tried global optimization routines \cite{norouzi_nongreedy_tree}.
-Subsequent partitionings can be visualized as a series of decision rules, which together form a tree graph (see Fig. \ref{fig:tree_structure}). Each partitioning of the data is referred to as a node, whereas a final partitioning is referred to as a leaf node. The starting point of a decision tree, which encompasses the entire, unpartitioned data, corresponds to the root node. When decision trees are used for predictive modeling, they are commonly referred to as regression trees for continuous target variables, and classification trees for categorical ones.
+Decision tree learning algorithms recursively partition the data.  Due to computational advantages, the default approach is through greedy optimization of an objective function. In recent years, there have also been attempts at global optimization routines \cite{norouzi_nongreedy_tree}.
+Subsequent partitionings can be visualized as a series of decision rules, which together form a tree graph (see Fig. \ref{fig:tree_structure}). Each partitioning of the data is referred to as a node, whereas a final partitioning is referred to as a leaf node. The starting point of a decision tree, which encompasses the entire, unpartitioned data, corresponds to the root node. Decision trees are often termed according to their application area, e.g., regression \cite{cart_1}, classification \cite{quinlan_c45, cart_1, kass_chaid}, survival \cite{derose_survival_tree}, or density estimation trees \cite{ram_density_estimation_tree}.
 
 \begin{figure}
     \centering
@@ -98,7 +98,6 @@ Subsequent partitionings can be visualized as a series of decision rules, which 
     \caption{General decision tree structure comprising a root node, regular nodes, and leaf nodes.}
     \label{fig:tree_structure}
 \end{figure}
-
 
 
 
@@ -121,21 +120,101 @@ Subsequent partitionings can be visualized as a series of decision rules, which 
 %     \item \textbf{Pruning:} To avoid overfitting, the tree can be pruned post-hoc.
 % \end{enumerate}
 
+
+\subsection{Growing and Pruning}
+
+There is a trade-off between growing a tree too large and too small \cite{hastie_elemstatlearn}. A tree with too many splits generally results in a smaller training error and a larger generalization error (overfitting). Conversely, a tree with few splits both performs bad on test, as well as on training data (underfitting). Pruning weighs the trade-off between over- and underfitting.
+
+\subsubsection{Growing}
+
+Ordinary decision trees such as CART aim to minimize the target value heterogeneity inside the leaf nodes by minimizing the sum of child node total sum of squares (TSS) for regression tasks, or the Gini impurity for classification tasks. This has proven to provide a fairly good predictive performance compared to more complex models such as neural networks \cite{razi_cart_comparison}.
 \par
+Model trees aim to boost predictive performance by incorporating leaf node models. The algorithm M5 \cite{quinlan_model_tree} was the first extension of ordinary decision trees to incorporate linear regression models inside the leafs.
+M5 starts with growing a decision tree by selecting splits that minimize the standard deviation of target values. It then adds linear regression models to the leaf nodes, and prunes the tree. However, training linear leaf node models, whereas the splits have been determined via reduction of target variance creates a discrepancy in model fit.
+\par
+In \cite{potts_incremental_model_tree} linear leaf node models are estimated incrementally through each split. The authors argue that splitting a node and estimating multiple linear models always provides a better or equal fit compared to a single linear model. Therefore, the change in SSE does not represent a sensible tool to determine whether to split a node.
+Instead, the authors propose a statistical test based on the Chow test \cite{chow_inequality_test}.
+
+\subsubsection{Pruning}
+
+There are two options to prune a tree: pre- and post-pruning. Pre-pruning incorporates an early stopping criterion, while post-pruning fully grows the tree and removes nodes post-hoc. Post-pruning methods can further be classified as top-down, e.g., pessimistic error pruning \cite{quinlan_simplifying}, or bottom-up, e.g., reduced error pruning \cite{quinlan_simplifying}.
+
+\section{Split Optimization}
+
 With a growing complexity, e.g., due to the cost of training node models for every split or multiway splitting, the computational cost of decision trees grows considerably. This puts a great importance on an efficient split search, which can be achieved in multiple ways.
 First, computations can be parallelized, e.g., after splitting a node, the computations in all child nodes are independent of each other and can run in parallel.
 Second, we can evaluate a subset of values, e.g., if the split variable is continuous, close values can be omitted from the search.
-Third, for each node there is a large number of split points to be evaluated. Instead of recomputing the objective for each split, computations may be sped up by an update mechanism. For hybrid trees, the leaf node model contains a predictive model. Recomputing the model for each split is infeasible in practice. One option is to use a heuristic to split the tree and train the leaf node model post-hoc, which may result in a bad tree fit. Another option is to update the node model with a shrinking subset of observations at each split, and using the model fit as a basis for splitting the tree.
-Fourth, an intelligently constructed split point generator can suggest split points with a higher probability of improving the objective than other points.
+Third, for each node there is a large number of split points to be evaluated. Instead of recomputing the objective and model for each split from scratch, computations may be sped up by an update mechanism. Fourth, a split point generator can suggest split points with a higher probability of improving the objective than other points.
 
-\subsection{Notation}
+\subsection{Updating Models}
 
 
+\subsubsection{Mean Prediction}
+
+The mean prediction is updated by keeping tack of the cumulative sum of target values. Let $\overline{y}_0$ the initial target mean value:
+$$
+\overline{y}_0 = \frac{1}{n_0} \sum_{i = 1}^n y^{(i)} = \frac{1}{n_0} M
+$$
+The updated target mean corresponds to:
+$$
+\overline{y}_1 =  \frac{1}{n_0 + \vert \mathcal{D}_1 \setminus \mathcal{D}_0 \vert - \vert \mathcal{D}_0 \setminus \mathcal{D}_1 \vert}\left(M + \sum_{i \,:\, x^{(i)} \, \in \, \mathcal{D}_1 \setminus \mathcal{D}_0} y^{(i)} - \sum_{i \,:\, x^{(i)} \, \in \, \mathcal{D}_0 \setminus \mathcal{D}_1} y^{(i)} \right)
+$$
+
+\subsubsection{Linear Regression Models}
+
+Given a set of training observations X and the target vector Y, the coefficients of a  linear regression model are estimated by:
+\begin{equation}
+\Theta = (X^TX)^{-1}X^TY
+\label{eq:linmod_beta}
+\end{equation}
+The model prediction is given by $y = x^T \Theta$. The residual between observed target value and model prediction is given by the squared error $\epsilon = (y - \hat{y})^2 = (y - x^T \Theta)^2$. Eq. (\ref{eq:linmod_beta}) can be recursively estimated for a series of observations \cite{potts_incremental_model_tree}:
+% \begin{align*}
+%     \Theta_i &= \Theta_{i - 1} + \frac{(X^TX)^{-1}_{i-1} \, x_i \left(y_i - x_i^T\Theta_{i-1}\right)}{1 + x_i^T \, (X^T X)_{i-1} \, x_i} \\
+%     (X^TX)^{-1}_i &= (X^TX)^{-1}_{i-1} - \frac{(X^TX)^{-1}_{i-1} \, x_i \, x_i^T \, (X^TX)^{-1}_{i-1}}{1 + x_i^T (X^TX)^{-1}_{i-1} x_i} \\
+%     \text{SSE}_i &= \text{SSE}_{i-1} + \left(y_i - x_i^T \Theta_{i-1}\right) \left(y_i - x_i^T \Theta_i\right)
+% \end{align*}
+\begin{align*}
+    \Theta_i &= \Theta_{i - 1} + \frac{B^{-1}_{i-1} \, x_i \left(y_i - x_i^T\Theta_{i-1}\right)}{1 + x_i^T \, B_{i-1} \, x_i} \\
+    B^{-1}_i &= B^{-1}_{i-1} - \frac{B^{-1}_{i-1} \, x_i \, x_i^T \, B^{-1}_{i-1}}{1 + x_i^T B^{-1}_{i-1} x_i} \\
+    \text{SSE}_i &= \text{SSE}_{i-1} + \left(y_i - x_i^T \Theta_{i-1}\right) \left(y_i - x_i^T \Theta_i\right)
+\end{align*}
+where $B = X^TX$.
+It follows that for two splits, $\Theta$ can be updated via Algorithm \ref{algo:rec_lm}:
+\begin{algorithm}
+ \caption{Updating Linear Regression Model \label{algo:rec_lm}}
+ \begin{algorithmic}[1]
+ \renewcommand{\algorithmicrequire}{\textbf{Input}: $\Theta, B, \text{SSE}, \mathcal{D}_0, \mathcal{D}_1$}
+ \renewcommand{\algorithmicensure}{\textbf{Output}: $\Theta_{updated}, \text{B}_{updated}, \text{SSE}_{updated}$}
+ \REQUIRE
+ \ENSURE
+ \FORALL{$(x^{(i)} \in \mathcal{D}_0 \setminus \mathcal{D}_1)$}
+    \STATE
+    $\Theta_{temp} = \Theta$
+    \STATE
+    $\Theta = \Theta - \frac{B^{-1}_{i-1} \, x_i \left(y_i - x_i^T\Theta\right)}{1 + x_i^T \, B_{i-1} \, x_i}$
+    \STATE
+    $B^{-1} = B^{-1} - \frac{B^{-1} \, x_i \, x_i^T \, B^{-1}}{1 + x_i^T B^{-1} x_i}$
+    \STATE
+    $\text{SSE} = \text{SSE} - \left(y_i - x_i^T \Theta\right) \left(y_i - x_i^T \Theta_{temp}\right)$
+ \ENDFOR 
+ \FORALL{$(x^{(i)} \in \mathcal{D}_1 \setminus \mathcal{D}_0)$}
+    \STATE
+    $\Theta_{temp} = \Theta$
+    \STATE
+    $\Theta = \Theta + \frac{B^{-1}_{i-1} \, x_i \left(y_i - x_i^T\Theta\right)}{1 + x_i^T \, B_{i-1} \, x_i}$
+    \STATE
+    $B^{-1} = B^{-1} + \frac{B^{-1} \, x_i \, x_i^T \, B^{-1}}{1 + x_i^T B^{-1} x_i}$
+    \STATE
+    $\text{SSE} = \text{SSE} + \left(y_i - x_i^T \Theta_{temp}\right) \left(y_i - x_i^T \Theta\right)$
+ \ENDFOR
+ \RETURN $\Theta, B, \text{SSE}$;
+ \end{algorithmic} 
+\end{algorithm}
 \subsection{Updating Objective Functions}
 
 Consider two sets of observations $\mathcal{D}_0$ and $\mathcal{D}_1$. An update mechanism decomposes the objective function $O(\mathcal{D})$ such that $O(\mathcal{D}_1)$ depends on $O(\mathcal{D}_0)$, as well as on additional observations $\mathcal{D}_1 \setminus \mathcal{D}_0$, and missing ones $\mathcal{D}_0 \setminus \mathcal{D}_1$. Updating an objective is only viable for a fixed number of child nodes per node, as the update rule always updates a single, fixed child node.
 
-\subsubsection{Total Sum of Squares (Variance)}
+\subsubsection{Total Sum of Squares}
 
 The total sum of squares (TSS) corresponds to the the sum of squared deviations between target values and the target average:
 $$
@@ -149,7 +228,6 @@ The TSS can be decomposed as follows:
 $$
 \text{TSS}(y) = \sum_{i = 1}^{n} \left(y^{(i)}\right)^2 - \overline{y}^2
 $$
-
 
 \subsubsection{Sum of Squared Errors}
 
@@ -193,82 +271,10 @@ The SSE for the second split can be decomposed as:
 %L_1^{(1)}(y_1) = L_1^{(0)} - y_{1}^{(n_1)} + y_{1}^{(n_1)}
 %$$
 
-\subsection{Updating Models}
-
-\subsubsection{Mean Prediction}
-
-The mean prediction is updated by keeping tack of the cumulative sum of target values. Let $\overline{y}_0$ the initial target mean value:
-$$
-\overline{y}_0 = \frac{1}{n_0} \sum_{i = 1}^n y^{(i)} = \frac{1}{n_0} M
-$$
-The updated target mean corresponds to:
-$$
-\overline{y}_1 =  \frac{1}{n_0 + \vert \mathcal{D}_1 \setminus \mathcal{D}_0 \vert - \vert \mathcal{D}_0 \setminus \mathcal{D}_1 \vert}\left(M + \sum_{i \,:\, x^{(i)} \, \in \, \mathcal{D}_1 \setminus \mathcal{D}_0} y^{(i)} - \sum_{i \,:\, x^{(i)} \, \in \, \mathcal{D}_0 \setminus \mathcal{D}_1} y^{(i)} \right)
-$$
-
-
-\subsubsection{Linear Regression Models}
-
-Given a set of training observations X and the target vector Y, the coefficients of a  linear regression model are estimated by:
-\begin{equation}
-\Theta = (X^TX)^{-1}X^TY
-\label{eq:linmod_beta}
-\end{equation}
-The model prediction is given by $y = x^T \Theta$. The residual between observed target value and model prediction is given by the squared error $\epsilon = (y - \hat{y})^2 = (y - x^T \Theta)^2$. Eq. (\ref{eq:linmod_beta}) can be recursively estimated for a series of observations \cite{potts_incremental_model_tree}:
-% \begin{align*}
-%     \Theta_i &= \Theta_{i - 1} + \frac{(X^TX)^{-1}_{i-1} \, x_i \left(y_i - x_i^T\Theta_{i-1}\right)}{1 + x_i^T \, (X^T X)_{i-1} \, x_i} \\
-%     (X^TX)^{-1}_i &= (X^TX)^{-1}_{i-1} - \frac{(X^TX)^{-1}_{i-1} \, x_i \, x_i^T \, (X^TX)^{-1}_{i-1}}{1 + x_i^T (X^TX)^{-1}_{i-1} x_i} \\
-%     \text{SSE}_i &= \text{SSE}_{i-1} + \left(y_i - x_i^T \Theta_{i-1}\right) \left(y_i - x_i^T \Theta_i\right)
-% \end{align*}
-\begin{align*}
-    \Theta_i &= \Theta_{i - 1} + \frac{B^{-1}_{i-1} \, x_i \left(y_i - x_i^T\Theta_{i-1}\right)}{1 + x_i^T \, B_{i-1} \, x_i} \\
-    B^{-1}_i &= B^{-1}_{i-1} - \frac{B^{-1}_{i-1} \, x_i \, x_i^T \, B^{-1}_{i-1}}{1 + x_i^T B^{-1}_{i-1} x_i} \\
-    \text{SSE}_i &= \text{SSE}_{i-1} + \left(y_i - x_i^T \Theta_{i-1}\right) \left(y_i - x_i^T \Theta_i\right)
-\end{align*}
-where $B = X^TX$.
-It follows that for two splits, $\Theta$ can be updated via Algorithm \ref{algo:rec_lm}:
-
-\vspace{0.25cm}
-\begin{algorithm}
- \caption{Updating Linear Regression Model \label{algo:rec_lm}}
- \begin{algorithmic}[1]
- \renewcommand{\algorithmicrequire}{\textbf{Input}: $\Theta, B, \text{SSE}, \mathcal{D}_0, \mathcal{D}_1$}
- \renewcommand{\algorithmicensure}{\textbf{Output}: $\Theta_{updated}, \text{B}_{updated}, \text{SSE}_{updated}$}
- \REQUIRE
- \ENSURE
- \FORALL{$(x^{(i)} \in \mathcal{D}_0 \setminus \mathcal{D}_1)$}
-    \STATE
-    $\Theta_{temp} = \Theta$
-    \STATE
-    $\Theta = \Theta - \frac{B^{-1}_{i-1} \, x_i \left(y_i - x_i^T\Theta\right)}{1 + x_i^T \, B_{i-1} \, x_i}$
-    \STATE
-    $B^{-1} = B^{-1} - \frac{B^{-1} \, x_i \, x_i^T \, B^{-1}}{1 + x_i^T B^{-1} x_i}$
-    \STATE
-    $\text{SSE} = \text{SSE} - \left(y_i - x_i^T \Theta\right) \left(y_i - x_i^T \Theta_{temp}\right)$
- \ENDFOR 
- \FORALL{$(x^{(i)} \in \mathcal{D}_1 \setminus \mathcal{D}_0)$}
-    \STATE
-    $\Theta_{temp} = \Theta$
-    \STATE
-    $\Theta = \Theta + \frac{B^{-1}_{i-1} \, x_i \left(y_i - x_i^T\Theta\right)}{1 + x_i^T \, B_{i-1} \, x_i}$
-    \STATE
-    $B^{-1} = B^{-1} + \frac{B^{-1} \, x_i \, x_i^T \, B^{-1}}{1 + x_i^T B^{-1} x_i}$
-    \STATE
-    $\text{SSE} = \text{SSE} + \left(y_i - x_i^T \Theta_{temp}\right) \left(y_i - x_i^T \Theta\right)$
- \ENDFOR
- \RETURN $\Theta, B, \text{SSE}$;
- \end{algorithmic} 
-\end{algorithm}
 
 
 \subsection{Split Point Generation}
 
-
-The algorithm M5 \cite{quinlan_model_tree} was the first extension of ordinary decision trees to incorporate leaf node models.
-M5 starts with growing a decision tree by selecting splits that minimize the standard deviation of target values. It then adds linear regression models to the leaf nodes, and prunes the tree. Training linear leaf node models, whereas the splits have been determined via reduction of target variance creates a discrepancy in model fit.
-\par
-In \cite{potts_incremental_model_tree} linear leaf node models are estimated incrementally through each split. The authors argue that splitting a node and estimating multiple linear models always provides a better or equal fit compared to a single linear model. Therefore, the change in SSE does not represent a sensible tool to determine whether to split a node.
-Instead, the authors propose a statistical test based on the Chow test \cite{chow_inequality_test}.
 
 
 
