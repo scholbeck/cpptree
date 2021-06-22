@@ -5,6 +5,9 @@
             footskip=.25in]{geometry}
 \usepackage[square, numbers]{natbib}
 \usepackage{amsmath}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+
 \begin{document}
 
 \title{A Software Package for Extendable Decision Trees in C++}
@@ -132,17 +135,28 @@ Fourth, an intelligently constructed split point generator can suggest split poi
 
 Consider two sets of observations $\mathcal{D}_0$ and $\mathcal{D}_1$. An update mechanism decomposes the objective function $O(\mathcal{D})$ such that $O(\mathcal{D}_1)$ depends on $O(\mathcal{D}_0)$, as well as on additional observations $\mathcal{D}_1 \setminus \mathcal{D}_0$, and missing ones $\mathcal{D}_0 \setminus \mathcal{D}_1$. Updating an objective is only viable for a fixed number of child nodes per node, as the update rule always updates a single, fixed child node.
 
-
-\subsubsection{Sum of Squared Errors}
+\subsubsection{Total Sum of Squares (Variance)}
 
 The total sum of squares (TSS) corresponds to the the sum of squared deviations between target values and the target average:
 $$
 \text{TSS}(y) = \sum_{i = 1}^{n} \left(y^{(i)} - \overline{y}\right)^2
 $$
-The TSS is used by algorithms such as CART. It is equivalent to the sum of squared errors (SSE), also referred to as the L2 loss, if the trained model corresponds to the mean target value:
+The TSS is used by algorithms such as CART. Averaging the TSS yields a variance estimate:
+$$
+\widehat{Var}(y) = \frac{1}{n-1}\, \text{TSS}(y)
+$$
+The TSS can be decomposed as follows:
+$$
+\text{TSS}(y) = \sum_{i = 1}^{n} \left(y^{(i)}\right)^2 - \overline{y}^2
+$$
+
+
+\subsubsection{Sum of Squared Errors}
+
+The TSS is equivalent to the sum of squared errors (SSE), also referred to as the L2 loss, if the trained model corresponds to the mean target value:
 \begin{align*}
 \text{SSE}(\mathcal{D}) &= \sum_{i = 1}^{n} \left(y^{(i)} - \hat{f}\left(x^{(i)}\right)\right)^2 \\
-&= \sum_{i = 1}^{n} \left[\left(y^{(i)}\right)^2 - 2\,y^{(i)} \hat{f}\left(x^{(i)}\right) + \hat{f}\left(x^{(i)}\right)^2\right] \\
+&= \sum_{i = 1}^{n} \left[\left(y^{(i)}\right)^2 - 2\, y^{(i)} \hat{f}\left(x^{(i)}\right) + \hat{f}\left(x^{(i)}\right)^2\right] \\
 &= \sum_{i = 1}^{n} \left(y^{(i)}\right)^2 - 2 \sum_{i = 1}^{n} \,y^{(i)} \hat{f}\left(x^{(i)}\right) + \sum_{i = 1}^{n} \hat{f}\left(x^{(i)}\right)^2 \\
 \end{align*}
 Consider two multiway splits, each one partitioning a node into $k$ subsets. We update the left-most node, which contains $n_0^{(0)}$ observations in the first split, and $n_0^{(1)}$ in the second one. The corresponding SSEs are denoted by $\text{SSE}^{(0)}$ and $\text{SSE}^{(1)}$. The child node observations resulting from each split are denoted by $\mathcal{D}_0$ and $\mathcal{D}_1$.
@@ -183,6 +197,16 @@ The SSE for the second split can be decomposed as:
 
 \subsubsection{Mean Prediction}
 
+The mean prediction is updated by keeping tack of the cumulative sum of target values. Let $\overline{y}_0$ the initial target mean value:
+$$
+\overline{y}_0 = \frac{1}{n_0} \sum_{i = 1}^n y^{(i)} = \frac{1}{n_0} M
+$$
+The updated target mean corresponds to:
+$$
+\overline{y}_1 =  \frac{1}{n_0 + \vert \mathcal{D}_1 \setminus \mathcal{D}_0 \vert - \vert \mathcal{D}_0 \setminus \mathcal{D}_1 \vert}\left(M + \sum_{i \,:\, x^{(i)} \, \in \, \mathcal{D}_1 \setminus \mathcal{D}_0} y^{(i)} - \sum_{i \,:\, x^{(i)} \, \in \, \mathcal{D}_0 \setminus \mathcal{D}_1} y^{(i)} \right)
+$$
+
+
 \subsubsection{Linear Regression Models}
 
 Given a set of training observations X and the target vector Y, the coefficients of a  linear regression model are estimated by:
@@ -190,13 +214,51 @@ Given a set of training observations X and the target vector Y, the coefficients
 \Theta = (X^TX)^{-1}X^TY
 \label{eq:linmod_beta}
 \end{equation}
-The model prediction is given by $y = x^T \Theta$. The residual between observed target value and model prediction is given by the squared error $\epsilon = (y - \hat{y})^2 = (y - x^T \Theta)^2$. Eq. (\ref{eq:linmod_beta}) can be recursively estimated for a series of observations \cite{potts_incremental_model_tree}: 
+The model prediction is given by $y = x^T \Theta$. The residual between observed target value and model prediction is given by the squared error $\epsilon = (y - \hat{y})^2 = (y - x^T \Theta)^2$. Eq. (\ref{eq:linmod_beta}) can be recursively estimated for a series of observations \cite{potts_incremental_model_tree}:
+% \begin{align*}
+%     \Theta_i &= \Theta_{i - 1} + \frac{(X^TX)^{-1}_{i-1} \, x_i \left(y_i - x_i^T\Theta_{i-1}\right)}{1 + x_i^T \, (X^T X)_{i-1} \, x_i} \\
+%     (X^TX)^{-1}_i &= (X^TX)^{-1}_{i-1} - \frac{(X^TX)^{-1}_{i-1} \, x_i \, x_i^T \, (X^TX)^{-1}_{i-1}}{1 + x_i^T (X^TX)^{-1}_{i-1} x_i} \\
+%     \text{SSE}_i &= \text{SSE}_{i-1} + \left(y_i - x_i^T \Theta_{i-1}\right) \left(y_i - x_i^T \Theta_i\right)
+% \end{align*}
 \begin{align*}
-    \Theta_i &= \Theta_{i - 1} + \frac{(X^TX)^{-1}_{i-1} \, x_i \left(y_i - x_i^T\Theta_{i-1}\right)}{1 + x_i^T \, (X^T X)_{i-1} \, x_i} \\
-    (X^TX)^{-1}_i &= (X^TX)^{-1}_{i-1} - \frac{(X^TX)^{-1}_{i-1} \, x_i \, x_i^T \, (X^TX)^{-1}_{i-1}}{1 + x_i^T (X^TX)^{-1}_{i-1} x_i} \\
+    \Theta_i &= \Theta_{i - 1} + \frac{B^{-1}_{i-1} \, x_i \left(y_i - x_i^T\Theta_{i-1}\right)}{1 + x_i^T \, B_{i-1} \, x_i} \\
+    B^{-1}_i &= B^{-1}_{i-1} - \frac{B^{-1}_{i-1} \, x_i \, x_i^T \, B^{-1}_{i-1}}{1 + x_i^T B^{-1}_{i-1} x_i} \\
     \text{SSE}_i &= \text{SSE}_{i-1} + \left(y_i - x_i^T \Theta_{i-1}\right) \left(y_i - x_i^T \Theta_i\right)
 \end{align*}
+where $B = X^TX$.
+It follows that for two splits, $\Theta$ can be updated via Algorithm \ref{algo:rec_lm}:
 
+\vspace{0.25cm}
+\begin{algorithm}
+ \caption{Updating Linear Regression Model \label{algo:rec_lm}}
+ \begin{algorithmic}[1]
+ \renewcommand{\algorithmicrequire}{\textbf{Input}: $\Theta, B, \text{SSE}, \mathcal{D}_0, \mathcal{D}_1$}
+ \renewcommand{\algorithmicensure}{\textbf{Output}: $\Theta_{updated}, \text{B}_{updated}, \text{SSE}_{updated}$}
+ \REQUIRE
+ \ENSURE
+ \FORALL{$(x^{(i)} \in \mathcal{D}_0 \setminus \mathcal{D}_1)$}
+    \STATE
+    $\Theta_{temp} = \Theta$
+    \STATE
+    $\Theta = \Theta - \frac{B^{-1}_{i-1} \, x_i \left(y_i - x_i^T\Theta\right)}{1 + x_i^T \, B_{i-1} \, x_i}$
+    \STATE
+    $B^{-1} = B^{-1} - \frac{B^{-1} \, x_i \, x_i^T \, B^{-1}}{1 + x_i^T B^{-1} x_i}$
+    \STATE
+    $\text{SSE} = \text{SSE} - \left(y_i - x_i^T \Theta\right) \left(y_i - x_i^T \Theta_{temp}\right)$
+ \ENDFOR 
+ \FORALL{$(x^{(i)} \in \mathcal{D}_1 \setminus \mathcal{D}_0)$}
+    \STATE
+    $\Theta_{temp} = \Theta$
+    \STATE
+    $\Theta = \Theta + \frac{B^{-1}_{i-1} \, x_i \left(y_i - x_i^T\Theta\right)}{1 + x_i^T \, B_{i-1} \, x_i}$
+    \STATE
+    $B^{-1} = B^{-1} + \frac{B^{-1} \, x_i \, x_i^T \, B^{-1}}{1 + x_i^T B^{-1} x_i}$
+    \STATE
+    $\text{SSE} = \text{SSE} + \left(y_i - x_i^T \Theta_{temp}\right) \left(y_i - x_i^T \Theta\right)$
+ \ENDFOR
+ \RETURN $\Theta, B, \text{SSE}$;
+ \end{algorithmic} 
+\end{algorithm}
 
 
 \subsection{Split Point Generation}
