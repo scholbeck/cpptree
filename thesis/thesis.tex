@@ -5,6 +5,8 @@
             footskip=.25in]{geometry}
 \usepackage[square, numbers]{natbib}
 \usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{mathtools}
 \usepackage{algorithm}
 \usepackage{algorithmic}
 
@@ -39,12 +41,10 @@
 \newpage
 \thispagestyle{empty}
 
-\vspace*{4cm}
 \begin{abstract}
 This thesis provides a software package for extendable decision trees written in C++. The package follows object-oriented and modular design principles. It works as a standalone application, or can be called by other programming languages. It supports both binary and multiway splitting, and can be extended with new optimizing algorithms, split criteria, models, and objectives. Supported application areas include classic predictive modeling with decision trees such as CART or C4.5, and advanced modeling such as model-based recursive partitioning. Furthermore, the modular design principle allows the extension of the package to support novel applications such as surrogate modeling for interpretable machine learning.
-
 \end{abstract}
-\vspace{2cm}
+\vspace*{1cm}
 \tableofcontents
 \clearpage
 \setcounter{page}{1}
@@ -89,8 +89,9 @@ The software package \texttt{ranger} \cite{ranger_package} provides a fast imple
 
 \section{Notation and Preliminaries}
 
-Decision tree learning algorithms recursively partition the data.  Due to computational advantages, the default approach is through greedy optimization of an objective function. In recent years, there have also been attempts at global optimization routines \cite{norouzi_nongreedy_tree}.
-Subsequent partitionings can be visualized as a series of decision rules, which together form a tree graph (see Fig. \ref{fig:tree_structure}). Each partitioning of the data is referred to as a node, whereas a final partitioning is referred to as a leaf node. The starting point of a decision tree, which encompasses the entire, unpartitioned data, corresponds to the root node. Decision trees are often termed according to their application area, e.g., regression \cite{cart_1}, classification \cite{quinlan_c45, cart_1, kass_chaid}, survival \cite{derose_survival_tree}, or density estimation trees \cite{ram_density_estimation_tree}.
+A decision tree is a hierarchical structure based on recursive partitioning of the data. Each partitioning of the data is referred to as a node, whereas a final partitioning is referred to as a leaf node. The starting point of a decision tree, which encompasses the entire, unpartitioned data, corresponds to the root node. 
+When splitting a node it becomes a parent node, and the resulting subspaces become children or child nodes. Subsequent partitionings can be visualized as a series of decision rules, which together form a tree graph (see Fig. \ref{fig:tree_structure}). Decision trees are $k$-ary if each node has $k$ children.
+Binary trees with $k = 2$ are the most popular variant \cite{hastie_elemstatlearn}. It is also possible to construct trees with varying amounts of child nodes. Decision trees are often termed according to their application area, e.g., regression \cite{cart_1}, classification \cite{quinlan_c45, cart_1, kass_chaid}, survival \cite{derose_survival_tree}, or density estimation trees \cite{ram_density_estimation_tree}.
 
 \begin{figure}
     \centering
@@ -99,8 +100,11 @@ Subsequent partitionings can be visualized as a series of decision rules, which 
     \label{fig:tree_structure}
 \end{figure}
 
+\subsection{Notation}
 
+We consider a $p$-dimensional feature space $\mathcal{X} = \mathcal{X}_1 \times \dots \times \mathcal{X}_p$ and a target space $\mathcal{Y}$. The probability distribution $\mathcal{P}$ is defined on the sample space $\mathcal{X}_p \times \mathcal{Y}$. A decision tree is trained on a data set $\mathcal{D}$ that was drawn from $\mathcal{P}$. The prediction function is denoted by $\widehat{f}: \mathbb{R}^p \mapsto \mathbb{R}$. An observation or instance is denoted by $x = (x_1, \dots, x_p)$. The value of the $j$-th feature in $x$ is denoted by $x_j$. The target vector is denoted by $y$. The $i$-th observation and target value in $\mathcal{D}$ are denoted by $x^{(i)}$ and $y^{(i)}$, respectively. $\mathcal{D}$ corresponds to the root node. A split $S$ partitions a node $N$ into multiple children $\{N_1, \dots, N_k\}$, which correspond to mutually exclusive subspaces of $N$. The split is evaluated by an objective function $Obj(N, S)$. For binary splits, the child nodes $N_1$ and $N_2$ correspond to half-planes.
 
+% Given a single node $R$, a splitting feature $j$ and a split point $q$, we define the pair of half-planes $R_1(j, q) = \{x \;\vert\; x_j \leq q\}$ and $R_2(j, q) = \{x \;\vert\; x_j > q\}$ with the respective cAME values $\text{cAME}_1 = \frac{1}{n} \sum_{i \;:\; x^{(i)} \;\in\; R_1(j, q)} \text{fME}_S(x^{(i)}, h_S)$ and $\text{cAME}_2 = \frac{1}{n} \sum_{i \;:\; x^{(i)} \;\in\; R_2(j, q)} \text{fME}_S(x^{(i)}, h_S)$. The goal is to find the pair $(j, q)$ that solve the following minimization problem:
 
 %\par
 %Training more complex models inside the nodes such as (generalized) linear models increases the predictive performance of the decision tree, but increases computational costs. Training a complex model for every potential split is infeasible in practice. 
@@ -120,24 +124,28 @@ Subsequent partitionings can be visualized as a series of decision rules, which 
 %     \item \textbf{Pruning:} To avoid overfitting, the tree can be pruned post-hoc.
 % \end{enumerate}
 
+\subsection{Growing}
 
-\subsection{Growing and Pruning}
-
-There is a trade-off between growing a tree too large and too small \cite{hastie_elemstatlearn}. A tree with too many splits generally results in a smaller training error and a larger generalization error (overfitting). Conversely, a tree with few splits both performs bad on test, as well as on training data (underfitting). Pruning weighs the trade-off between over- and underfitting.
-
-\subsubsection{Growing}
-
-Ordinary decision trees such as CART aim to minimize the target value heterogeneity inside the leaf nodes by minimizing the sum of child node total sum of squares (TSS) for regression tasks, or the Gini impurity for classification tasks. This has proven to provide a fairly good predictive performance compared to more complex models such as neural networks \cite{razi_cart_comparison}.
+Due to computational advantages, the default approach to grow a tree is through greedy optimization of an objective function. In recent years, there have also been attempts at global optimization routines \cite{norouzi_nongreedy_tree}. Due to being the default variant of decision tree learning, we concentrate on greedy optimization. Pruning weighs the trade-off between growing a tree too large and too small \cite{hastie_elemstatlearn}. A tree with too many splits generally results in a smaller training error and a larger generalization error (overfitting). Conversely, a tree with few splits both performs bad on test, as well as on training data (underfitting). 
+\par
+A greedy algorithm iteratively partitions a node, and compares the objective computed on the parent, and on the children. It then chooses the split with the maximum improvement in the objective value. This procedure is repeated for each child node. One simple option is to reduce the impurity of target values inside each node. CART aims to reduce impurity by minimizing the total sum of squares (TSS), which is proportional to the sample variance, for regression tasks, and Gini impurity for classification tasks. CART is restricted to binary splits. The objective for regression trees corresponds to:
+\begin{align*}
+Obj(N, S) &= TSS(N) - (TSS(N_1) + TSS(N_2)) \\
+ &= \sum_{i \;:\; x^{(i)} \;\in\; N} \left(x^{(i)} - \overline{y}\right)^2 - \left(\sum_{i \;:\; x^{(i)} \;\in\; N_1} \left(x^{(i)} - \overline{y}_1\right)^2 + \sum_{i \;:\; x^{(i)} \;\in\; N_2} \left(x^{(i)} - \overline{y}_2\right)^2 \right)
+\end{align*}
+Although simple, this setup has proven to provide a fairly good predictive performance compared to more complex models such as neural networks \cite{razi_cart_comparison}.
 \par
 Model trees aim to boost predictive performance by incorporating leaf node models. The algorithm M5 \cite{quinlan_model_tree} was the first extension of ordinary decision trees to incorporate linear regression models inside the leafs.
-M5 starts with growing a decision tree by selecting splits that minimize the standard deviation of target values. It then adds linear regression models to the leaf nodes, and prunes the tree. However, training linear leaf node models, whereas the splits have been determined via reduction of target variance creates a discrepancy in model fit.
+M5 starts with growing a decision tree by minimizing target variance. It then adds linear regression models to the leaf nodes, and prunes the tree. However, training linear leaf node models, whereas the splits have been determined via the reduction of target variance, results in a suboptimal model fit.
 \par
-In \cite{potts_incremental_model_tree} linear leaf node models are estimated incrementally through each split. The authors argue that splitting a node and estimating multiple linear models always provides a better or equal fit compared to a single linear model. Therefore, the change in SSE does not represent a sensible tool to determine whether to split a node.
+In \cite{potts_incremental_model_tree} linear leaf node models are estimated incrementally through each split, i.e., the model fit determines the split. The authors argue that splitting a node and estimating multiple linear models always provides a better or equal fit compared to a single linear model. Therefore, the change in SSE does not represent a sensible way to determine whether to split a node.
 Instead, the authors propose a statistical test based on the Chow test \cite{chow_inequality_test}.
 
-\subsubsection{Pruning}
+\subsection{Pruning}
 
 There are two options to prune a tree: pre- and post-pruning. Pre-pruning incorporates an early stopping criterion, while post-pruning fully grows the tree and removes nodes post-hoc. Post-pruning methods can further be classified as top-down, e.g., pessimistic error pruning \cite{quinlan_simplifying}, or bottom-up, e.g., reduced error pruning \cite{quinlan_simplifying}.
+
+\subsection{Binary and Multiway Splits}
 
 \section{Split Optimization}
 
@@ -146,9 +154,9 @@ First, computations can be parallelized, e.g., after splitting a node, the compu
 Second, we can evaluate a subset of values, e.g., if the split variable is continuous, close values can be omitted from the search.
 Third, for each node there is a large number of split points to be evaluated. Instead of recomputing the objective and model for each split from scratch, computations may be sped up by an update mechanism. Fourth, a split point generator can suggest split points with a higher probability of improving the objective than other points.
 
-\subsection{Updating Models}
+\subsection{Updating Objective Functions}
 
-
+Updating an objective function is restricted to $k$-ary trees, as we have to update the same node in each iteration. Consider two splits $S_A$ and $S_B$, which result in different child nodes (but with the same index) $N_1$ and $\tilde{N}_1$. An update mechanism decomposes the objective function $Obj(N, S_B)$ such that it depends on $Obj(N, S_A)$, as well as on additional observations $\mathcal{N}_1 \setminus \mathcal{N}_0$, and missing ones $\mathcal{N}_0 \setminus \mathcal{N}_1$. 
 \subsubsection{Mean Prediction}
 
 The mean prediction is updated by keeping tack of the cumulative sum of target values. Let $\overline{y}_0$ the initial target mean value:
