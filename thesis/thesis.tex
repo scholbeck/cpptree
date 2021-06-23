@@ -9,6 +9,9 @@
 \usepackage{mathtools}
 \usepackage{algorithm}
 \usepackage{algorithmic}
+\newcommand{\Data}{\mathcal{D}}
+\newcommand{\Node}{\mathcal{N}}
+\newcommand{\Split}{\mathcal{S}}
 
 \begin{document}
 
@@ -102,7 +105,9 @@ Binary trees with $k = 2$ are the most popular variant \cite{hastie_elemstatlear
 
 \subsection{Notation}
 
-We consider a $p$-dimensional feature space $\mathcal{X} = \mathcal{X}_1 \times \dots \times \mathcal{X}_p$ and a target space $\mathcal{Y}$. The probability distribution $\mathcal{P}$ is defined on the sample space $\mathcal{X}_p \times \mathcal{Y}$. A decision tree is trained on a data set $\mathcal{D}$ that was drawn from $\mathcal{P}$. The prediction function is denoted by $\widehat{f}: \mathbb{R}^p \mapsto \mathbb{R}$. An observation or instance is denoted by $x = (x_1, \dots, x_p)$. The value of the $j$-th feature in $x$ is denoted by $x_j$. The target vector is denoted by $y$. The $i$-th observation and target value in $\mathcal{D}$ are denoted by $x^{(i)}$ and $y^{(i)}$, respectively. $\mathcal{D}$ corresponds to the root node. A split $S$ partitions a node $N$ into multiple children $\{N_1, \dots, N_k\}$, which correspond to mutually exclusive subspaces of $N$. The split is evaluated by an objective function $Obj(N, S)$. For binary splits, the child nodes $N_1$ and $N_2$ correspond to half-planes.
+We consider a $p$-dimensional feature space $\mathcal{X} = \mathcal{X}_1 \times \dots \times \mathcal{X}_p$ and a target space $\mathcal{Y}$. The probability distribution $\mathcal{P}$ is defined on the sample space $\mathcal{X}_p \times \mathcal{Y}$. A decision tree is trained on a data set $\mathcal{D}$ that was drawn from $\mathcal{P}$. The prediction function is denoted by $\widehat{f}: \mathbb{R}^p \mapsto \mathbb{R}$. An observation or instance is denoted by $x = (x_1, \dots, x_p)$. The value of the $j$-th feature in $x$ is denoted by $x_j$. The target vector is denoted by $y$. The 
+$i$-th observation and target value in $\Data$ are denoted by $x^{(i)}$ and $y^{(i)}$, respectively. $\Data$ corresponds to the root node. A split $\Split$ partitions a node $\Node$ into multiple 
+children $\{\Node_1, \dots, \Node_k\}$, which correspond to mutually exclusive subspaces of $\Node$.  For binary splits, the child nodes $\Node_1$ and $\Node_2$ correspond to half-planes. The split is evaluated by an objective function $Obj(\Node, \Split)$.
 
 % Given a single node $R$, a splitting feature $j$ and a split point $q$, we define the pair of half-planes $R_1(j, q) = \{x \;\vert\; x_j \leq q\}$ and $R_2(j, q) = \{x \;\vert\; x_j > q\}$ with the respective cAME values $\text{cAME}_1 = \frac{1}{n} \sum_{i \;:\; x^{(i)} \;\in\; R_1(j, q)} \text{fME}_S(x^{(i)}, h_S)$ and $\text{cAME}_2 = \frac{1}{n} \sum_{i \;:\; x^{(i)} \;\in\; R_2(j, q)} \text{fME}_S(x^{(i)}, h_S)$. The goal is to find the pair $(j, q)$ that solve the following minimization problem:
 
@@ -129,16 +134,21 @@ We consider a $p$-dimensional feature space $\mathcal{X} = \mathcal{X}_1 \times 
 Due to computational advantages, the default approach to grow a tree is through greedy optimization of an objective function. In recent years, there have also been attempts at global optimization routines \cite{norouzi_nongreedy_tree}. Due to being the default variant of decision tree learning, we concentrate on greedy optimization. Pruning weighs the trade-off between growing a tree too large and too small \cite{hastie_elemstatlearn}. A tree with too many splits generally results in a smaller training error and a larger generalization error (overfitting). Conversely, a tree with few splits both performs bad on test, as well as on training data (underfitting). 
 \par
 A greedy algorithm iteratively partitions a node, and compares the objective computed on the parent, and on the children. It then chooses the split with the maximum improvement in the objective value. This procedure is repeated for each child node. One simple option is to reduce the impurity of target values inside each node. CART aims to reduce impurity by minimizing the total sum of squares (TSS), which is proportional to the sample variance, for regression tasks, and Gini impurity for classification tasks. CART is restricted to binary splits. The objective for regression trees corresponds to:
-\begin{align*}
-Obj(N, S) &= TSS(N) - (TSS(N_1) + TSS(N_2)) \\
- &= \sum_{i \;:\; x^{(i)} \;\in\; N} \left(x^{(i)} - \overline{y}\right)^2 - \left(\sum_{i \;:\; x^{(i)} \;\in\; N_1} \left(x^{(i)} - \overline{y}_1\right)^2 + \sum_{i \;:\; x^{(i)} \;\in\; N_2} \left(x^{(i)} - \overline{y}_2\right)^2 \right)
-\end{align*}
-Although simple, this setup has proven to provide a fairly good predictive performance compared to more complex models such as neural networks \cite{razi_cart_comparison}.
+\begin{align}
+Obj(\Node, \Split) &= TSS(\Node) - (TSS(\Node_1) + TSS(\Node_2)) \nonumber \\
+ &= \sum_{i \;:\; x^{(i)} \;\in\; \Node} \left(x^{(i)} - \overline{y}\right)^2 - \left(\sum_{i \;:\; x^{(i)} \;\in\; \Node_1} \left(x^{(i)} - \overline{y}_1\right)^2 + \sum_{i \;:\; x^{(i)} \;\in\; \Node_2} \left(x^{(i)} - \overline{y}_2\right)^2 \right)
+\label{eq:cart_regr}
+\end{align}
+Although simple, this setup has proven to provide a fairly good predictive performance compared to more complex models such as neural networks \cite{razi_cart_comparison}. 
 \par
-Model trees aim to boost predictive performance by incorporating leaf node models. The algorithm M5 \cite{quinlan_model_tree} was the first extension of ordinary decision trees to incorporate linear regression models inside the leafs.
+Model trees aim to boost predictive performance by incorporating leaf node models. In fact, Eq. (\ref{eq:cart_regr}) already implicitly incorporates a simple leaf node model: the target average. We can make the mode explicit by rewriting each TSS as the sum of squared errors (SSE) between target values and the model prediction:
+\begin{align*}
+SSE(\Node) = \sum_{i \;:\; (x, y)^{(i)} \;\in\; \Node} \left(y^{(i)} - \widehat{f}(x^{(i)})\right)^2
+\end{align*}
+The algorithm M5 \cite{quinlan_model_tree} was the first extension of ordinary decision trees to incorporate linear regression models inside the leafs.
 M5 starts with growing a decision tree by minimizing target variance. It then adds linear regression models to the leaf nodes, and prunes the tree. However, training linear leaf node models, whereas the splits have been determined via the reduction of target variance, results in a suboptimal model fit.
 \par
-In \cite{potts_incremental_model_tree} linear leaf node models are estimated incrementally through each split, i.e., the model fit determines the split. The authors argue that splitting a node and estimating multiple linear models always provides a better or equal fit compared to a single linear model. Therefore, the change in SSE does not represent a sensible way to determine whether to split a node.
+In \cite{potts_incremental_model_tree} linear leaf node models are estimated incrementally through each split by evaluating the model fit via the SSE. The authors argue that splitting a node and estimating multiple linear models always provides a better or equal SSE compared to a single linear model. Therefore, the change in SSE does not represent a sensible way to determine whether to split a node.
 Instead, the authors propose a statistical test based on the Chow test \cite{chow_inequality_test}.
 
 \subsection{Pruning}
@@ -157,6 +167,7 @@ Third, for each node there is a large number of split points to be evaluated. In
 \subsection{Updating Objective Functions}
 
 Updating an objective function is restricted to $k$-ary trees, as we have to update the same node in each iteration. Consider two splits $S_A$ and $S_B$, which result in different child nodes (but with the same index) $N_1$ and $\tilde{N}_1$. An update mechanism decomposes the objective function $Obj(N, S_B)$ such that it depends on $Obj(N, S_A)$, as well as on additional observations $\mathcal{N}_1 \setminus \mathcal{N}_0$, and missing ones $\mathcal{N}_0 \setminus \mathcal{N}_1$. 
+
 \subsubsection{Mean Prediction}
 
 The mean prediction is updated by keeping tack of the cumulative sum of target values. Let $\overline{y}_0$ the initial target mean value:
@@ -165,7 +176,7 @@ $$
 $$
 The updated target mean corresponds to:
 $$
-\overline{y}_1 =  \frac{1}{n_0 + \vert \mathcal{D}_1 \setminus \mathcal{D}_0 \vert - \vert \mathcal{D}_0 \setminus \mathcal{D}_1 \vert}\left(M + \sum_{i \,:\, x^{(i)} \, \in \, \mathcal{D}_1 \setminus \mathcal{D}_0} y^{(i)} - \sum_{i \,:\, x^{(i)} \, \in \, \mathcal{D}_0 \setminus \mathcal{D}_1} y^{(i)} \right)
+\overline{y}_1 =  \frac{1}{n_0 + \vert \mathcal{D}_1 \setminus \mathcal{D}_0 \vert - \vert \mathcal{D}_0 \setminus \mathcal{D}_1 \vert}\left(M + \sum_{i \,:\, x^{(i)} \, \in \, \mathcal{D}_1 \setminus \mathcal{D}_0} y^{(i)} - \sum_{i \,:\, x^{(i)} \, \in \, \_0 \setminus \mathcal{D}_1} y^{(i)} \right)
 $$
 
 \subsubsection{Linear Regression Models}
