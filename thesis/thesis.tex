@@ -92,9 +92,10 @@ The software package \texttt{ranger} \cite{ranger_package} provides a fast imple
 
 \section{Notation and Preliminaries}
 
-A decision tree is a hierarchical structure based on recursive partitioning of the data. Each partitioning of the data is referred to as a node, whereas a final partitioning is referred to as a leaf node. The starting point of a decision tree, which encompasses the entire, unpartitioned data, corresponds to the root node. 
-When splitting a node it becomes a parent node, and the resulting subspaces become children or child nodes. Subsequent partitionings can be visualized as a series of decision rules, which together form a tree graph (see Fig. \ref{fig:tree_structure}). Decision trees are $k$-ary if each node has $k$ children.
-Binary trees with $k = 2$ are the most popular variant \cite{hastie_elemstatlearn}. It is also possible to construct trees with varying amounts of child nodes. Decision trees are often termed according to their application area, e.g., regression \cite{cart_1}, classification \cite{quinlan_c45, cart_1, kass_chaid}, survival \cite{derose_survival_tree}, or density estimation trees \cite{ram_density_estimation_tree}.
+A decision tree is a hierarchical structure based on recursive partitioning of the data. Each partitioning of the data is referred to as a node, whereas a final partitioning is referred to as a leaf node.
+The starting point of a decision tree, which encompasses the entire, unpartitioned data, corresponds to the root node. All nodes excluding leaf nodes are also referred to as internal nodes.
+A split node becomes a parent node, and the resulting nodes become children or child nodes. Subsequent partitionings can be visualized as a series of decision rules, which together form a tree graph (see Fig. \ref{fig:tree_structure}). Decision trees are $k$-ary if each node has $k$ children.
+Binary trees with $k = 2$ are the most popular variant \cite{hastie_elemstatlearn}. Furthermore, there are trees with varying numbers of child nodes. Decision trees are often termed according to their application area, e.g., regression \cite{cart_1}, classification \cite{quinlan_c45, cart_1, kass_chaid}, survival \cite{derose_survival_tree}, or density estimation trees \cite{ram_density_estimation_tree}.
 
 \begin{figure}
     \centering
@@ -105,9 +106,11 @@ Binary trees with $k = 2$ are the most popular variant \cite{hastie_elemstatlear
 
 \subsection{Notation}
 
-We consider a $p$-dimensional feature space $\mathcal{X} = \mathcal{X}_1 \times \dots \times \mathcal{X}_p$ and a target space $\mathcal{Y}$. The probability distribution $\mathcal{P}$ is defined on the sample space $\mathcal{X}_p \times \mathcal{Y}$. A decision tree is trained on a data set $\mathcal{D}$ that was drawn from $\mathcal{P}$. The prediction function is denoted by $\widehat{f}: \mathbb{R}^p \mapsto \mathbb{R}$. An observation or instance is denoted by $x = (x_1, \dots, x_p)$. The value of the $j$-th feature in $x$ is denoted by $x_j$. The target vector is denoted by $y$. The 
+We consider a $p$-dimensional feature space $\mathcal{X} = \mathcal{X}_1 \times \dots \times \mathcal{X}_p$ and a target space $\mathcal{Y}$. The probability distribution $\mathcal{P}$ is defined on the sample space $\mathcal{X}_p \times \mathcal{Y}$. A decision tree is trained on a data set $\mathcal{D}$ that was drawn from $\mathcal{P}$ with a prediction function $\widehat{f}: \mathbb{R}^p \mapsto \mathbb{R}^g$ with $g \in \mathbb{N}$. An observation or instance is denoted by $x = (x_1, \dots, x_p)$. The value of the $j$-th feature in $x$ is denoted by $x_j$. The target vector is denoted by $y$. The 
 $i$-th observation and target value in $\Data$ are denoted by $x^{(i)}$ and $y^{(i)}$, respectively. $\Data$ corresponds to the root node. A split $\Split$ partitions a node $\Node$ into multiple 
 children $\{\Node_1, \dots, \Node_k\}$, which correspond to mutually exclusive subspaces of $\Node$.  For binary splits, the child nodes $\Node_1$ and $\Node_2$ correspond to half-planes. The split is evaluated by an objective function $Obj(\Node, \Split)$.
+A continuous split corresponds to a variable $x_j$ and one or multiple thresholds. The threshold can be a scalar or an interval. A categorical split is based on one or multiple feature categories according to which the data is partitioned.
+
 
 % Given a single node $R$, a splitting feature $j$ and a split point $q$, we define the pair of half-planes $R_1(j, q) = \{x \;\vert\; x_j \leq q\}$ and $R_2(j, q) = \{x \;\vert\; x_j > q\}$ with the respective cAME values $\text{cAME}_1 = \frac{1}{n} \sum_{i \;:\; x^{(i)} \;\in\; R_1(j, q)} \text{fME}_S(x^{(i)}, h_S)$ and $\text{cAME}_2 = \frac{1}{n} \sum_{i \;:\; x^{(i)} \;\in\; R_2(j, q)} \text{fME}_S(x^{(i)}, h_S)$. The goal is to find the pair $(j, q)$ that solve the following minimization problem:
 
@@ -133,22 +136,24 @@ children $\{\Node_1, \dots, \Node_k\}$, which correspond to mutually exclusive s
 
 Due to computational advantages, the default approach to grow a tree is through greedy optimization of an objective function. In recent years, there have also been attempts at global optimization routines \cite{norouzi_nongreedy_tree}. Due to being the default variant of decision tree learning, we concentrate on greedy optimization. Pruning weighs the trade-off between growing a tree too large and too small \cite{hastie_elemstatlearn}. A tree with too many splits generally results in a smaller training error and a larger generalization error (overfitting). Conversely, a tree with few splits both performs bad on test, as well as on training data (underfitting). 
 \par
-A greedy algorithm iteratively partitions a node, and compares the objective computed on the parent, and on the children. It then chooses the split with the maximum improvement in the objective value. This procedure is repeated for each child node. One simple option is to reduce the impurity of target values inside each node. CART aims to reduce impurity by minimizing the total sum of squares (TSS), which is proportional to the sample variance, for regression tasks, and Gini impurity for classification tasks. CART is restricted to binary splits. The objective for regression trees corresponds to:
+A greedy algorithm iteratively partitions a node, and compares the objective computed on the parent, and on the children. The objective for all children is aggregated, e.g., averaged or summed up. The algorithm then chooses the split with the maximum improvement in objective value. This procedure is recursively applied to each child node. One simple option is to reduce the impurity of target values inside each node. CART aims to reduce impurity by minimizing the total sum of squares (TSS), which is proportional to the sample variance, for regression tasks, and Gini impurity for classification tasks:
 \begin{align}
-Obj(\Node, \Split) &= TSS(\Node) - (TSS(\Node_1) + TSS(\Node_2)) \nonumber \\
+Obj(\Node, \Split)_{\text{CART, Regr}} &= TSS(\Node) - (TSS(\Node_1) + TSS(\Node_2)) \nonumber \\
  &= \sum_{i \;:\; x^{(i)} \;\in\; \Node} \left(x^{(i)} - \overline{y}\right)^2 - \left(\sum_{i \;:\; x^{(i)} \;\in\; \Node_1} \left(x^{(i)} - \overline{y}_1\right)^2 + \sum_{i \;:\; x^{(i)} \;\in\; \Node_2} \left(x^{(i)} - \overline{y}_2\right)^2 \right)
 \label{eq:cart_regr}
 \end{align}
-Although simple, this setup has proven to provide a fairly good predictive performance compared to more complex models such as neural networks \cite{razi_cart_comparison}. 
+Another variant is to weight each child node TSS with the fraction of observations it contains. For classification tasks, CART makes use of the Gini impurity, which summarizes a node's target class distribution in a single metric:
+$$
+Obj(\Node, \Split)_{\text{CART, Classif}} &= Gini(\Node) - (Gini(\Node_1) + Gini(\Node_2)) \nonumber \\
+$$
+Although simple, CART has proven to provide a fairly good predictive performance compared to more complex models such as neural networks \cite{razi_cart_comparison}, while being interpretable and easily comprehensible.
 \par
-Model trees aim to boost predictive performance by incorporating leaf node models. In fact, Eq. (\ref{eq:cart_regr}) already implicitly incorporates a simple leaf node model: the target average. We can make the mode explicit by rewriting each TSS as the sum of squared errors (SSE) between target values and the model prediction:
+Model trees aim to boost predictive performance by incorporating leaf node models while preserving the decision tree's intelligibility. In fact, Eq. (\ref{eq:cart_regr}) already implicitly incorporates a simple leaf node model: the target average. We can make the mode explicit by rewriting each TSS as the sum of squared errors (SSE) between target values and the model prediction:
 \begin{align*}
 SSE(\Node) = \sum_{i \;:\; (x, y)^{(i)} \;\in\; \Node} \left(y^{(i)} - \widehat{f}(x^{(i)})\right)^2
 \end{align*}
-The algorithm M5 \cite{quinlan_model_tree} was the first extension of ordinary decision trees to incorporate linear regression models inside the leafs.
-M5 starts with growing a decision tree by minimizing target variance. It then adds linear regression models to the leaf nodes, and prunes the tree. However, training linear leaf node models, whereas the splits have been determined via the reduction of target variance, results in a suboptimal model fit.
 \par
-In \cite{potts_incremental_model_tree} linear leaf node models are estimated incrementally through each split by evaluating the model fit via the SSE. The authors argue that splitting a node and estimating multiple linear models always provides a better or equal SSE compared to a single linear model. Therefore, the change in SSE does not represent a sensible way to determine whether to split a node.
+The algorithm M5 \cite{quinlan_model_tree} was the first extension of ordinary decision trees to incorporate linear regression models inside the leafs. It starts with growing a decision tree by minimizing target variance. It then adds linear regression models to the leaf nodes, and prunes the tree. However, training linear leaf node models, whereas the splits have been determined via the reduction of target variance, results in a suboptimal model fit. In \cite{potts_incremental_model_tree} linear leaf node models are estimated incrementally through each split by evaluating the model fit via the SSE. The authors argue that splitting a node and estimating multiple linear models always provides a better or equal SSE compared to a single linear model. Therefore, the change in SSE does not represent a sensible way to determine whether to split a node.
 Instead, the authors propose a statistical test based on the Chow test \cite{chow_inequality_test}.
 
 \subsection{Pruning}
