@@ -94,15 +94,15 @@ The software package \texttt{ranger} \cite{ranger_package} provides a fast imple
 
 A decision tree is a hierarchical structure based on recursive partitioning of the data. Each partitioning of the data is referred to as a node, whereas a final partitioning is referred to as a leaf node.
 The starting point of a decision tree, which encompasses the entire, unpartitioned data, corresponds to the root node. Nodes excluding leaf nodes and root node are also referred to as internal nodes.
-A split node becomes a parent node, and the resulting nodes become children or child nodes. Subsequent partitionings can be visualized as a series of decision rules, which together form a tree graph. Decision trees are $k$-ary if each node has $k$ children.
+A split node becomes a parent node, and the resulting nodes become children or child nodes. Subsequent partitionings can be visualized as a series of decision rules, which together form a tree graph (see Fig. \ref{fig:tree_structure}). Decision trees are $k$-ary if each node has $k$ children.
 Binary trees with $k = 2$ are the most popular variant \cite{hastie_elemstatlearn}. Furthermore, there are trees with varying numbers of child nodes \cite{quinlan_c45}. Decision trees are often termed according to their application area, e.g., regression \cite{cart_1}, classification \cite{quinlan_c45, cart_1, kass_chaid}, survival \cite{derose_survival_tree}, or density estimation trees \cite{ram_density_estimation_tree}.
 
-% \begin{figure}
-%     \centering
-%     \includegraphics[width = 0.6 \linewidth]{thesis/figure/tree_structure.png}
-%     \caption{General decision tree structure comprising a root node, regular nodes, and leaf nodes.}
-%     \label{fig:tree_structure}
-% \end{figure}
+\begin{figure}
+    \centering
+    \includegraphics[width = 0.6 \linewidth]{thesis/figure/decision_tree_structure.png}
+    \caption{General decision tree structure comprising a root node, regular nodes, and leaf nodes.}
+    \label{fig:tree_structure}
+\end{figure}
 
 \subsection{Notation}
 
@@ -148,9 +148,9 @@ Consider a node with $n$ observations. The frequencies of all target categories 
 $$
 Gini(\Node) = 1 - \sum_{i = 1}^n \left(\frac{n_i}{n}\right)^2
 $$
-Although simple, CART has proven to provide a fairly good predictive performance compared to more complex models such as neural networks \cite{razi_cart_comparison}, while being interpretable and easily comprehensible.
+CART has proven to provide a fairly good predictive performance compared to more complex models such as neural networks \cite{razi_cart_comparison}, while being much less complex.
 \par
-Model trees aim to boost predictive performance by incorporating leaf node models while preserving the decision tree's intelligibility. In fact, Eq. (\ref{eq:cart_regr}) already implicitly incorporates a simple leaf node model: the target average. The model can be made explicit by rewriting each TSS as the sum of squared errors (SSE) between target values and the model prediction, also referred to as the residual sum of squares:
+Model trees aim to boost predictive performance while preserving the decision tree's intelligibility by training leaf node models. In fact, Eq. (\ref{eq:cart_regr}) already implicitly incorporates a simple leaf node model: the target average. The model can be made explicit by rewriting each TSS as the sum of squared errors (SSE) between target values and the model prediction, also referred to as the residual sum of squares:
 \begin{align*}
 SSE(\Node) = \sum_{i \;:\; (x, y)^{(i)} \;\in\; \Node} \left(y^{(i)} - \widehat{f}(x^{(i)})\right)^2
 \end{align*}
@@ -162,11 +162,19 @@ Instead, the authors propose a statistical test based on the Chow test \cite{cho
 
 \subsection{Binary versus Multiway Splits}
 
-Most techniques such as CART create binary decision trees. A series of binary splits is able to represent the same data partitioning as a multiway split, while the latter also creates more fragmented trees  \cite{hastie_elemstatlearn}. As an example, consider Fig.
-
-
+Most techniques such as CART create binary decision trees. A series of binary splits is able to represent the same data partitioning as a multiway split, while the latter also creates more fragmented trees  \cite{hastie_elemstatlearn} (see Fig. \ref{fig:binary_vs_multiway}). On the other hand, a multiway split is easier comprehensible to the human mind, which is not used to think of decisions with multiple outcomes as a series of decisions with binary outcomes. Furthermore, greedy optimization is not guaranteed to find the same series of binary decisions as an algorithm that considers multiway decisions. Greedy optimization makes decision trees subject to a high variance, as a decision higher up cascades through the entire tree and results in different splits lower down the tree \cite{hastie_elemstatlearn}.
+\begin{figure}
+    \centering
+    \includegraphics[width = 0.59\linewidth]{thesis/figure/binary_splits.png}
+    \includegraphics[width = 0.4\linewidth]{thesis/figure/threeway_split.png}
+    \caption{A binary decision tree (left) is able to represent the same partitioning as the multiway split.}
+    \label{fig:binary_vs_multiway}
+\end{figure}
+\par
+When allowing for multiway splits, one needs to decide whether to train a $k$-ary tree, i.e., each node has $k$ children, or the number of children is chosen adaptively. The latter creates two predicaments. First, the objective function cannot be updated from one split to the next, thereby considerably increasing computational costs (see Section \ref{sec:computational_speedups}). Second, we need to construct an algorithm that decides how many children to create. If the objective is based on the aggregated model fit of all child nodes, we can expect more splits to always provide a better fit. Multiway splitting therefore boils down to a regularization problem.
 
 \section{Computational Speedups}
+\label{sec:computational_speedups}
 
 With a growing complexity, e.g., due to the cost of training node models for every split or multiway splitting, the computational cost of decision trees grows considerably. This puts a great importance on an efficient split search, which can be achieved in multiple ways.
 First, computations can be parallelized, e.g., after splitting a node, the computations in all child nodes are independent of each other and can run in parallel.
