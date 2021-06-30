@@ -137,6 +137,7 @@ int Node::recursiveSplit() {
 	this->child_nodes = child_nodes;
 	int n_child_nodes = 0; 
 	int ret = 0;
+	std::cout << "test";
 	
 	if (child_nodes.empty() == false) {
 		n_child_nodes = child_nodes.size();
