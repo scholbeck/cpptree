@@ -54,7 +54,7 @@ This thesis provides a software package for extendable decision trees written in
 \section{Introduction}
 
 Decision trees are one of the most fundamental techniques in machine learning. They are frequently preferred over more complex models due to their intelligibility in the form of decision rules, e.g., in medical applications \cite{podgorelec_trees_medicine}. Tree learning algorithms are numerous and differ regarding split criteria, model choices, stopping rules and pruning. \par
-Ideas for decision tree learning originate in supervised learning and date back as far as linear discriminant analysis \cite{fisher_lda}. A large variety of decision tree algorithms has been published, such as Automatic Interaction Detection (AID) \cite{hawkins_AID}, Theta AID (THAID) \cite{ messenger_mandell_thaid}, Chi-Squared AID (CHAID) \cite{kass_chaid}, Classification and Regression Trees (CART) \cite{cart_1, hastie_elemstatlearn}, ID3 \cite{quinlan_induction}, C4.5 \cite{quinlan_c45}, M5 \cite{quinlan_m5}, and many more \cite{loh_trees_review}.
+Ideas for decision tree learning originate in supervised learning and date back as far as linear discriminant analysis \cite{fisher_lda}. Early developments include Automatic Interaction Detection (AID) \cite{hawkins_AID}, Theta AID (THAID) \cite{ messenger_mandell_thaid}, Chi-Squared AID (CHAID) \cite{kass_chaid}, Classification and Regression Trees (CART) \cite{cart_1, hastie_elemstatlearn}, ID3 \cite{quinlan_induction}, C4.5 \cite{quinlan_c45}, M5 \cite{quinlan_m5}, and more \cite{loh_trees_review}.
 \par
 So-called hybrid, model, or functional trees \cite{zeileis_mob} have added capabilities such as fitting node models \cite{quinlan_model_tree}, or using linear combinations of variables for splits \cite{brodley_multivariate_trees}. Hybrid trees are also capable of unsupervised learning, e.g., by training kernel density estimators inside the nodes \cite{ram_density_estimation_tree}.
 Recent developments have embedded hybrid trees into frameworks for  statistical inference, e.g., conditional inference trees \cite{hothorn_ctree} and model-based recursive partitioning (MOB) \cite{zeileis_mob}.
@@ -99,7 +99,7 @@ Binary trees with $k = 2$ are the most popular variant \cite{hastie_elemstatlear
 
 \begin{figure}
     \centering
-    \includegraphics[width = 0.6 \linewidth]{thesis/figure/decision_tree_structure.png}
+    \includegraphics[width = 0.8 \linewidth]{thesis/figure/decision_tree_structure.png}
     \caption{General decision tree structure comprising a root node, regular nodes, and leaf nodes.}
     \label{fig:tree_structure}
 \end{figure}
@@ -134,12 +134,11 @@ A continuous split corresponds to a variable $x_j$ and one or multiple threshold
 
 \subsection{Methodological Overview}
 
-Growing a tree by global optimization poses considerable computational difficulties \cite{norouzi_nongreedy_tree}. Thereby, the default approach is through greedy optimization of an objective function. A tree can be grown via batch processing, i.e., the entire training data is available at once, or incrementally, e.g., for data streams \cite{potts_incremental_model_tree}. Pruning weighs the trade-off between growing a tree too large and too small \cite{hastie_elemstatlearn}. A tree with too many splits generally results in a smaller training error and a larger generalization error (overfitting). Conversely, a tree with few splits both performs bad on test, as well as on training data (underfitting). There are two options to prune a tree: pre- and post-pruning. Pre-pruning incorporates an early stopping criterion, while post-pruning fully grows the tree and removes nodes post-hoc. Post-pruning methods can further be classified as top-down, e.g., pessimistic error pruning \cite{quinlan_simplifying}, or bottom-up, e.g., reduced error pruning \cite{quinlan_simplifying}.
+Growing a tree by global optimization poses considerable computational difficulties \cite{norouzi_nongreedy_tree}. Thereby, the default approach is through greedy optimization of an objective function. A tree can be grown via batch processing, i.e., the entire training data is available at once, or incrementally, e.g., for data streams \cite{potts_incremental_model_tree}. Pruning weighs the trade-off between growing a tree too large (overfitting) and too small (underfitting) \cite{hastie_elemstatlearn}. There are two options to prune a tree: pre- and post-pruning. Pre-pruning incorporates an early stopping criterion, while post-pruning fully grows the tree and removes nodes post-hoc. Post-pruning methods can further be classified as top-down, e.g., pessimistic error pruning \cite{quinlan_simplifying}, or bottom-up, e.g., reduced error pruning \cite{quinlan_simplifying}.
 \par
-A greedy algorithm iteratively partitions a node, and compares the objective computed on the parent, and on the children. The objective for all children is aggregated, e.g., averaged, summed up, or weighted by the fraction of node observations before being summed up. The algorithm then chooses the split with the maximum improvement in objective value. Through recursion, this procedure is repeated for each node.
-
+A greedy algorithm iteratively partitions a node, and compares the objective computed on the parent and on the children. The objective for all children is aggregated, e.g., summed up, or weighted by the fraction of node observations before being summed up. The algorithm then chooses the split with the maximum improvement in objective value. Through recursion, this procedure is repeated for each node.
 \par 
-One simple option is to reduce the impurity of target values inside each node. CART aims to reduce impurity by minimizing the total sum of squares (TSS), which is proportional to the sample variance (for regression tasks) and Gini impurity for classification tasks:
+One simple option is to reduce the impurity of target values inside each node. CART aims to reduce impurity by minimizing the total sum of squares (TSS) for regression tasks, and Gini impurity for classification tasks:
 \begin{align}
 TSS(\Node) &= \sum_{i \;:\; (x, y)^{(i)} \;\in\; \Node} \left(y^{(i)} - \overline{y}\right)^2
 \label{eq:cart_regr}
@@ -150,7 +149,7 @@ Gini(\Node) = 1 - \sum_{i = 1}^n \left(\frac{n_i}{n}\right)^2
 $$
 CART has proven to provide a fairly good predictive performance compared to more complex models such as neural networks \cite{razi_cart_comparison}, while being much less complex.
 \par
-Model trees aim to boost predictive performance while preserving the decision tree's intelligibility by training leaf node models. In fact, Eq. (\ref{eq:cart_regr}) already implicitly incorporates a simple leaf node model: the target average. The model can be made explicit by rewriting each TSS as the sum of squared errors (SSE) between target values and the model prediction, also referred to as the residual sum of squares:
+Model trees aim to boost predictive performance while preserving the decision tree's intelligibility by training leaf node models. In fact, Eq. (\ref{eq:cart_regr}) already implicitly incorporates a simple leaf node model: the target average. The model can be made explicit by rewriting the TSS as the sum of squared errors (SSE) between target values and the model prediction, also referred to as the residual sum of squares:
 \begin{align*}
 SSE(\Node) = \sum_{i \;:\; (x, y)^{(i)} \;\in\; \Node} \left(y^{(i)} - \widehat{f}(x^{(i)})\right)^2
 \end{align*}
@@ -160,9 +159,9 @@ The algorithm M5 \cite{quinlan_model_tree} is an extension of ordinary decision 
 Training linear leaf node models (via least squares), whereas the splits have been determined via minimization of the target standard deviation, results in suboptimal leaf node models. Instead, a more favorable approach is to use the same objective for both model estimation and splitting \cite{zeileis_mob}. The RETIS algorithm \cite{karalic_retis} minimizes the sum of child node SSE values. For each evaluated split, this requires the calculation of a least squares estimate for all models which quickly becomes infeasible in practice. Computational costs can be decreased by reducing the model complexity, e.g., by restricting the number of explanatory variables \cite{grimshaw_treed}, which limits predictive performance. In \cite{potts_incremental_model_tree} linear leaf node models are estimated incrementally through each split. The authors argue that splitting a node and estimating multiple linear models always provides a better or equal SSE compared to a single linear model.
 Instead, the authors propose a statistical test based on the Chow test \cite{chow_inequality_test}. Furthermore, there is a large variety of techniques that support more complex models such as generalized linear models \cite{ciampi_glm_tree, loh_guide, gama_functional_tree, zeileis_mob}. For instance, MOB provides a framework for a multitude of parametric node models, where the splits are found through a model-specific parameter instability test.
 
-\subsection{Binary versus Multiway Splits}
+\subsection{Binary versus Multiway Splitting}
 
-Most techniques such as CART create binary decision trees. A series of binary splits is able to represent the same data partitioning as a multiway split, while the latter also creates more fragmented trees  \cite{hastie_elemstatlearn} (see Fig. \ref{fig:binary_vs_multiway}). On the other hand, a multiway split is easier comprehensible to the human mind, which is not used to think of decisions with multiple outcomes as a series of decisions with binary outcomes. Furthermore, greedy optimization is not guaranteed to find the same series of binary decisions as an algorithm that considers multiway decisions. Greedy optimization makes decision trees subject to a high variance, as a decision higher up cascades through the entire tree and results in different splits lower down the tree \cite{hastie_elemstatlearn}.
+Most techniques such as CART create binary decision trees. In theory, a series of binary splits is able to represent the same data partitioning as a multiway split  \cite{hastie_elemstatlearn} (see Fig. \ref{fig:binary_vs_multiway}). However, due to greedy optimization, a multiway split is rarely discovered by binary splitting \cite{wang_multiway_splits}. Binary decision trees are subject to a high variance, as a decision higher up cascades through the entire tree and results in different splits lower down the tree \cite{hastie_elemstatlearn}. 
 \begin{figure}
     \centering
     \includegraphics[width = 0.59\linewidth]{thesis/figure/binary_splits.png}
@@ -170,20 +169,73 @@ Most techniques such as CART create binary decision trees. A series of binary sp
     \caption{A binary decision tree (left) is able to represent the same partitioning as the multiway split.}
     \label{fig:binary_vs_multiway}
 \end{figure}
+Furthermore, a multiway split is easier comprehensible to the human mind, which is not used to think of decisions with multiple outcomes as a series of decisions with binary outcomes.
 \par
-When allowing for multiway splits, the tree can be $k$-ary, i.e., each node has $k$ children regardless of the data structure, or the number of children is chosen adaptively. The latter creates two predicaments. First, the objective function cannot be updated from one split to the next, thereby considerably increasing computational costs (see Section \ref{sec:computational_speedups}). Second, we need to construct an algorithm that decides how many children to create. If the objective is based on the aggregated model fit of all child nodes, we can expect more splits to always provide a better fit. Multiway splitting therefore boils down to a regularization problem.
+However, multiway splitting is considerably more expensive than binary splitting \cite{wang_multiway_splits}.
+When allowing for multiway splits, the tree can be $k$-ary, i.e., each node has $k$ children regardless of the data structure, or the number of children is chosen adaptively. The latter creates two predicaments. First, the objective function cannot be updated from one split to the next, thereby considerably increasing computational costs (see Section \ref{sec:computational_speedups}). Second, more splits can be expected to always provide a better fit, which implies a regularization problem between the aggregated child node objective and the number of splits \cite{wang_multiway_splits}.
 
 \section{Computational Speedups}
 \label{sec:computational_speedups}
 
 With a growing complexity, e.g., due to the cost of training node models for every split or multiway splitting, the computational cost of decision trees grows considerably. This puts a great importance on an efficient split search, which can be achieved in multiple ways.
 First, computations can be parallelized, e.g., after splitting a node, the computations in all child nodes are independent of each other and can run in parallel.
-Second, we can evaluate a subset of values, e.g., if the split variable is continuous, close values can be omitted from the search.
-Third, for each node there is a large number of split points to be evaluated. Instead of recomputing the objective and model for each split from scratch, computations may be sped up by an update mechanism. Fourth, a split point generator can suggest split points with a higher probability of improving the objective than other points.
+Second, for each node there is a large number of split points to be evaluated. Instead of recomputing the objective and model for each split from scratch, computations may be sped up by an update mechanism. Third, a split point generator can suggest split points with a higher probability of improving the objective than other points.
 
 \subsection{Updating Objective Functions}
 
-Updating an objective function is restricted to $k$-ary trees, as we have to update the same node in each iteration. Consider two splits $S_A$ and $S_B$, which result in different child nodes (but with the same index) $N_1$ and $\tilde{N}_1$. An update mechanism decomposes the objective function $Obj(N, S_B)$ such that it depends on $Obj(N, S_A)$, as well as on additional observations $\mathcal{N}_1 \setminus \mathcal{N}_0$, and missing ones $\mathcal{N}_0 \setminus \mathcal{N}_1$. 
+Updating an objective function is restricted to $k$-ary trees, as we have to update a fixed node in each iteration. Consider two distinct multiway splits $S_A$ and $S_B$. Each one results in $k$ child nodes $N_1^A, \dots, N_k^A$, and $N_1^B, \dots, N_k^B$. An update mechanism $upd$ of the $j$-th child node depends on the previous objective value $Obj(N_j, S_A)$, as well as on the observations leaving ($\Data_{-} = N_j^A \setminus N_j^B$) and entering the node ($\Data_{+} = N_j^B \setminus N_j^A$):
+$$
+Obj(N_j^B) = upd(Obj(N_j^A), \Data_{-}, \Data_{+}) \qquad \forall j \in \{1, \dots, k\}
+$$
+
+\subsubsection{Total Sum of Squares}
+
+% The total sum of squares (TSS) corresponds to the the sum of squared deviations between target values and the target average:
+% $$
+% \text{TSS}(y) = \sum_{i = 1}^{n} \left(y^{(i)} - \overline{y}\right)^2
+% $$
+% The TSS is used by algorithms such as CART. Averaging the TSS yields a variance estimate:
+% $$
+% \widehat{Var}(y) = \frac{1}{n-1}\, \text{TSS}(y)
+% $$
+The TSS is proportional to the empirical variance. It can be decomposed into a sum of two updatable components:
+\begin{align*}
+\text{TSS}(y) &= \sum_{i = 1}^{n} \left(y^{(i)} - \overline{y}\right)^2 \\
+&= \sum_{i = 1}^{n} \left[\left(y^{(i)}\right)^2 - 2\, y^{(i)}  \overline{y} +  \overline{y}^2\right] \\
+&= \sum_{i = 1}^{n} \left(y^{(i)}\right)^2 - 2\,\overline{y} \sum_{i = 1}^{n} \, y^{(i)}  +  \sum_{i = 1}^{n}  \overline{y}^2 \\
+&= \sum_{i = 1}^{n} \left(y^{(i)}\right)^2 - 2\,n\,\overline{y}^2 + n\, \overline{y}^2 \\
+&= \sum_{i = 1}^{n} \left(y^{(i)}\right)^2 - \,n\,\overline{y}^2\\
+&= \sum_{i = 1}^{n} \left(y^{(i)}\right)^2 - \sum_{i = 1}^{n} y^{(i)}\\
+\end{align*}
+The TSS is updated as follows:
+% The mean prediction is updated by keeping tack of the cumulative sum of target values. Let $\overline{y}_0$ the initial target mean value:
+% $$
+% \overline{y}_0 = \frac{1}{n_0} \sum_{i = 1}^n y^{(i)} = \frac{1}{n_0} M
+% $$
+% The updated target mean corresponds to:
+\begin{align*}
+    TSS^B(y) &= TSS^A(y)  + \left(\sum_{i \,:\, x^{(i)} \, \in \, \mathcal{D}_1 \setminus \mathcal{D}_0} \left(y^{(i)}\right)^2 + y^{(i)}\right) - \left(\sum_{i \,:\, x^{(i)} \, \in \, \Data_0 \setminus \mathcal{D}_1}  \left(y^{(i)}\right)^2  -  y^{(i)}\right)
+\end{align*}
+
+
+\subsubsection{Sum of Squared Errors}
+
+The SSE is not as easily decomposed as the TSS:
+\begin{align*}
+\text{SSE}(\mathcal{D}) &= \sum_{i = 1}^{n} \left(y^{(i)} - \hat{f}\left(x^{(i)}\right)\right)^2 \\
+&= \sum_{i = 1}^{n} \left[\left(y^{(i)}\right)^2 - 2\, y^{(i)} \hat{f}\left(x^{(i)}\right) + \hat{f}\left(x^{(i)}\right)^2\right] \\
+&= \sum_{i = 1}^{n} \left(y^{(i)}\right)^2 - 2 \sum_{i = 1}^{n} \,y^{(i)} \hat{f}\left(x^{(i)}\right) + \sum_{i = 1}^{n} \hat{f}\left(x^{(i)}\right)^2 \\
+\end{align*}
+Consider two multiway splits, each one partitioning a node into $k$ subsets. We update the left-most node, which contains $n_0^{(0)}$ observations in the first split, and $n_0^{(1)}$ in the second one. The corresponding SSEs are denoted by $\text{SSE}^{(0)}$ and $\text{SSE}^{(1)}$. The child node observations resulting from each split are denoted by $\mathcal{D}_0$ and $\mathcal{D}_1$.
+
+The SSE for the second split can be decomposed as:
+\begin{align}
+\text{SSE}^{(1)}\left(\mathcal{D}_0 \cup \mathcal{D}_1\right) &= \text{SSE}^{(0)}(\mathcal{D}_0) \nonumber \\
+&\phantom{{}={}} + \sum_{i \,:\, x^{(i)} \, \in \, \mathcal{D}_1 \setminus \mathcal{D}_0} \left(y^{(i)}\right)^2 - 2 \sum_{i \,:\, x^{(i)} \, \in \, \mathcal{D}_1 \setminus \mathcal{D}_0} \,y^{(i)} \hat{f}\left(x^{(i)}\right) + \sum_{i \,:\, x^{(i)} \, \in \, \mathcal{D}_1 \setminus \mathcal{D}_0} \hat{f}\left(x^{(i)}\right)^2 \nonumber \\
+&\phantom{{}={}} - \sum_{i \,:\, x^{(i)} \, \in \, \mathcal{D}_0 \setminus \mathcal{D}_1} \left(y^{(i)}\right)^2 + 2 \sum_{i \,:\, x^{(i)} \, \in \, \mathcal{D}_0 \setminus \mathcal{D}_1} \,y^{(i)} \hat{f}\left(x^{(i)}\right) - \sum_{i \,:\, x^{(i)} \, \in \, \mathcal{D}_0 \setminus \mathcal{D}_1} \hat{f}\left(x^{(i)}\right)^2 \label{eq:SSE_update}
+\end{align}
+
+\subsection{Updating Models}
 
 \subsubsection{Mean Prediction}
 
@@ -246,41 +298,12 @@ It follows that for two splits, $\Theta$ can be updated via Algorithm \ref{algo:
  \RETURN $\Theta, B, \text{SSE}$;
  \end{algorithmic} 
 \end{algorithm}
-\subsection{Updating Objective Functions}
 
-Consider two sets of observations $\mathcal{D}_0$ and $\mathcal{D}_1$. An update mechanism decomposes the objective function $O(\mathcal{D})$ such that $O(\mathcal{D}_1)$ depends on $O(\mathcal{D}_0)$, as well as on additional observations $\mathcal{D}_1 \setminus \mathcal{D}_0$, and missing ones $\mathcal{D}_0 \setminus \mathcal{D}_1$. Updating an objective is only viable for a fixed number of child nodes per node, as the update rule always updates a single, fixed child node.
+% \subsection{Updating Objective Functions}
 
-\subsubsection{Total Sum of Squares}
+% Consider two sets of observations $\mathcal{D}_0$ and $\mathcal{D}_1$. An update mechanism decomposes the objective function $O(\mathcal{D})$ such that $O(\mathcal{D}_1)$ depends on $O(\mathcal{D}_0)$, as well as on additional observations $\mathcal{D}_1 \setminus \mathcal{D}_0$, and missing ones $\mathcal{D}_0 \setminus \mathcal{D}_1$. Updating an objective is only viable for a fixed number of child nodes per node, as the update rule always updates a single, fixed child node.
 
-The total sum of squares (TSS) corresponds to the the sum of squared deviations between target values and the target average:
-$$
-\text{TSS}(y) = \sum_{i = 1}^{n} \left(y^{(i)} - \overline{y}\right)^2
-$$
-The TSS is used by algorithms such as CART. Averaging the TSS yields a variance estimate:
-$$
-\widehat{Var}(y) = \frac{1}{n-1}\, \text{TSS}(y)
-$$
-The TSS can be decomposed as follows:
-$$
-\text{TSS}(y) = \sum_{i = 1}^{n} \left(y^{(i)}\right)^2 - \overline{y}^2
-$$
 
-\subsubsection{Sum of Squared Errors}
-
-The TSS is equivalent to the sum of squared errors (SSE), also referred to as the L2 loss, if the trained model corresponds to the mean target value:
-\begin{align*}
-\text{SSE}(\mathcal{D}) &= \sum_{i = 1}^{n} \left(y^{(i)} - \hat{f}\left(x^{(i)}\right)\right)^2 \\
-&= \sum_{i = 1}^{n} \left[\left(y^{(i)}\right)^2 - 2\, y^{(i)} \hat{f}\left(x^{(i)}\right) + \hat{f}\left(x^{(i)}\right)^2\right] \\
-&= \sum_{i = 1}^{n} \left(y^{(i)}\right)^2 - 2 \sum_{i = 1}^{n} \,y^{(i)} \hat{f}\left(x^{(i)}\right) + \sum_{i = 1}^{n} \hat{f}\left(x^{(i)}\right)^2 \\
-\end{align*}
-Consider two multiway splits, each one partitioning a node into $k$ subsets. We update the left-most node, which contains $n_0^{(0)}$ observations in the first split, and $n_0^{(1)}$ in the second one. The corresponding SSEs are denoted by $\text{SSE}^{(0)}$ and $\text{SSE}^{(1)}$. The child node observations resulting from each split are denoted by $\mathcal{D}_0$ and $\mathcal{D}_1$.
-
-The SSE for the second split can be decomposed as:
-\begin{align}
-\text{SSE}^{(1)}\left(\mathcal{D}_0 \cup \mathcal{D}_1\right) &= \text{SSE}^{(0)}(\mathcal{D}_0) \nonumber \\
-&\phantom{{}={}} + \sum_{i \,:\, x^{(i)} \, \in \, \mathcal{D}_1 \setminus \mathcal{D}_0} \left(y^{(i)}\right)^2 - 2 \sum_{i \,:\, x^{(i)} \, \in \, \mathcal{D}_1 \setminus \mathcal{D}_0} \,y^{(i)} \hat{f}\left(x^{(i)}\right) + \sum_{i \,:\, x^{(i)} \, \in \, \mathcal{D}_1 \setminus \mathcal{D}_0} \hat{f}\left(x^{(i)}\right)^2 \nonumber \\
-&\phantom{{}={}} - \sum_{i \,:\, x^{(i)} \, \in \, \mathcal{D}_0 \setminus \mathcal{D}_1} \left(y^{(i)}\right)^2 + 2 \sum_{i \,:\, x^{(i)} \, \in \, \mathcal{D}_0 \setminus \mathcal{D}_1} \,y^{(i)} \hat{f}\left(x^{(i)}\right) - \sum_{i \,:\, x^{(i)} \, \in \, \mathcal{D}_0 \setminus \mathcal{D}_1} \hat{f}\left(x^{(i)}\right)^2 \label{eq:SSE_update}
-\end{align}
 
 %The child node SSEs are denoted by $SSE_1, \dots, SSE_k$. The SSE  with $n_1$ observations and target vector $y_1$ can be decomposed as:
 %$$
@@ -307,9 +330,10 @@ The SSE for the second split can be decomposed as:
 %L_1^{(1)}(y_1) = L_1^{(0)} - y_{1}^{(n_1)} + y_{1}^{(n_1)}
 %$$
 
-
-
 \subsection{Split Point Generation}
+
+Split point generation can greatly increase computational efficiency without sacrificing 
+
 
 
 
