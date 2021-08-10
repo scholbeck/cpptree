@@ -6,6 +6,7 @@
 #include "class_optimizer.h"
 #include "class_model.h"
 #include "class_data.h"
+#include "class_splitgenerator.h"
 #include <iomanip>
 
 Node::Node(std::string id, Data data, Tree* tree, std::string decision_rule) {
@@ -112,8 +113,14 @@ std::string Node::createDecisionRule(Split s, int child_ix) {
 	return rule;
 }
 
+
+
 std::vector<Node*> Node::split() {
 	std::vector<Node*> child_nodes;
+	
+	SplitGenerator* split_generator = new SplitGeneratorBinExh();
+	std::vector<Split> splits = split_generator->generate(this->data);
+	/*
 	Optimizer* optim = this->tree->getFactory().createOptimizer();
 	Split s = optim->searchOptimum(this->data, this->tree->args, this->obj_val);
 	
@@ -128,7 +135,7 @@ std::vector<Node*> Node::split() {
 		}
 	}
 	free(optim);
-	
+	*/
 	return child_nodes;
 }
 

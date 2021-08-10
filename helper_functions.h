@@ -11,5 +11,6 @@ void printVectorInt(std::vector<int> vec);
 void printVectorDouble(std::vector<double> vec);
 void printVectorString(std::vector<std::string>);
 std::vector<int> initVectorSeq(int from, int to);
+std::vector<double> initVectorSeqDouble(int from, int to);
 
 #endif 

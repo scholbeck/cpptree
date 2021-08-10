@@ -27,12 +27,13 @@ std::vector<std::string> Reader::detectColTypes(std::vector<std::string> vec) {
 	std::vector<std::string> types;
 	char value;
 	int n = vec.size();
+	types.push_back(std::string("ID"));
 	for (int i = 0; i < n; i++) {
 		value = vec[i][0];
 		if (isdigit(value)) {
-			types.push_back("num");
+			types.push_back(std::string("num"));
 		} else {
-			types.push_back("categ");
+			types.push_back(std::string("categ"));
 		}
 	}
 	return types;
@@ -64,19 +65,20 @@ Data Reader::read(std::string filename, char sep) {
 	while (std::getline(file, line)) {
         rows_strings.push_back(parseLine(line, sep)); // read and parse remaining lines
     }
-    
+    std::vector<std::string> types = detectColTypes(rows_strings[0]);
     int n_rows = rows_strings.size();
     int n_cols = rows_strings[0].size();
-    std::vector<std::string> types = detectColTypes(rows_strings[0]);
 	Data data;
+	data.addCol(initVectorSeqDouble(0, n_rows));
 	data.setColTypes(types);
     std::vector<double> new_row;
     
     for (int i = 0; i < n_rows; i++) {
-		for (int j = 0; j < n_cols; j++) {	
-			if (types[j] == "num") {
+		new_row.push_back(i);
+		for (int j = 0; j < n_cols; j++) {
+			if (types[j + 1] == "num") {
 				new_row.push_back(std::stod(rows_strings[i][j]));
-			} else {
+			} else if (types[j + 1] == "categ") {
 				// types[j] = "categ"
 				std::set<std::string> levels = detectLevels(rows_strings, j);
 				std::map<std::string, int> m;
@@ -86,7 +88,7 @@ Data Reader::read(std::string filename, char sep) {
 					l++;
 				}
 				// create mapping for each categ feature j and for all its feature levels to integer 0, 1, 2, etc.
-				data.addCategEncoding(j, m);
+				data.addCategEncoding(j + 1, m);
 				// add mapping to data object
 				new_row.push_back(m.at(rows_strings[i][j]));
 				// add mapped integer to data

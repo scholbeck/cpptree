@@ -127,15 +127,19 @@ int main(int argc, char *argv[]) {
 		return EXIT_FAILURE;
 	}
 	data = reader.read(args.getFilename(), args.getSep());
-	data.setTargetIndex(args.getTargetIndex());
-	
-	std::clock_t start;
+	data.setTargetIndex(args.getTargetIndex() + 1);
+	data.print();
+    data.summary();
+    
+    std::clock_t start;
     double duration;
     start = std::clock();
-	Tree tree = Tree(data, args);
+	
+    Tree tree = Tree(data, args);
 	int ret = tree.grow();
 	duration = (std::clock() - start) / (double) CLOCKS_PER_SEC;
-	tree.summary();
+	
+    tree.summary();
     std::cout << "Training complete. Duration: "<< duration << "sec\n";
 
 	tree.freeNodeMemory();

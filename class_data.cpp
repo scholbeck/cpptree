@@ -129,13 +129,13 @@ void Data::summary() {
 	std::cout << "\tcolumn types : ";
 	std::vector<std::string> types = this->getColTypes();
 	std::map<std::string, int> levels;
-	std::cout << "| ";
-	for (int j = 0; j < this->ncols(); j++) {
+	std::cout << "| (0 : ID) | ";
+	for (int j = 1; j < this->ncols(); j++) {
 		std::cout << "(" << j << " : "<< types[j] << ") | ";
 	}
 	std::cout << "\n";
 	std::cout << "\tcategorical encodings :\n";
-	for (int j = 0; j < this->ncols(); j++) {
+	for (int j = 1; j < this->ncols(); j++) {
 		if (types[j] == "categ") {
 			std::cout << "\t\tcolumn " << j << " : \n";
 			levels = this->categ_encodings.at(j);

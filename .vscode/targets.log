@@ -1,4 +1,6 @@
 make all --print-data-base --no-builtin-variables --no-builtin-rules --question
+make: *** No rule to make target 'all'.  Stop.
+ 
 # GNU Make 4.2.1
 # Built for x86_64-pc-linux-gnu
 # Copyright (C) 1988-2016 Free Software Foundation, Inc.
@@ -6,7 +8,7 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Wed May 19 22:50:45 2021
+# Make data base, printed on Tue Aug 10 18:43:54 2021
 
 # Variables
 
@@ -43,15 +45,15 @@ CURDIR := /home/scholbeck/C_Projects/treelib
 # makefile
 SHELL = /bin/sh
 # environment
-SNAP_DATA = /var/snap/code/65
+SNAP_DATA = /var/snap/code/71
 # environment
 GDM_LANG = en_US
 # environment
 VSCODE_NLS_CONFIG = {"locale":"en-us","availableLanguages":{},"_languagePackSupport":true}
 # environment
-JOURNAL_STREAM = 9:45429
+JOURNAL_STREAM = 9:43511
 # makefile (from 'Makefile', line 2)
-CFLAGS = -Wl,--start-group
+CFLAGS = -g -o
 # environment
 XDG_CONFIG_DIRS = /etc/xdg/xdg-ubuntu:/etc/xdg
 # environment
@@ -77,9 +79,9 @@ DBUS_SESSION_BUS_ADDRESS = unix:path=/run/user/1000/bus
 # environment
 VSCODE_VERBOSE_LOGGING = true
 # environment
-_ = /snap/code/65/usr/share/code/code
+_ = /snap/code/71/usr/share/code/code
 # environment
-MANAGERPID = 1386
+MANAGERPID = 1465
 # environment
 LESSOPEN = | /usr/bin/lesspipe %s
 # environment
@@ -89,7 +91,7 @@ VSCODE_CWD = /home/scholbeck
 # environment
 XDG_SESSION_PATH = /org/freedesktop/DisplayManager/Session0
 # environment
-GSETTINGS_SCHEMA_DIR = /snap/code/65/usr/share/glib-2.0/schemas
+GSETTINGS_SCHEMA_DIR = /snap/code/71/usr/share/glib-2.0/schemas
 # default
 MAKE_HOST := x86_64-pc-linux-gnu
 # environment
@@ -97,15 +99,15 @@ PATH = /home/scholbeck/bin:/home/scholbeck/bin:/usr/local/sbin:/usr/local/bin:/u
 # environment
 GPG_AGENT_INFO = /run/user/1000/gnupg/S.gpg-agent:0:1
 # environment
-SESSION_MANAGER = local/christian-ThinkPad-T480s:@/tmp/.ICE-unix/1621,unix/christian-ThinkPad-T480s:/tmp/.ICE-unix/1621
+SESSION_MANAGER = local/christian-ThinkPad-T480s:@/tmp/.ICE-unix/1661,unix/christian-ThinkPad-T480s:/tmp/.ICE-unix/1661
 # environment
 XDG_RUNTIME_DIR = /run/user/1000
 # environment
 GDK_PIXBUF_MODULE_FILE = /home/scholbeck/snap/code/common/.cache/gdk-pixbuf-loaders.cache
 # environment
-SNAP = /snap/code/65
+SNAP = /snap/code/71
 # environment
-SNAP_VERSION = 054a9295
+SNAP_VERSION = 379476f0
 # environment
 XDG_MENU_PREFIX = gnome-
 # environment
@@ -115,9 +117,9 @@ DISABLE_WAYLAND = 1
 # environment
 VSCODE_CRASH_REPORTER_START_OPTIONS = {"companyName":"Microsoft","productName":"VSCode","submitURL":"appcenter://code?aid=fba07a4d-84bd-4fc8-a125-9640fc8ce171&uid=d4c92552-81de-44ef-b0ac-f4c985dec6d5&iid=d4c92552-81de-44ef-b0ac-f4c985dec6d5&sid=d4c92552-81de-44ef-b0ac-f4c985dec6d5","uploadToServer":true}
 # environment
-INVOCATION_ID = 2b92bf798e1e4abf813a5d68693e3fb9
+INVOCATION_ID = f8488049cbfa4fba988ddc926db34d88
 # environment
-GDK_PIXBUF_MODULEDIR = /snap/code/65/usr/lib/x86_64-linux-gnu/gdk-pixbuf-2.0/2.10.0/loaders
+GDK_PIXBUF_MODULEDIR = /snap/code/71/usr/lib/x86_64-linux-gnu/gdk-pixbuf-2.0/2.10.0/loaders
 # default
 .FEATURES := target-specific order-only second-expansion else-if shortest-stem undefine oneshell archives jobserver output-sync check-symlink load
 # environment
@@ -129,7 +131,7 @@ XDG_SESSION_DESKTOP = ubuntu
 # environment
 SSH_AUTH_SOCK = /run/user/1000/keyring/ssh
 # environment
-GIO_LAUNCHED_DESKTOP_FILE_PID = 12981
+GIO_LAUNCHED_DESKTOP_FILE_PID = 7126
 # automatic
 %F = $(notdir $%)
 # environment
@@ -143,7 +145,7 @@ PWD = /home/scholbeck/C_Projects/treelib
 # default
 .LOADED := 
 # environment
-SSH_AGENT_PID = 1535
+SSH_AGENT_PID = 1611
 # environment
 ORIGINAL_XDG_CURRENT_DESKTOP = ubuntu:GNOME
 # environment
@@ -156,6 +158,8 @@ HOME = /home/scholbeck
 LESSCLOSE = /usr/bin/lesspipe %s %s
 # environment
 VSCODE_CLI = 1
+# environment
+VSCODE_CODE_CACHE_PATH = /home/scholbeck/.config/Code/CachedData/379476f0e13988d90fab105c5c19e7abc8b1dea8
 # environment
 LOGNAME = scholbeck
 # environment
@@ -187,7 +191,7 @@ MAKECMDGOALS := all
 # environment
 QT_IM_MODULE = ibus
 # environment
-SNAP_USER_DATA = /home/scholbeck/snap/code/65
+SNAP_USER_DATA = /home/scholbeck/snap/code/71
 # environment
 SHLVL = 0
 # makefile (from 'Makefile', line 1)
@@ -195,13 +199,13 @@ CC = g++
 # environment
 GNOME_SHELL_SESSION_MODE = ubuntu
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-ae1244c8-f73f-4954-a92a-59125dcdaa2f.sock
+VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-f3f1c573-8f4c-475b-b851-35c634bc911c.sock
 # default
 MAKE_VERSION := 4.2.1
 # environment
 USER = scholbeck
 # environment
-SNAP_REVISION = 65
+SNAP_REVISION = 71
 # environment
 LC_MONETARY = de_DE.UTF-8
 # makefile
@@ -214,8 +218,6 @@ XDG_CURRENT_DESKTOP = Unity
 LC_TELEPHONE = de_DE.UTF-8
 # default
 MAKE_COMMAND := make
-# environment
-VSCODE_NODE_CACHED_DATA_DIR = /home/scholbeck/.config/Code/CachedData/054a9295330880ed74ceaedda236253b4f39a335
 # default
 .VARIABLES := 
 # automatic
@@ -225,11 +227,12 @@ LANGUAGE = en_US
 # environment
 XDG_SEAT_PATH = /org/freedesktop/DisplayManager/Seat0
 # environment
-VSCODE_IPC_HOOK = /run/user/1000/vscode-14c041f9-1.56.2-main.sock
+VSCODE_IPC_HOOK = /run/user/1000/vscode-14c041f9-1.59.0-main.sock
 # environment
 BAMF_DESKTOP_FILE_HINT = /var/lib/snapd/desktop/applications/code_code.desktop
 # makefile
 MAKEFLAGS = pqrR
+ 
 # environment
 MFLAGS = -pqrR
 # automatic
@@ -239,6 +242,7 @@ BREAKPAD_DUMP_LOCATION = /home/scholbeck/.config/Code/exthost Crash Reports
 # automatic
 +D = $(patsubst %/,%,$(dir $+))
 # environment
+ 
 GDK_BACKEND = x11
 # environment
 LC_PAPER = de_DE.UTF-8
@@ -254,6 +258,8 @@ MAKEFILES :=
 SNAP_COOKIE = V1nge5Gce1baW0AHPwZl8M5BBlxAJEXY3TvUYP_DyZGLlJRAAgtV
 # environment
 LC_NUMERIC = de_DE.UTF-8
+# environment
+VSCODE_BROWSER_CODE_LOADING = bypassHeatCheck
 # automatic
 <F = $(notdir $<)
 # environment
@@ -277,9 +283,6 @@ CHROME_DESKTOP = code-url-handler.desktop
 # default
 .INCLUDE_DIRS = /usr/include /usr/local/include /usr/include
 # environment
- 
-make: *** No rule to make target 'all'.  Stop.
- 
 GJS_DEBUG_OUTPUT = stderr
 # default
 .RECIPEPREFIX := 
@@ -288,9 +291,9 @@ LC_ADDRESS = de_DE.UTF-8
 # environment
 LANG = C
 # environment
-VSCODE_PID = 13024
+VSCODE_PID = 7170
 # variable set hash-table stats:
-# Load=138/1024=13%, Rehash=0, Collisions=21/163=13%
+# Load=139/1024=14%, Rehash=0, Collisions=20/164=12%
 
 # Pattern-specific Variable Values
 
@@ -298,9 +301,9 @@ VSCODE_PID = 13024
 
 # Directories
 
-# . (device 66309, inode 6162272): 29 files, no impossibilities.
+# . (device 66310, inode 6162272): 36 files, no impossibilities.
 
-# 29 files, no impossibilities in 1 directories.
+# 36 files, no impossibilities in 1 directories.
 
 # Implicit Rules
 
@@ -318,8 +321,9 @@ all:
 # Not a target:
 Makefile:
 #  Implicit rule search has been done.
-#  Last modified 2021-05-19 20:12:21.999499025
+#  Last modified 2021-08-10 18:43:52.160542529
 #  File has been updated.
+ 
 #  Successfully updated.
 
 iris:
@@ -327,13 +331,21 @@ iris:
 #  Modification time never checked.
 #  File has not been updated.
 #  recipe to execute (from 'Makefile', line 11):
-	./tree --filename data/iris.data --sep , --task classif --algorithm exhaustive --objective gini --model majorvote --minsize 20 --children 2
+	./tree --filename data/iris.data --target 4 --sep , --task classif --algorithm exhaustive --objective gini --model majorvote --minsize 20 --children 2
 
-# Not a target:
-main.cpp:
+iris3way:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
+#  recipe to execute (from 'Makefile', line 14):
+	./tree --filename data/iris_10.data --target 4 --sep , --task classif --algorithm exhaustive --objective gini --model majorvote --minsize 1 --children 3
+
+mushroom:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 17):
+	./tree --filename data/mushroom.data --target 1 --sep , --task classif --algorithm exhaustive --objective gini --model majorvote --minsize 20 --children 2
 
 # Not a target:
 .DEFAULT:
@@ -348,28 +360,35 @@ clean:
 #  recipe to execute (from 'Makefile', line 8):
 	rm -f main
 
-main: main.cpp
+gt:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 20):
+	./tree --filename data/gt_data.csv --target 0 --sep , --task regr --algorithm exhaustive --objective sse --model mean --minsize 100 --children 2
+
+main:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
 #  recipe to execute (from 'Makefile', line 5):
-	g++ -o tree main.cpp class_arguments.cpp class_reader.cpp class_data.cpp class_node.cpp class_split.cpp class_model.cpp class_objective.cpp class_optimizer.cpp class_tree.cpp helper_functions.cpp
+	$(CC) $(CFLAGS) tree main.cpp class_arguments.cpp class_factory.cpp class_reader.cpp class_data.cpp class_node.cpp class_split.cpp class_model.cpp class_objective.cpp class_optimizer.cpp class_tree.cpp class_improvement.cpp class_splitgenerator.cpp helper_functions.cpp
 	
 
 # files hash-table stats:
-# Load=8/1024=1%, Rehash=0, Collisions=0/19=0%
+# Load=10/1024=1%, Rehash=0, Collisions=0/20=0%
 # VPATH Search Paths
 
 # No 'vpath' search paths.
 
 # No general ('VPATH' variable) search path.
 
-# strcache buffers: 1 (0) / strings = 37 / storage = 457 B / avg = 12 B
-# current buf: size = 8162 B / used = 457 B / count = 37 / avg = 12 B
+# strcache buffers: 1 (0) / strings = 47 / storage = 609 B / avg = 12 B
+# current buf: size = 8162 B / used = 609 B / count = 47 / avg = 12 B
 
-# strcache performance: lookups = 45 / hit rate = 17%
+# strcache performance: lookups = 57 / hit rate = 17%
 # hash-table stats:
-# Load=37/8192=0%, Rehash=0, Collisions=2/45=4%
-# Finished Make data base on Wed May 19 22:50:45 2021
+# Load=47/8192=1%, Rehash=0, Collisions=2/57=4%
+# Finished Make data base on Tue Aug 10 18:43:54 2021
 
  

@@ -74,6 +74,15 @@ std::vector<int> initVectorSeq(int from, int to) {
 
 }
 
+std::vector<double> initVectorSeqDouble(int from, int to) {
+	std::vector<double> seq;
+	for (int i = from; i <= to; i++) {
+		seq.push_back((double) i);
+	}
+	return seq;
+
+}
+
 std::vector<double> initVectorDoubleValue(double value, int size) {
 	std::vector<double> vec;
 	for (int i = 0; i < size; i++) {

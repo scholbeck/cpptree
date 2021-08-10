@@ -2,7 +2,7 @@ CC = g++
 CFLAGS = -g -o
 
 main:
-	$(CC) $(CFLAGS) tree main.cpp class_arguments.cpp class_factory.cpp class_reader.cpp class_data.cpp class_node.cpp class_split.cpp class_model.cpp class_objective.cpp class_optimizer.cpp class_tree.cpp helper_functions.cpp
+	$(CC) $(CFLAGS) tree main.cpp class_arguments.cpp class_factory.cpp class_reader.cpp class_data.cpp class_node.cpp class_split.cpp class_model.cpp class_objective.cpp class_optimizer.cpp class_tree.cpp class_improvement.cpp class_splitgenerator.cpp helper_functions.cpp
 	
 clean:
 	rm -f main
