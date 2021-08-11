@@ -8,7 +8,7 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Tue Aug 10 18:43:54 2021
+# Make data base, printed on Wed Aug 11 17:28:02 2021
 
 # Variables
 
@@ -51,7 +51,7 @@ GDM_LANG = en_US
 # environment
 VSCODE_NLS_CONFIG = {"locale":"en-us","availableLanguages":{},"_languagePackSupport":true}
 # environment
-JOURNAL_STREAM = 9:43511
+JOURNAL_STREAM = 9:49344
 # makefile (from 'Makefile', line 2)
 CFLAGS = -g -o
 # environment
@@ -81,7 +81,7 @@ VSCODE_VERBOSE_LOGGING = true
 # environment
 _ = /snap/code/71/usr/share/code/code
 # environment
-MANAGERPID = 1465
+MANAGERPID = 1807
 # environment
 LESSOPEN = | /usr/bin/lesspipe %s
 # environment
@@ -99,7 +99,7 @@ PATH = /home/scholbeck/bin:/home/scholbeck/bin:/usr/local/sbin:/usr/local/bin:/u
 # environment
 GPG_AGENT_INFO = /run/user/1000/gnupg/S.gpg-agent:0:1
 # environment
-SESSION_MANAGER = local/christian-ThinkPad-T480s:@/tmp/.ICE-unix/1661,unix/christian-ThinkPad-T480s:/tmp/.ICE-unix/1661
+SESSION_MANAGER = local/christian-ThinkPad-T480s:@/tmp/.ICE-unix/2005,unix/christian-ThinkPad-T480s:/tmp/.ICE-unix/2005
 # environment
 XDG_RUNTIME_DIR = /run/user/1000
 # environment
@@ -117,7 +117,7 @@ DISABLE_WAYLAND = 1
 # environment
 VSCODE_CRASH_REPORTER_START_OPTIONS = {"companyName":"Microsoft","productName":"VSCode","submitURL":"appcenter://code?aid=fba07a4d-84bd-4fc8-a125-9640fc8ce171&uid=d4c92552-81de-44ef-b0ac-f4c985dec6d5&iid=d4c92552-81de-44ef-b0ac-f4c985dec6d5&sid=d4c92552-81de-44ef-b0ac-f4c985dec6d5","uploadToServer":true}
 # environment
-INVOCATION_ID = f8488049cbfa4fba988ddc926db34d88
+INVOCATION_ID = bff41f37152b4327879bd42086caf6f2
 # environment
 GDK_PIXBUF_MODULEDIR = /snap/code/71/usr/lib/x86_64-linux-gnu/gdk-pixbuf-2.0/2.10.0/loaders
 # default
@@ -131,7 +131,7 @@ XDG_SESSION_DESKTOP = ubuntu
 # environment
 SSH_AUTH_SOCK = /run/user/1000/keyring/ssh
 # environment
-GIO_LAUNCHED_DESKTOP_FILE_PID = 7126
+GIO_LAUNCHED_DESKTOP_FILE_PID = 13456
 # automatic
 %F = $(notdir $%)
 # environment
@@ -145,7 +145,7 @@ PWD = /home/scholbeck/C_Projects/treelib
 # default
 .LOADED := 
 # environment
-SSH_AGENT_PID = 1611
+SSH_AGENT_PID = 1947
 # environment
 ORIGINAL_XDG_CURRENT_DESKTOP = ubuntu:GNOME
 # environment
@@ -183,6 +183,7 @@ GNOME_DESKTOP_SESSION_ID = this-is-deprecated
 # environment
 LC_TIME = de_DE.UTF-8
 # environment
+ 
 SNAP_REAL_HOME = /home/scholbeck
 # default
 MAKE = $(MAKE_COMMAND)
@@ -199,7 +200,7 @@ CC = g++
 # environment
 GNOME_SHELL_SESSION_MODE = ubuntu
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-f3f1c573-8f4c-475b-b851-35c634bc911c.sock
+VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-2b0c4df4-3c00-4e38-bde0-d582ebbefe03.sock
 # default
 MAKE_VERSION := 4.2.1
 # environment
@@ -232,7 +233,6 @@ VSCODE_IPC_HOOK = /run/user/1000/vscode-14c041f9-1.59.0-main.sock
 BAMF_DESKTOP_FILE_HINT = /var/lib/snapd/desktop/applications/code_code.desktop
 # makefile
 MAKEFLAGS = pqrR
- 
 # environment
 MFLAGS = -pqrR
 # automatic
@@ -242,7 +242,6 @@ BREAKPAD_DUMP_LOCATION = /home/scholbeck/.config/Code/exthost Crash Reports
 # automatic
 +D = $(patsubst %/,%,$(dir $+))
 # environment
- 
 GDK_BACKEND = x11
 # environment
 LC_PAPER = de_DE.UTF-8
@@ -291,7 +290,7 @@ LC_ADDRESS = de_DE.UTF-8
 # environment
 LANG = C
 # environment
-VSCODE_PID = 7170
+VSCODE_PID = 13501
 # variable set hash-table stats:
 # Load=139/1024=14%, Rehash=0, Collisions=20/164=12%
 
@@ -301,9 +300,9 @@ VSCODE_PID = 7170
 
 # Directories
 
-# . (device 66310, inode 6162272): 36 files, no impossibilities.
+# . (device 66310, inode 6162272): 35 files, no impossibilities.
 
-# 36 files, no impossibilities in 1 directories.
+# 35 files, no impossibilities in 1 directories.
 
 # Implicit Rules
 
@@ -321,9 +320,8 @@ all:
 # Not a target:
 Makefile:
 #  Implicit rule search has been done.
-#  Last modified 2021-08-10 18:43:52.160542529
+#  Last modified 2021-08-11 17:27:58.2677914
 #  File has been updated.
- 
 #  Successfully updated.
 
 iris:
@@ -331,6 +329,7 @@ iris:
 #  Modification time never checked.
 #  File has not been updated.
 #  recipe to execute (from 'Makefile', line 11):
+ 
 	./tree --filename data/iris.data --target 4 --sep , --task classif --algorithm exhaustive --objective gini --model majorvote --minsize 20 --children 2
 
 iris3way:
@@ -383,12 +382,12 @@ main:
 
 # No general ('VPATH' variable) search path.
 
-# strcache buffers: 1 (0) / strings = 47 / storage = 609 B / avg = 12 B
-# current buf: size = 8162 B / used = 609 B / count = 47 / avg = 12 B
+# strcache buffers: 1 (0) / strings = 46 / storage = 604 B / avg = 13 B
+# current buf: size = 8162 B / used = 604 B / count = 46 / avg = 13 B
 
-# strcache performance: lookups = 57 / hit rate = 17%
+# strcache performance: lookups = 56 / hit rate = 17%
 # hash-table stats:
-# Load=47/8192=1%, Rehash=0, Collisions=2/57=4%
-# Finished Make data base on Tue Aug 10 18:43:54 2021
+# Load=46/8192=1%, Rehash=0, Collisions=2/56=4%
+# Finished Make data base on Wed Aug 11 17:28:02 2021
 
  

@@ -114,7 +114,6 @@ int processArguments(int argc, char** argv, Arguments *arguments)
 
 
 
- 
 
 int main(int argc, char *argv[]) {
 	
@@ -128,9 +127,17 @@ int main(int argc, char *argv[]) {
 	}
 	data = reader.read(args.getFilename(), args.getSep());
 	data.setTargetIndex(args.getTargetIndex() + 1);
-	data.print();
+	/*
+    data.print();
     data.summary();
     
+    Split s = Split(1);
+    s.addSplitValue(data.elem(10, 20));
+    s.setFeatureIndex(3);
+    s.setSplitType("num");
+    std::vector<std::vector<int>> new_data = data.splitObs(s);
+    printVectorInt(new_data[1]);
+    */
     std::clock_t start;
     double duration;
     start = std::clock();

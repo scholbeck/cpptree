@@ -4,10 +4,47 @@
 #include "class_data.h"
 #include "class_objective.h"
 #include "class_model.h"
+#include "helper_functions.h"
 #include <cmath>
 #include <algorithm>
 
+Objective::Objective() {	
+}
 
+// ObjectiveSSE
+ObjectiveSSE::ObjectiveSSE() {	
+}
+
+double ObjectiveSSE::compute(Data data) {
+	std::vector<double> target_obs = data.col(data.getTargetIndex());
+	int n = data.nrows();
+	double mean_target = mean(target_obs);
+	double cumsum = 0;
+	for (int i = 0; i < n; i++) {
+		cumsum += pow((data.elem(i, data.getTargetIndex()) - mean_target), 2);
+	}
+	return cumsum;
+}
+
+double ObjectiveSSE::update(Data data, double obj_prev, std::array<std::vector<int>, 2> diff) {
+	std::vector<double> target_obs = data.col(data.getTargetIndex());
+	double mean_target = mean(target_obs);
+	
+	double obj_upd = obj_prev;
+	int n_setplus = diff[0].size();
+	int n_setminus = diff[1].size();
+	for (int i = 0; i < n_setplus; i++) {
+		obj_upd += pow((diff[0][i] - mean_target), 2);
+	}
+	for (int i = 0; i < n_setminus; i++) {
+		obj_upd -= pow((diff[1][i] - mean_target), 2);
+	}
+	return obj_upd;
+}
+
+
+
+/*
 Objective::Objective() {
 	
 }
@@ -56,3 +93,4 @@ double ObjectiveGini::compute(Data data, std::vector<double> target_preds) {
 void ObjectiveGini::summary() {
 	std::cout << "Objective: Gini Impurity>\n";
 }
+*/

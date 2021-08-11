@@ -9,13 +9,13 @@ class ObjImprovement {
   
   public:
     ObjImprovement();
-    virtual double compute(std::vector<Node*> nodes, Objective* obj) = 0;
+    virtual double compute(std::vector<double> childnode_obj, double obj_prev) = 0;
 };
 
 
 class ObjImprovementAdditive: public ObjImprovement {
 	public:
 		ObjImprovementAdditive();
-		double compute(std::vector<Node*> nodes, Objective* obj);
+    double compute(std::vector<double> childnode_obj, double obj_prev);
 };
 #endif 

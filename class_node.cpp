@@ -6,7 +6,9 @@
 #include "class_optimizer.h"
 #include "class_model.h"
 #include "class_data.h"
+#include "class_improvement.h"
 #include "class_splitgenerator.h"
+#include "helper_functions.h"
 #include <iomanip>
 
 Node::Node(std::string id, Data data, Tree* tree, std::string decision_rule) {
@@ -113,13 +115,59 @@ std::string Node::createDecisionRule(Split s, int child_ix) {
 	return rule;
 }
 
-
-
 std::vector<Node*> Node::split() {
 	std::vector<Node*> child_nodes;
-	
 	SplitGenerator* split_generator = new SplitGeneratorBinExh();
 	std::vector<Split> splits = split_generator->generate(this->data);
+	int n_splits = splits.size();
+	std::vector<std::vector<int>> split_obs_current, split_obs_prev;
+	std::array<std::vector<int>, 2> diff;
+	std::vector<double> childnode_obj;
+	std::vector<Data> childnode_data;
+	Data subset_data;
+	ObjectiveSSE obj;
+	ObjImprovementAdditive improv;
+	double node_obj, improv_val, improv_opt;
+	int optsplit_ix;
+	node_obj = obj.compute(this->data);
+
+	for (int i = 0; i < n_splits; i++) {
+		if (i == 0) {
+			split_obs_prev = this->data.splitObs(splits[i]);
+			for (int j = 0; j < split_obs_prev.size(); j++) {
+				subset_data = this->data.subsetRows(split_obs_prev[j]);
+				childnode_data.push_back(subset_data);
+				childnode_obj.push_back(obj.compute(subset_data));
+				// compute objective for child node
+			}
+			// do sth
+		} else {
+			split_obs_current = this->data.splitObs(splits[i]);
+			for (int j = 0; j < split_obs_prev.size(); j++) {
+				diff = diffSet(split_obs_current[j], split_obs_prev[j]);
+				// update objective for each node
+				childnode_obj[j] = obj.update(this->data, childnode_obj[j], diff);
+			}
+		}
+		improv_val = improv.compute(childnode_obj, node_obj);
+		if (improv_val < improv_opt) {
+			improv_opt = improv_val;
+			optsplit_ix = i;
+		}
+	}
+	
+	Split optsplit = splits[optsplit_ix];
+	if (optsplit.getSplitFeatureIndex() != -1) {
+		std::vector<Data> child_node_data = this->data.split(optsplit);
+		int n_child_nodes = child_node_data.size();
+		for (int i = 0; i < n_child_nodes; i++) {
+			std::string child_id = this->id + std::to_string(i);
+			std::string rule = this->createDecisionRule(optsplit, i);
+			Node* child = new Node(child_id, child_node_data[i], this->tree, rule);
+			child_nodes.push_back(child);
+		}
+	}
+	
 	/*
 	Optimizer* optim = this->tree->getFactory().createOptimizer();
 	Split s = optim->searchOptimum(this->data, this->tree->args, this->obj_val);

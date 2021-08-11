@@ -47,6 +47,11 @@ class Data {
 		std::vector<Data> splitCateg(int col_index);
 		std::vector<Data> splitBinary(double split_value, int col_index);
 		std::vector<Data> split(Split split);
+		std::vector<std::vector<int>> splitBinaryObs(double split_value, int col_index);
+		std::vector<std::vector<int>> splitCategObs(int col_index);
+		std::vector<std::vector<int>> splitObs(Split split);
+		std::vector<std::vector<int>> updateSplits(std::vector<std::vector<int>> part_prev, Split split);
+		Data subsetRows(std::vector<int> rows);
 };
 
 

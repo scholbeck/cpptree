@@ -20,7 +20,7 @@ void Model::checkTrained() {
 
 double Model::evaluate(Data data, Objective* obj) {
 	std::vector<double> target_pred = this->predict(data);
-	return obj->compute(data, target_pred);
+	return obj->compute(data);
 }
 
 // ModelAverage

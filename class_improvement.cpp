@@ -10,7 +10,12 @@ ObjImprovementAdditive::ObjImprovementAdditive() : ObjImprovement() {
 }
 
 
-double ObjImprovementAdditive::compute(std::vector<Node*> nodes, Objective* obj) {
-    double improv_val = 0;
-    return improv_val;
+double ObjImprovementAdditive::compute(std::vector<double> childnode_obj, double obj_prev) {
+    double improv = 0;
+    int n_children = childnode_obj.size();
+    for (int i = 0; i < n_children; i++) {
+        improv += childnode_obj[i];
+    }
+    improv -= obj_prev;
+    return improv;
 }

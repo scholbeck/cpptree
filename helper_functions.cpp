@@ -1,5 +1,5 @@
 
-
+#include <array>
 #include <iostream>
 #include "helper_functions.h"
 
@@ -90,3 +90,37 @@ std::vector<double> initVectorDoubleValue(double value, int size) {
 	}
 	return vec;
 }
+
+
+std::array<std::vector<int>, 2> diffSet(std::vector<int> set_a, std::vector<int> set_b) {
+	std::array<std::vector<int>, 2> diff;
+	// first elem = additional obs in set a, second elem = removed obs in set a
+	// compared to set b
+	int n_a = set_a.size();
+	int n_b = set_b.size();
+	bool in_a_notin_b = true;
+	bool in_b_notin_a = true;
+	for (int i = 0; i < n_a; i++) {
+		for (int j = 0; j < n_b; j++) {
+			if (set_a[i] == set_b[j]) {
+				in_a_notin_b = false;
+				break;
+			}
+		}
+		if (in_a_notin_b == true) {
+			diff[0].push_back(set_a[i]);
+		}
+	}
+	for (int i = 0; i < n_b; i++) {
+		for (int j = 0; j < n_a; j++) {
+			if (set_b[i] == set_a[j]) {
+				in_b_notin_a = false;
+				break;
+			}
+		}
+		if (in_b_notin_a == true) {
+			diff[1].push_back(set_b[i]);
+		}
+	}
+	return diff;
+} 

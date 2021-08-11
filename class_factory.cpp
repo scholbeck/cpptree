@@ -16,9 +16,12 @@ Objective* Factory::createObjective() {
 	Objective* obj;
 	if (this->args.getObjective() == "sse") {
 		obj = new ObjectiveSSE();
+	}
+	/*
 	} else if (this->args.getObjective() == "gini") {
 		obj = new ObjectiveGini();
 	}
+	*/
 	return obj;
 }
 
@@ -32,6 +35,7 @@ Model* Factory::createModel() {
 	return m;
 }
 
+/*
 Optimizer* Factory::createOptimizer() {
 	Optimizer* optim;
 	Objective* obj;
@@ -48,5 +52,5 @@ Optimizer* Factory::createOptimizer() {
 	optim->setMaxChildren(this->args.getMaxChildren());
 	return optim;
 }
-
+*/
 
