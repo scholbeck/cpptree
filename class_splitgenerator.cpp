@@ -13,11 +13,10 @@ SplitGeneratorBinExh::SplitGeneratorBinExh() : SplitGenerator() {
 std::vector<Split> SplitGeneratorBinExh::generate(Data data) {
 	std::vector<Split> splits;
 	int n_rows = data.nrows();
-	int n_cols = data.ncols() - 1;
+	int n_cols = data.ncols();
 	
 	std::vector<int> col_ix_num, col_ix_categ, categ;
 	for (int j = 1; j < n_cols; j++) {
-		std::cout << j;
 		// exclude first column with ID
 		if (data.getColTypes()[j] == "num") {
 			col_ix_num.push_back(j);
@@ -33,6 +32,9 @@ std::vector<Split> SplitGeneratorBinExh::generate(Data data) {
 	//categorical features
 	for (int j = 0; j < n_cols_categ; j++) {
 		col = col_ix_categ[j];
+		if (col == data.getTargetIndex()) {
+			continue;
+		}
 		current_split.setFeatureIndex(col);
 		current_split.setSplitType("categ");
 		splits.push_back(current_split);
@@ -53,6 +55,5 @@ std::vector<Split> SplitGeneratorBinExh::generate(Data data) {
 			current_split.clear();
 		}
 	}
-	
 	return splits;
 }

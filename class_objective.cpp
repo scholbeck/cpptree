@@ -33,11 +33,14 @@ double ObjectiveSSE::update(Data data, double obj_prev, std::array<std::vector<i
 	double obj_upd = obj_prev;
 	int n_setplus = diff[0].size();
 	int n_setminus = diff[1].size();
+	double element;
 	for (int i = 0; i < n_setplus; i++) {
-		obj_upd += pow((diff[0][i] - mean_target), 2);
+		element = data.elem(diff[0][i], data.getTargetIndex());
+		obj_upd += pow((element - mean_target), 2);
 	}
 	for (int i = 0; i < n_setminus; i++) {
-		obj_upd -= pow((diff[1][i] - mean_target), 2);
+		element = data.elem(diff[1][i], data.getTargetIndex());
+		obj_upd -= pow((element - mean_target), 2);
 	}
 	return obj_upd;
 }
