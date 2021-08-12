@@ -32,7 +32,28 @@ ModelAverage::ModelAverage() : Model() {
 void ModelAverage::train() {
 	int target_index = this->training_data.getTargetIndex();
 	std::vector<double> target_values = this->training_data.col(target_index);
-	this->mean_prediction = mean(target_values);
+	this->cumsum_target = cumsum(target_values);
+	this->n = target_values.size();
+	this->mean_prediction = this->cumsum_target / this->n;
+	this->is_trained = true;
+}
+
+void ModelAverage::update(std::array<std::vector<int>, 2> diff) {
+	int n_setplus = diff[0].size();
+	int n_setminus = diff[1].size();
+	double element;
+	for (int i = 0; i < n_setplus; i++) {
+		this->n += n_setplus;
+		element = this->training_data.elem(diff[0][i], this->training_data.getTargetIndex());
+		this->cumsum_target += element;
+		this->mean_prediction = cumsum_target / this->n;
+	}
+	for (int i = 0; i < n_setminus; i++) {
+		this->n -= n_setplus;
+		element = this->training_data.elem(diff[0][i], this->training_data.getTargetIndex());
+		this->cumsum_target -= element;
+		this->mean_prediction = cumsum_target / this->n;
+	}
 	this->is_trained = true;
 }
 

@@ -12,7 +12,7 @@ Objective::Objective() {
 }
 
 // ObjectiveSSE
-ObjectiveSSE::ObjectiveSSE() {	
+ObjectiveSSE::ObjectiveSSE() {
 }
 
 double ObjectiveSSE::compute(Data data) {
@@ -26,7 +26,16 @@ double ObjectiveSSE::compute(Data data) {
 	return cumsum;
 }
 
-double ObjectiveSSE::update(Data data, double obj_prev, std::array<std::vector<int>, 2> diff) {
+double ObjectiveSSE::update(Data data, int childnode, std::array<std::vector<int>, 2> diff) {
+	this->models[childnode]->update(diff);
+	int n_setplus = diff[0].size();
+	int n_setminus = diff[1].size();
+	double element;
+	for (int i = 0; i < n_setplus; i++) {
+		element = data.elem(diff[0][i], data.getTargetIndex());
+		values[childnode] += pow((element - this->models[childnode]->), 2);
+	}
+	/*
 	std::vector<double> target_obs = data.col(data.getTargetIndex());
 	double cumsum_target = cumsum(target_obs);
 	int n_target = target_obs.size();
@@ -50,9 +59,9 @@ double ObjectiveSSE::update(Data data, double obj_prev, std::array<std::vector<i
 		mean_target = cumsum_target / n_target;
 		obj_upd -= pow((element - mean_target), 2);
 	}
+	*/
 	return obj_upd;
 }
-
 
 
 /*

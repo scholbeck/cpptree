@@ -15,6 +15,7 @@ class Model {
 		void setTrainingData(Data data);
 		void checkTrained();
 		virtual void train() = 0;
+		virtual void update(std::array<std::vector<int>, 2> diff) = 0;
 		virtual void summary() = 0;
 		virtual std::string getShortSummary() = 0;
 		virtual std::vector<double> predict(Data data) = 0;
@@ -26,10 +27,13 @@ class Model {
 class ModelAverage: public Model {
 	public:
 		double mean_prediction;
-		
+		double cumsum_target;
+		int n;
+
 		ModelAverage();
 		void train();
 		void summary();
+		virtual void update(std::array<std::vector<int>, 2> diff);
 		std::string getShortSummary();
 		std::vector<double> predict(Data data);
 };

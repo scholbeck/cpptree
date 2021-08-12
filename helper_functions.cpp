@@ -1,4 +1,4 @@
-
+#include <algorithm>
 #include <array>
 #include <iostream>
 #include "helper_functions.h"
@@ -91,7 +91,18 @@ std::vector<double> initVectorDoubleValue(double value, int size) {
 	return vec;
 }
 
+std::array<std::vector<int>, 2> diffSet(std::vector<int> set_a, std::vector<int> set_b) {
+	std::array<std::vector<int>, 2> diff;
+	// first elem = additional obs in set a, second elem = removed obs in set a
+	// compared to set b
+	std::set_difference(set_a.begin(), set_a.end(), set_b.begin(), set_b.end(),
+	std::inserter(diff[0], diff[0].begin()));
+	std::set_difference(set_b.begin(), set_b.end(), set_a.begin(), set_a.end(),
+	std::inserter(diff[1], diff[1].begin()));
+	return diff;
+} 
 
+/*
 std::array<std::vector<int>, 2> diffSet(std::vector<int> set_a, std::vector<int> set_b) {
 	std::array<std::vector<int>, 2> diff;
 	// first elem = additional obs in set a, second elem = removed obs in set a
@@ -124,7 +135,7 @@ std::array<std::vector<int>, 2> diffSet(std::vector<int> set_a, std::vector<int>
 	}
 	return diff;
 } 
-
+*/
 
 bool checkObsSize(std::vector<std::vector<int>> split_obs, int min_node_size) {
 	bool geq_min = true;

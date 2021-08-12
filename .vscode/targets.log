@@ -1,4 +1,6 @@
 make all --print-data-base --no-builtin-variables --no-builtin-rules --question
+make: *** No rule to make target 'all'.  Stop.
+ 
 # GNU Make 4.2.1
 # Built for x86_64-pc-linux-gnu
 # Copyright (C) 1988-2016 Free Software Foundation, Inc.
@@ -6,7 +8,7 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Thu Aug 12 16:33:38 2021
+# Make data base, printed on Thu Aug 12 18:43:33 2021
 
 # Variables
 
@@ -50,8 +52,6 @@ GDM_LANG = en_US
 VSCODE_NLS_CONFIG = {"locale":"en-us","availableLanguages":{},"_languagePackSupport":true}
 # environment
 JOURNAL_STREAM = 9:328576
-# makefile (from 'Makefile', line 2)
-CFLAGS = -g -o
 # environment
 XDG_CONFIG_DIRS = /etc/xdg/xdg-ubuntu:/etc/xdg
 # environment
@@ -146,6 +146,7 @@ PWD = /home/scholbeck/C_Projects/treelib
 SSH_AGENT_PID = 1994
 # environment
 ORIGINAL_XDG_CURRENT_DESKTOP = ubuntu:GNOME
+ 
 # environment
 GTK_MODULES = gail:atk-bridge
 # environment
@@ -162,6 +163,7 @@ VSCODE_CODE_CACHE_PATH = /home/scholbeck/.config/Code/CachedData/379476f0e13988d
 LOGNAME = scholbeck
 # environment
 APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = true
+ 
 # environment
 SNAP_LIBRARY_PATH = /var/lib/snapd/lib/gl:/var/lib/snapd/lib/gl32:/var/lib/snapd/void
 # environment
@@ -282,9 +284,6 @@ CHROME_DESKTOP = code-url-handler.desktop
 GJS_DEBUG_OUTPUT = stderr
 # default
 .RECIPEPREFIX := 
- 
-make: *** No rule to make target 'all'.  Stop.
- 
 # environment
 LC_ADDRESS = de_DE.UTF-8
 # environment
@@ -292,7 +291,7 @@ LANG = C
 # environment
 VSCODE_PID = 25331
 # variable set hash-table stats:
-# Load=139/1024=14%, Rehash=0, Collisions=20/164=12%
+# Load=138/1024=13%, Rehash=0, Collisions=20/163=12%
 
 # Pattern-specific Variable Values
 
@@ -300,9 +299,9 @@ VSCODE_PID = 25331
 
 # Directories
 
-# . (device 66310, inode 6162272): 36 files, no impossibilities.
+# . (device 66310, inode 6162272): 38 files, no impossibilities.
 
-# 36 files, no impossibilities in 1 directories.
+# 38 files, no impossibilities in 1 directories.
 
 # Implicit Rules
 
@@ -311,6 +310,7 @@ VSCODE_PID = 25331
 # Files
 
 # Not a target:
+ 
 all:
 #  Command line target.
 #  Implicit rule search has been done.
@@ -320,7 +320,7 @@ all:
 # Not a target:
 Makefile:
 #  Implicit rule search has been done.
-#  Last modified 2021-08-12 16:27:57.400102091
+#  Last modified 2021-08-12 18:40:25.941976282
 #  File has been updated.
 #  Successfully updated.
 
@@ -328,21 +328,21 @@ iris:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 11):
+#  recipe to execute (from 'Makefile', line 10):
 	./tree --filename data/iris.data --target 4 --sep , --task classif --algorithm exhaustive --objective gini --model majorvote --minsize 20 --children 2
 
 iris3way:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 14):
+#  recipe to execute (from 'Makefile', line 13):
 	./tree --filename data/iris_10.data --target 4 --sep , --task classif --algorithm exhaustive --objective gini --model majorvote --minsize 1 --children 3
 
 mushroom:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 17):
+#  recipe to execute (from 'Makefile', line 16):
 	./tree --filename data/mushroom.data --target 1 --sep , --task classif --algorithm exhaustive --objective gini --model majorvote --minsize 20 --children 2
 
 # Not a target:
@@ -355,22 +355,22 @@ clean:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 8):
+#  recipe to execute (from 'Makefile', line 7):
 	rm -f main
 
 gt:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 20):
-	./tree --filename data/gt_data.csv --target 0 --sep , --task regr --algorithm exhaustive --objective sse --model mean --minsize 100 --children 2
+#  recipe to execute (from 'Makefile', line 19):
+	./tree --filename data/gt_data.csv --target 1 --sep , --task regr --algorithm exhaustive --objective sse --model mean --minsize 100 --children 2
 
 main:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 5):
-	$(CC) $(CFLAGS) tree main.cpp class_arguments.cpp class_factory.cpp class_reader.cpp class_data.cpp class_node.cpp class_split.cpp class_model.cpp class_objective.cpp class_optimizer.cpp class_tree.cpp class_aggregation.cpp class_splitgenerator.cpp helper_functions.cpp
+#  recipe to execute (from 'Makefile', line 4):
+	$(CC) -o tree main.cpp class_arguments.cpp class_factory.cpp class_reader.cpp class_data.cpp class_node.cpp class_split.cpp class_model.cpp class_objective.cpp class_optimizer.cpp class_tree.cpp class_aggregation.cpp class_splitgenerator.cpp helper_functions.cpp
 	
 
 # files hash-table stats:
@@ -381,12 +381,12 @@ main:
 
 # No general ('VPATH' variable) search path.
 
-# strcache buffers: 1 (0) / strings = 47 / storage = 609 B / avg = 12 B
-# current buf: size = 8162 B / used = 609 B / count = 47 / avg = 12 B
+# strcache buffers: 1 (0) / strings = 49 / storage = 631 B / avg = 12 B
+# current buf: size = 8162 B / used = 631 B / count = 49 / avg = 12 B
 
-# strcache performance: lookups = 57 / hit rate = 17%
+# strcache performance: lookups = 59 / hit rate = 16%
 # hash-table stats:
-# Load=47/8192=1%, Rehash=0, Collisions=2/57=4%
-# Finished Make data base on Thu Aug 12 16:33:38 2021
+# Load=49/8192=1%, Rehash=0, Collisions=2/59=3%
+# Finished Make data base on Thu Aug 12 18:43:33 2021
 
  
