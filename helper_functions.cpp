@@ -144,3 +144,12 @@ bool checkObsSize(std::vector<std::vector<int>> split_obs, int min_node_size) {
 	}
 	return geq_min;
 }
+
+double cumsum(std::vector<double> vec) {
+	int n = vec.size();
+	double cumsum = 0;
+	for (int i = 0; i < n; i++) {
+		cumsum += vec[i];
+	}
+	return cumsum;
+}

@@ -63,7 +63,6 @@ void Tree::sortNodesAsc() {
 }
 
 int Tree::grow() {
-	this->root->summary();
 	int ret = this->root->recursiveSplit();
 	this->gatherTreeInformation();
 	return ret;

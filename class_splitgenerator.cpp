@@ -1,6 +1,7 @@
 #include "class_splitgenerator.h"
 #include "class_data.h"
 #include <iostream>
+#include <algorithm>
 
 SplitGenerator::SplitGenerator() {
 	//
@@ -38,16 +39,21 @@ std::vector<Split> SplitGeneratorBinExh::generate(Data data) {
 		current_split.setFeatureIndex(col);
 		current_split.setSplitType("categ");
 		splits.push_back(current_split);
+		current_split.clear();
 	}
-	
 	// numeric features
+	std::vector<double> col_values;
 	for (int j = 0; j < n_cols_num; j++) {
 		col = col_ix_num[j];
 		if (col == data.getTargetIndex()) {
 			continue;
 		}
-		for (int i = 0; i < n_rows; i++) {
-			double split_val = data.elem(i, col);
+		col_values = data.col(col);
+		std::sort(col_values.begin(), col_values.end());
+		col_values.erase(std::unique(col_values.begin(), col_values.end()), col_values.end());
+		int n_unique_values = col_values.size();
+		for (int i = 0; i < n_unique_values; i++) {
+			double split_val = col_values[i];
 			current_split.addSplitValue(split_val);
 			current_split.setSplitType("num");
 			current_split.setFeatureIndex(col);

@@ -28,18 +28,26 @@ double ObjectiveSSE::compute(Data data) {
 
 double ObjectiveSSE::update(Data data, double obj_prev, std::array<std::vector<int>, 2> diff) {
 	std::vector<double> target_obs = data.col(data.getTargetIndex());
-	double mean_target = mean(target_obs);
-	
+	double cumsum_target = cumsum(target_obs);
+	int n_target = target_obs.size();
+	double mean_target = cumsum_target / n_target;
+
 	double obj_upd = obj_prev;
 	int n_setplus = diff[0].size();
 	int n_setminus = diff[1].size();
 	double element;
 	for (int i = 0; i < n_setplus; i++) {
+		n_target += n_setplus;
 		element = data.elem(diff[0][i], data.getTargetIndex());
+		cumsum_target += element;
+		mean_target = cumsum_target / n_target;
 		obj_upd += pow((element - mean_target), 2);
 	}
 	for (int i = 0; i < n_setminus; i++) {
+		n_target -= n_setminus;
 		element = data.elem(diff[1][i], data.getTargetIndex());
+		cumsum_target -= element;
+		mean_target = cumsum_target / n_target;
 		obj_upd -= pow((element - mean_target), 2);
 	}
 	return obj_upd;

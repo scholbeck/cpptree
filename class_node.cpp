@@ -125,7 +125,7 @@ std::vector<Node*> Node::split() {
 	int n_splits = splits.size();
 	std::vector<std::vector<int>> split_obs_current, split_obs_prev;
 	std::array<std::vector<int>, 2> diff;
-	std::vector<double> childnode_obj;
+	std::vector<double> childnode_obj(this->tree->getArgs().getMaxChildren(), 0);
 	std::vector<Data> childnode_data;
 	Data subset_data;
 	ObjectiveSSE obj;
@@ -134,59 +134,55 @@ std::vector<Node*> Node::split() {
 	int optsplit_ix = -1;
 	opt_obj_val = obj.compute(this->data);
 	bool geq_min_node_size = true;
-	std::cout << "starting split search \n";
 	if (!splits.empty()) {
-		std::cout << "breakpoint1\n";
 		for (int i = 0; i < n_splits; i++) {
+			// loop over every split
 			if (i == 0) {
+				// for the first split, the objective cannot be updated
 				split_obs_prev = this->data.splitObs(splits[i]);
-				geq_min_node_size = checkObsSize(split_obs_prev, 1);
-				std::cout << "breakpoint2\n";
+				geq_min_node_size = checkObsSize(split_obs_prev, this->tree->getArgs().getMinNodeSize());
 				if (geq_min_node_size == false) {
 					geq_min_node_size = true;
 					continue;
 				}
-				std::cout << "breakpoint3\n";
+				// check node size for all subsets created by splitting
 				for (int j = 0; j < split_obs_prev.size(); j++) {
 					subset_data = this->data.subsetRows(split_obs_prev[j]);
 					childnode_data.push_back(subset_data);
-					childnode_obj.push_back(obj.compute(subset_data));
+					childnode_obj[j] = obj.compute(subset_data);
 					// compute objective for child node
 				}
-				std::cout << "breakpoint4\n";
-				// do sth
 			} else {
 				split_obs_current = this->data.splitObs(splits[i]);
-				geq_min_node_size = checkObsSize(split_obs_current, 1);
+				geq_min_node_size = checkObsSize(split_obs_current, this->tree->getArgs().getMinNodeSize());
 				if (geq_min_node_size == false) {
 					geq_min_node_size = true;
 					continue;
 				}
-				std::cout << "breakpoint5\n";
+				// check node size for all subsets created by splitting
 				for (int j = 0; j < split_obs_current.size(); j++) {
-					std::cout << "breakpoint6\n";
+					// for each subset, do:
 					diff = diffSet(split_obs_current[j], split_obs_prev[j]);
-					printVectorInt(diff[0]);
-					printVectorInt(diff[1]);
-					// update objective for each node
+					// diff[0] contains additional observations in the subset versus the previous split
+					// diff[1] contains removed observations in the subset versus the previous split 
 					childnode_obj[j] = obj.update(this->data, childnode_obj[j], diff);
+					// update objective for subset (child node)
 				}
 				split_obs_prev = split_obs_current;
 			}
 			child_obj_val = aggreg.compute(childnode_obj);
+			// aggregate objective of all child nodes
 			if (child_obj_val < opt_obj_val) {
-				std::cout << "new optimum, objective value = " << child_obj_val << "\n";
-				splits[i].summary();
 				opt_obj_val = child_obj_val;
 				optsplit_ix = i;
 			}
+			// if aggregate objective better than parent objective, record best split 
 		}
 	}
-	
 	if (optsplit_ix != -1) {
+		// if a split has been found, do:
 		Split optsplit = splits[optsplit_ix];
 		if (optsplit.getSplitFeatureIndex() != -1) {
-			std::cout << "attempting to split... \n";
 			std::vector<Data> child_node_data = this->data.split(optsplit);
 			int n_child_nodes = child_node_data.size();
 			for (int i = 0; i < n_child_nodes; i++) {
@@ -194,27 +190,9 @@ std::vector<Node*> Node::split() {
 				std::string rule = this->createDecisionRule(optsplit, i);
 				Node* child = new Node(child_id, child_node_data[i], this->tree, rule);
 				child_nodes.push_back(child);
-				child->summary();
 			}
 		}
 	}
-	
-	/*
-	Optimizer* optim = this->tree->getFactory().createOptimizer();
-	Split s = optim->searchOptimum(this->data, this->tree->args, this->obj_val);
-	
-	if (s.getSplitFeatureIndex() != -1) {
-		std::vector<Data> child_node_data = this->data.split(s);
-		int n_child_nodes = child_node_data.size();
-		for (int i = 0; i < n_child_nodes; i++) {
-			std::string child_id = this->id + std::to_string(i);
-			std::string rule = this->createDecisionRule(s, i);
-			Node* child = new Node(child_id, child_node_data[i], this->tree, rule);
-			child_nodes.push_back(child);
-		}
-	}
-	free(optim);
-	*/
 	return child_nodes;
 }
 

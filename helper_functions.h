@@ -7,6 +7,7 @@
 
 std::vector<int> initvectorLLUINT(int start, int end);
 double mean(std::vector<double> vec);
+double cumsum(std::vector<double> vec);
 void printVectorLLUInt(std::vector<int> vec);
 void printVectorInt(std::vector<int> vec);
 void printVectorDouble(std::vector<double> vec);
