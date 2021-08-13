@@ -109,8 +109,6 @@ std::string Node::createDecisionRule(Split s, int child_ix) {
 }
 
 
-
-
 std::vector<Node*> Node::split() {
 	SplitGenerator* split_generator = new SplitGeneratorBinExh(this->data, this->tree->getArgs());
 	std::vector<Split> splits = split_generator->generate();
@@ -131,7 +129,6 @@ std::vector<Node*> Node::split() {
 				// for the first split, the objective cannot be updated
 				for (int j = 0; j < n_children; j++) {
 					//subset_data = this->data.subsetRows(split_obs_prev[j]);
-					Data subset = this->data.subsetRows(splits[i].splitted_obs[j]);
 					obj.init(this->data.subsetRows(splits[i].splitted_obs[j]), j);
 					// objective is initialized with all initial observations
 				}
@@ -159,7 +156,6 @@ std::vector<Node*> Node::split() {
 	std::vector<Node*> child_nodes;
 	if (optsplit_ix != -1) {
 		// if a split has been found, do:
-		std::vector<Data> childnode_data;
 		for (int i = 0; i < n_children; i++) {
 			Node* child = new Node(
 				this->id + std::to_string(i),

@@ -66,7 +66,7 @@ void Data::addCols(std::vector<std::vector<double>> col_vec) {
 }
 
 double Data::elem(int row_index, int col_index) {
-	return (this->row(row_index))[col_index];
+	return this->rows[row_index][col_index];
 }
 
 int Data::nrows() {
@@ -182,7 +182,6 @@ std::vector<Data> Data::splitCateg(int col_index) {
 	std::vector<int> level_rows;
 	std::vector<Data> data_partitioned;
 	std::map<std::string, int> levels = this->categ_encodings.at(col_index);
-	double element;
 	int n_levels = levels.size();
 	int level;
 	int n_elements = this->nrows();
@@ -190,8 +189,7 @@ std::vector<Data> Data::splitCateg(int col_index) {
 	for (auto it = levels.begin(); it != levels.end(); ++it) {
 		level = it->second;
 		for (int i = 0; i < n_elements; i++) {
-			element = this->elem(i, col_index);
-			if (element == level) {
+			if (this->elem(i, col_index) == level) {
 				level_rows.push_back(i);
 			}
 		}
@@ -207,12 +205,10 @@ std::vector<Data> Data::splitBinary(double split_value, int col_index) {
 	std::vector<int> rows_right;
 	std::vector<Data> data_partitioned;
 	
-	double element;
 	int n_elements = this->nrows();
 	
 	for (int i = 0; i < n_elements; i++) {
-		element = this->elem(i, col_index);
-		if (element <= split_value) {
+		if (this->elem(i, col_index) <= split_value) {
 			rows_left.push_back(i);
 		} else {
 			rows_right.push_back(i);
@@ -232,7 +228,7 @@ std::vector<std::vector<int>> Data::splitCategObs(int col_index) {
 	std::vector<int> level_rows;
 	std::vector<std::vector<int>> obs_partitioned;
 	std::map<std::string, int> levels = this->categ_encodings.at(col_index);
-	double element;
+	
 	int n_levels = levels.size();
 	int level;
 	int n_elements = this->nrows();
@@ -240,8 +236,7 @@ std::vector<std::vector<int>> Data::splitCategObs(int col_index) {
 	for (auto it = levels.begin(); it != levels.end(); ++it) {
 		level = it->second;
 		for (int i = 0; i < n_elements; i++) {
-			element = this->elem(i, col_index);
-			if (element == level) {
+			if (this->elem(i, col_index) == level) {
 				level_rows.push_back(i);
 			}
 		}
