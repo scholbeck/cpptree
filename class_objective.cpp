@@ -4,15 +4,28 @@
 #include "class_data.h"
 #include "class_objective.h"
 #include "class_model.h"
+#include "class_arguments.h"
 #include "helper_functions.h"
 #include <cmath>
 #include <algorithm>
 
-Objective::Objective() {	
+Objective::Objective(Arguments args) {	
+	for (int i = 0; i < args.getMaxChildren(); i++) {
+		Model* m = new ModelAverage();
+		this->models.push_back(m);
+		this->values.push_back(0);
+	}
+	this->args = args;
 }
 
 // ObjectiveSSE
-ObjectiveSSE::ObjectiveSSE() {
+ObjectiveSSE::ObjectiveSSE(Arguments args) : Objective(args) {
+
+}
+
+void ObjectiveSSE::init(Data data, int childnode) {
+	this->models[childnode]->setTrainingData(data);
+	this->models[childnode]->train();
 }
 
 double ObjectiveSSE::compute(Data data) {
@@ -26,14 +39,24 @@ double ObjectiveSSE::compute(Data data) {
 	return cumsum;
 }
 
-double ObjectiveSSE::update(Data data, int childnode, std::array<std::vector<int>, 2> diff) {
-	this->models[childnode]->update(diff);
-	int n_setplus = diff[0].size();
-	int n_setminus = diff[1].size();
-	double element;
-	for (int i = 0; i < n_setplus; i++) {
-		element = data.elem(diff[0][i], data.getTargetIndex());
-		values[childnode] += pow((element - this->models[childnode]->), 2);
+void ObjectiveSSE::update(Data data, int childnode, std::array<std::vector<int>, 2> diff) {
+	if (!(diff[0].empty() && diff[1].empty())) {
+		int n_setplus = diff[0].size();
+		int n_setminus = diff[1].size();
+		std::vector<double> observation;
+		for (int i = 0; i < n_setplus; i++) {
+			//printVectorInt(diff[0]);
+			observation = data.row(diff[0][i]);
+			//printVectorDouble(observation);
+			this->models[childnode]->update(observation, '+');
+			this->values[childnode] += pow((observation[data.getTargetIndex()] - this->models[childnode]->predictSingle(observation)), 2);
+		}
+		for (int i = 0; i < n_setminus; i++) {
+			//printVectorInt(diff[1]);
+			observation = data.row(diff[1][i]);
+			this->models[childnode]->update(observation, '-');
+			this->values[childnode] -= pow((observation[data.getTargetIndex()] - this->models[childnode]->predictSingle(observation)), 2);
+		}
 	}
 	/*
 	std::vector<double> target_obs = data.col(data.getTargetIndex());
@@ -60,7 +83,6 @@ double ObjectiveSSE::update(Data data, int childnode, std::array<std::vector<int
 		obj_upd -= pow((element - mean_target), 2);
 	}
 	*/
-	return obj_upd;
 }
 
 

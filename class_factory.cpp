@@ -15,7 +15,7 @@ Factory::Factory(Arguments args) {
 Objective* Factory::createObjective() {
 	Objective* obj;
 	if (this->args.getObjective() == "sse") {
-		obj = new ObjectiveSSE();
+		obj = new ObjectiveSSE(this->args);
 	}
 	/*
 	} else if (this->args.getObjective() == "gini") {
@@ -29,9 +29,12 @@ Model* Factory::createModel() {
 	Model* m;
 	if (this->args.getModel() == "mean") {
 		m = new ModelAverage();
-	} else if (this->args.getModel() == "majorvote") {
+	}
+	/*
+	 else if (this->args.getModel() == "majorvote") {
 		m = new ModelMajorityVote();
 	}
+	*/
 	return m;
 }
 

@@ -18,15 +18,13 @@ void Model::checkTrained() {
 	}
 }
 
-double Model::evaluate(Data data, Objective* obj) {
-	std::vector<double> target_pred = this->predict(data);
-	return obj->compute(data);
-}
 
 // ModelAverage
 
 ModelAverage::ModelAverage() : Model() {
-	//
+	this->cumsum_target = 0;
+	this->n = 0;
+	this->mean_target = 0;
 }
 
 void ModelAverage::train() {
@@ -34,49 +32,48 @@ void ModelAverage::train() {
 	std::vector<double> target_values = this->training_data.col(target_index);
 	this->cumsum_target = cumsum(target_values);
 	this->n = target_values.size();
-	this->mean_prediction = this->cumsum_target / this->n;
+	this->mean_target = this->cumsum_target / this->n;
 	this->is_trained = true;
 }
 
-void ModelAverage::update(std::array<std::vector<int>, 2> diff) {
-	int n_setplus = diff[0].size();
-	int n_setminus = diff[1].size();
-	double element;
-	for (int i = 0; i < n_setplus; i++) {
-		this->n += n_setplus;
-		element = this->training_data.elem(diff[0][i], this->training_data.getTargetIndex());
-		this->cumsum_target += element;
-		this->mean_prediction = cumsum_target / this->n;
-	}
-	for (int i = 0; i < n_setminus; i++) {
-		this->n -= n_setplus;
-		element = this->training_data.elem(diff[0][i], this->training_data.getTargetIndex());
-		this->cumsum_target -= element;
-		this->mean_prediction = cumsum_target / this->n;
+void ModelAverage::update(std::vector<double> observation, char setdiff) {
+	if (setdiff == '+') {
+		this->cumsum_target += observation[this->training_data.getTargetIndex()];
+		this->n += 1;
+		this->mean_target = cumsum_target / this->n;
+	} else {
+		this->cumsum_target -= observation[this->training_data.getTargetIndex()];
+		this->n -= 1;
+		this->mean_target = cumsum_target / this->n;
 	}
 	this->is_trained = true;
 }
 
 void ModelAverage::summary() {
 	std::cout << "model summary:\nclass <Average>\n";	
-	std::cout << "mean target value = " << this->mean_prediction << "\n"; 
+	std::cout << "mean target value = " << this->mean_target << "\n"; 
 }
 
 std::string ModelAverage::getShortSummary() {	
 	std::string s;
-	s = std::string("y = ") + std::to_string(this->mean_prediction);
+	s = std::string("y = ") + std::to_string(this->mean_target);
 	return s;
 }
 
-std::vector<double> ModelAverage::predict(Data data) {
+std::vector<double> ModelAverage::predictMult(Data data) {
 	this->checkTrained();
 	int n = data.nrows();
-	std::vector<double> predictions(n, mean_prediction);
+	std::vector<double> predictions(n, mean_target);
 	return predictions;
 }
 
-// ModelMajorityVote
+double ModelAverage::predictSingle(std::vector<double> observation) {
+	this->checkTrained();
+	return this->mean_target;
+}
 
+// ModelMajorityVote
+/*
 ModelMajorityVote::ModelMajorityVote() : Model() {
 	//
 }
@@ -121,3 +118,4 @@ std::vector<double> ModelMajorityVote::predict(Data data) {
 	return predictions;
 }
 
+*/

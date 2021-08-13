@@ -172,7 +172,7 @@ Data Data::subset(std::vector<int> rows, std::vector<int> cols) {
 }
 
 Data Data::subsetRows(std::vector<int> rows) {
-	std::vector<int> cols = initVectorSeq(0, this->ncols());
+	std::vector<int> cols = initVectorSeq(0, this->ncols()-1);
 	Data subset_data = this->subset(rows, cols);
 	return subset_data;
 }

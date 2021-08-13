@@ -4,7 +4,7 @@
 #include "class_tree.h"
 #include "class_arguments.h"
 #include "class_data.h"
-#include "class_optimizer.h"
+#include "class_objective.h"
 #include "string"
 
 class Tree;

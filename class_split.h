@@ -18,6 +18,7 @@ class Split {
 		int max_splits;
 		std::vector<double> split_values;
 		std::vector<Model*> child_node_models;
+		std::vector<std::vector<int>> splitted_obs;
 		
 		int getSplitFeatureIndex();
 		void setFeatureIndex(int feature_index);

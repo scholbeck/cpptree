@@ -70,7 +70,7 @@ int Tree::grow() {
 
 void Tree::freeNodeMemory() {
 	while (this->nodes.empty() == false) {
-		delete(this->nodes.back()->getModel());
+		//delete(this->nodes.back()->getModel());
 		delete(this->nodes.back());
 		this->nodes.pop_back();
 	}
@@ -107,15 +107,14 @@ std::string repeatString(int n, std::string s) {
 void Tree::printSubTree(Node* node) {
 	int level = node->getId().length() - 1;
 		std::ostringstream sstream;
-		sstream << std::setprecision(2) << std::fixed << node->getObjValue(); // obj printout with 2 decimal places
+		sstream << std::setprecision(2) << std::fixed ; //<< node->getObjValue(); // obj printout with 2 decimal places
 	if (level == 0) {
-		std::cout << "└──[" << node->getId() << "] (" << node->getModel()->getShortSummary() << " | obj = " << sstream.str() << ")\n";
+		std::cout << "└──[" << node->getId() << "\n"; // << "] (" << node->getModel()->getShortSummary() << " | obj = " << sstream.str() << ")\n";
 	} else {
 		if (node->isLeaf()) {
-			
-			std::cout << std::string((level * 4) , ' ') << "├──" << repeatString((((this->depth) - level) * 4) + depth * 2, "─") << "<" << node->getDecisionRule() << ">──[*" << node->getId() << "] (" << node->getModel()->getShortSummary() << " | obj = " << sstream.str() << ")\n";
+			std::cout << std::string((level * 4) , ' ') << "├──" << repeatString((((this->depth) - level) * 4) + depth * 2, "─") << "<" << node->getDecisionRule() << ">──[*" << node->getId() << "\n" ;//<< "] (" << node->getModel()->getShortSummary() << " | obj = " << sstream.str() << ")\n";
 		} else {
-			std::cout << std::string((level * 4) , ' ') << "├──<" << node->getDecisionRule() << ">──[" << node->getId() << "] (" << node->getModel()->getShortSummary() << " | obj = " << sstream.str() << ")\n";
+			std::cout << std::string((level * 4) , ' ') << "├──<" << node->getDecisionRule() << ">──[" << node->getId() << "\n" ;//<< "] (" << node->getModel()->getShortSummary() << " | obj = " << sstream.str() << ")\n";
 		}
 	}
 	std::vector<Node*> child_nodes = node->getChildNodes();

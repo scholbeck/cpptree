@@ -15,27 +15,28 @@ class Model {
 		void setTrainingData(Data data);
 		void checkTrained();
 		virtual void train() = 0;
-		virtual void update(std::array<std::vector<int>, 2> diff) = 0;
+		virtual void update(std::vector<double> observation, char setdiff) = 0;
 		virtual void summary() = 0;
 		virtual std::string getShortSummary() = 0;
-		virtual std::vector<double> predict(Data data) = 0;
-		virtual double evaluate(Data data, Objective* obj);
+		virtual std::vector<double> predictMult(Data data) = 0;
+		virtual double predictSingle(std::vector<double> observation) = 0;
 };
 
 // Regression
 
 class ModelAverage: public Model {
 	public:
-		double mean_prediction;
+		double mean_target;
 		double cumsum_target;
 		int n;
 
 		ModelAverage();
 		void train();
 		void summary();
-		virtual void update(std::array<std::vector<int>, 2> diff);
+		virtual void update(std::vector<double> observation, char setdiff);
 		std::string getShortSummary();
-		std::vector<double> predict(Data data);
+		std::vector<double> predictMult(Data data);
+		virtual double predictSingle(std::vector<double> observation);
 };
 
 class ModelLinearRegression: public Model {
@@ -45,7 +46,7 @@ class ModelLinearRegression: public Model {
 
 // Classification
 
-
+/*
 class ModelMajorityVote: public Model {
 	public:
 		int majority_class;
@@ -58,5 +59,5 @@ class ModelMajorityVote: public Model {
 		std::vector<double> predict(Data data);
 };
 
-
+*/
 #endif 

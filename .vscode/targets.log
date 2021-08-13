@@ -8,7 +8,7 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Thu Aug 12 18:43:33 2021
+# Make data base, printed on Fri Aug 13 17:36:22 2021
 
 # Variables
 
@@ -51,7 +51,7 @@ GDM_LANG = en_US
 # environment
 VSCODE_NLS_CONFIG = {"locale":"en-us","availableLanguages":{},"_languagePackSupport":true}
 # environment
-JOURNAL_STREAM = 9:328576
+JOURNAL_STREAM = 9:42689
 # environment
 XDG_CONFIG_DIRS = /etc/xdg/xdg-ubuntu:/etc/xdg
 # environment
@@ -79,7 +79,7 @@ VSCODE_VERBOSE_LOGGING = true
 # environment
 _ = /snap/code/71/usr/share/code/code
 # environment
-MANAGERPID = 1842
+MANAGERPID = 1611
 # environment
 LESSOPEN = | /usr/bin/lesspipe %s
 # environment
@@ -97,7 +97,7 @@ PATH = /home/scholbeck/bin:/home/scholbeck/bin:/usr/local/sbin:/usr/local/bin:/u
 # environment
 GPG_AGENT_INFO = /run/user/1000/gnupg/S.gpg-agent:0:1
 # environment
-SESSION_MANAGER = local/christian-ThinkPad-T480s:@/tmp/.ICE-unix/2041,unix/christian-ThinkPad-T480s:/tmp/.ICE-unix/2041
+SESSION_MANAGER = local/christian-ThinkPad-T480s:@/tmp/.ICE-unix/1820,unix/christian-ThinkPad-T480s:/tmp/.ICE-unix/1820
 # environment
 XDG_RUNTIME_DIR = /run/user/1000
 # environment
@@ -115,7 +115,7 @@ DISABLE_WAYLAND = 1
 # environment
 VSCODE_CRASH_REPORTER_START_OPTIONS = {"companyName":"Microsoft","productName":"VSCode","submitURL":"appcenter://code?aid=fba07a4d-84bd-4fc8-a125-9640fc8ce171&uid=d4c92552-81de-44ef-b0ac-f4c985dec6d5&iid=d4c92552-81de-44ef-b0ac-f4c985dec6d5&sid=d4c92552-81de-44ef-b0ac-f4c985dec6d5","uploadToServer":true}
 # environment
-INVOCATION_ID = 3b9757b961ea42d0a4550652540cf49e
+INVOCATION_ID = 53b9d47661944a7ab7d1cf91fa9affaf
 # environment
 GDK_PIXBUF_MODULEDIR = /snap/code/71/usr/lib/x86_64-linux-gnu/gdk-pixbuf-2.0/2.10.0/loaders
 # default
@@ -129,7 +129,7 @@ XDG_SESSION_DESKTOP = ubuntu
 # environment
 SSH_AUTH_SOCK = /run/user/1000/keyring/ssh
 # environment
-GIO_LAUNCHED_DESKTOP_FILE_PID = 25287
+GIO_LAUNCHED_DESKTOP_FILE_PID = 4569
 # automatic
 %F = $(notdir $%)
 # environment
@@ -143,10 +143,9 @@ PWD = /home/scholbeck/C_Projects/treelib
 # default
 .LOADED := 
 # environment
-SSH_AGENT_PID = 1994
+SSH_AGENT_PID = 1771
 # environment
 ORIGINAL_XDG_CURRENT_DESKTOP = ubuntu:GNOME
- 
 # environment
 GTK_MODULES = gail:atk-bridge
 # environment
@@ -163,7 +162,6 @@ VSCODE_CODE_CACHE_PATH = /home/scholbeck/.config/Code/CachedData/379476f0e13988d
 LOGNAME = scholbeck
 # environment
 APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = true
- 
 # environment
 SNAP_LIBRARY_PATH = /var/lib/snapd/lib/gl:/var/lib/snapd/lib/gl32:/var/lib/snapd/void
 # environment
@@ -199,7 +197,7 @@ CC = g++
 # environment
 GNOME_SHELL_SESSION_MODE = ubuntu
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-ea927c8b-0e45-4708-848e-67133c2a934b.sock
+VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-6836b155-3730-4b61-9992-e2e1579d794a.sock
 # default
 MAKE_VERSION := 4.2.1
 # environment
@@ -281,6 +279,7 @@ CHROME_DESKTOP = code-url-handler.desktop
 # default
 .INCLUDE_DIRS = /usr/include /usr/local/include /usr/include
 # environment
+ 
 GJS_DEBUG_OUTPUT = stderr
 # default
 .RECIPEPREFIX := 
@@ -289,7 +288,7 @@ LC_ADDRESS = de_DE.UTF-8
 # environment
 LANG = C
 # environment
-VSCODE_PID = 25331
+VSCODE_PID = 4614
 # variable set hash-table stats:
 # Load=138/1024=13%, Rehash=0, Collisions=20/163=12%
 
@@ -310,17 +309,23 @@ VSCODE_PID = 25331
 # Files
 
 # Not a target:
- 
 all:
 #  Command line target.
 #  Implicit rule search has been done.
 #  File does not exist.
 #  File has not been updated.
 
+gt2:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 21):
+	./tree --filename data/gt_data1feature.csv --target 1 --sep , --task regr --algorithm exhaustive --objective sse --model mean --minsize 100 --children 2
+
 # Not a target:
 Makefile:
 #  Implicit rule search has been done.
-#  Last modified 2021-08-12 18:40:25.941976282
+#  Last modified 2021-08-13 17:35:20.959139481
 #  File has been updated.
 #  Successfully updated.
 
@@ -363,30 +368,30 @@ gt:
 #  Modification time never checked.
 #  File has not been updated.
 #  recipe to execute (from 'Makefile', line 19):
-	./tree --filename data/gt_data.csv --target 1 --sep , --task regr --algorithm exhaustive --objective sse --model mean --minsize 100 --children 2
+	./tree --filename data/gt_data2.csv --target 1 --sep , --task regr --algorithm exhaustive --objective sse --model mean --minsize 100 --children 2
 
 main:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
 #  recipe to execute (from 'Makefile', line 4):
-	$(CC) -o tree main.cpp class_arguments.cpp class_factory.cpp class_reader.cpp class_data.cpp class_node.cpp class_split.cpp class_model.cpp class_objective.cpp class_optimizer.cpp class_tree.cpp class_aggregation.cpp class_splitgenerator.cpp helper_functions.cpp
+	$(CC) -o tree main.cpp class_arguments.cpp class_factory.cpp class_reader.cpp class_data.cpp class_node.cpp class_split.cpp class_model.cpp class_objective.cpp class_tree.cpp class_aggregation.cpp class_splitgenerator.cpp helper_functions.cpp
 	
 
 # files hash-table stats:
-# Load=10/1024=1%, Rehash=0, Collisions=0/20=0%
+# Load=11/1024=1%, Rehash=0, Collisions=0/21=0%
 # VPATH Search Paths
 
 # No 'vpath' search paths.
 
 # No general ('VPATH' variable) search path.
 
-# strcache buffers: 1 (0) / strings = 49 / storage = 631 B / avg = 12 B
-# current buf: size = 8162 B / used = 631 B / count = 49 / avg = 12 B
+# strcache buffers: 1 (0) / strings = 50 / storage = 635 B / avg = 12 B
+# current buf: size = 8162 B / used = 635 B / count = 50 / avg = 12 B
 
-# strcache performance: lookups = 59 / hit rate = 16%
+# strcache performance: lookups = 61 / hit rate = 18%
 # hash-table stats:
-# Load=49/8192=1%, Rehash=0, Collisions=2/59=3%
-# Finished Make data base on Thu Aug 12 18:43:33 2021
+# Load=50/8192=1%, Rehash=0, Collisions=2/61=3%
+# Finished Make data base on Fri Aug 13 17:36:22 2021
 
  
