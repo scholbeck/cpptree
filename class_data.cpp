@@ -91,6 +91,7 @@ std::vector<double> Data::col(int j) {
 }
 
 void Data::init(int n_rows, int n_cols) {
+	this->rows.reserve(n_rows);
 	std::vector<std::vector<double>> vec(n_rows, std::vector<double>(n_cols, 0));
 	this->rows = vec;
 }
