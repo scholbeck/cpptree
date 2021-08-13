@@ -256,12 +256,10 @@ std::vector<std::vector<int>> Data::splitBinaryObs(double split_value, int col_i
 	std::vector<int> rows_left;
 	std::vector<int> rows_right;
 	std::vector<std::vector<int>> split_obs; 
-	double element;
 	int n_elements = this->nrows();
 	
 	for (int i = 0; i < n_elements; i++) {
-		element = this->elem(i, col_index);
-		if (element <= split_value) {
+		if (this->elem(i, col_index) <= split_value) {
 			rows_left.push_back(i);
 		} else {
 			rows_right.push_back(i);
@@ -273,7 +271,6 @@ std::vector<std::vector<int>> Data::splitBinaryObs(double split_value, int col_i
 }
 
 std::vector<std::vector<int>> Data::splitObs(Split split) {
-
 	std::vector<std::vector<int>> split_multiway;
 	if (split.getSplitType() == "num") {
 		std::vector<double> split_values = split.getSplitValues();
@@ -286,8 +283,7 @@ std::vector<std::vector<int>> Data::splitObs(Split split) {
 		split_multiway.push_back(split_binary[1]);
 		
 		for (int i = 1; i < n_splits; i++) {
-			std::vector<int> cols = initVectorSeq(0, (this->ncols()) - 1); // init vector from 0 to highest column index
-			Data right_subset = this->subset(split_binary[1], cols);
+			Data right_subset = this->subsetRows(split_binary[1]);
 			split_binary = right_subset.splitBinaryObs(split_values[i], feature); // split last element in two
 			split_multiway.pop_back(); // remove last element which was split in two
 			split_multiway.push_back(split_binary[0]); // add resulting splits

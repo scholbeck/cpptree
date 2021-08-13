@@ -8,7 +8,7 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Fri Aug 13 17:36:22 2021
+# Make data base, printed on Fri Aug 13 18:29:15 2021
 
 # Variables
 
@@ -193,7 +193,7 @@ SNAP_USER_DATA = /home/scholbeck/snap/code/71
 # environment
 SHLVL = 0
 # makefile (from 'Makefile', line 1)
-CC = g++
+CC = g++ -oFast 
 # environment
 GNOME_SHELL_SESSION_MODE = ubuntu
 # environment
@@ -279,7 +279,6 @@ CHROME_DESKTOP = code-url-handler.desktop
 # default
 .INCLUDE_DIRS = /usr/include /usr/local/include /usr/include
 # environment
- 
 GJS_DEBUG_OUTPUT = stderr
 # default
 .RECIPEPREFIX := 
@@ -298,9 +297,9 @@ VSCODE_PID = 4614
 
 # Directories
 
-# . (device 66310, inode 6162272): 38 files, no impossibilities.
+# . (device 66310, inode 6162272): 37 files, no impossibilities.
 
-# 38 files, no impossibilities in 1 directories.
+# 37 files, no impossibilities in 1 directories.
 
 # Implicit Rules
 
@@ -319,13 +318,13 @@ gt2:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 21):
+#  recipe to execute (from 'Makefile', line 24):
 	./tree --filename data/gt_data1feature.csv --target 1 --sep , --task regr --algorithm exhaustive --objective sse --model mean --minsize 100 --children 2
 
 # Not a target:
 Makefile:
 #  Implicit rule search has been done.
-#  Last modified 2021-08-13 17:35:20.959139481
+#  Last modified 2021-08-13 18:25:40.916467331
 #  File has been updated.
 #  Successfully updated.
 
@@ -333,21 +332,22 @@ iris:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 10):
+#  recipe to execute (from 'Makefile', line 13):
 	./tree --filename data/iris.data --target 4 --sep , --task classif --algorithm exhaustive --objective gini --model majorvote --minsize 20 --children 2
 
 iris3way:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 13):
+#  recipe to execute (from 'Makefile', line 16):
 	./tree --filename data/iris_10.data --target 4 --sep , --task classif --algorithm exhaustive --objective gini --model majorvote --minsize 1 --children 3
+ 
 
 mushroom:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 16):
+#  recipe to execute (from 'Makefile', line 19):
 	./tree --filename data/mushroom.data --target 1 --sep , --task classif --algorithm exhaustive --objective gini --model majorvote --minsize 20 --children 2
 
 # Not a target:
@@ -360,14 +360,14 @@ clean:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 7):
+#  recipe to execute (from 'Makefile', line 10):
 	rm -f main
 
 gt:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 19):
+#  recipe to execute (from 'Makefile', line 22):
 	./tree --filename data/gt_data2.csv --target 1 --sep , --task regr --algorithm exhaustive --objective sse --model mean --minsize 100 --children 2
 
 main:
@@ -378,20 +378,27 @@ main:
 	$(CC) -o tree main.cpp class_arguments.cpp class_factory.cpp class_reader.cpp class_data.cpp class_node.cpp class_split.cpp class_model.cpp class_objective.cpp class_tree.cpp class_aggregation.cpp class_splitgenerator.cpp helper_functions.cpp
 	
 
+profile:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 7):
+		$(CC) -o tree -pg main.cpp class_arguments.cpp class_factory.cpp class_reader.cpp class_data.cpp class_node.cpp class_split.cpp class_model.cpp class_objective.cpp class_tree.cpp class_aggregation.cpp class_splitgenerator.cpp helper_functions.cpp
+
 # files hash-table stats:
-# Load=11/1024=1%, Rehash=0, Collisions=0/21=0%
+# Load=12/1024=1%, Rehash=0, Collisions=0/22=0%
 # VPATH Search Paths
 
 # No 'vpath' search paths.
 
 # No general ('VPATH' variable) search path.
 
-# strcache buffers: 1 (0) / strings = 50 / storage = 635 B / avg = 12 B
-# current buf: size = 8162 B / used = 635 B / count = 50 / avg = 12 B
+# strcache buffers: 1 (0) / strings = 50 / storage = 634 B / avg = 12 B
+# current buf: size = 8162 B / used = 634 B / count = 50 / avg = 12 B
 
-# strcache performance: lookups = 61 / hit rate = 18%
+# strcache performance: lookups = 62 / hit rate = 19%
 # hash-table stats:
-# Load=50/8192=1%, Rehash=0, Collisions=2/61=3%
-# Finished Make data base on Fri Aug 13 17:36:22 2021
+# Load=50/8192=1%, Rehash=0, Collisions=2/62=3%
+# Finished Make data base on Fri Aug 13 18:29:15 2021
 
  

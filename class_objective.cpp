@@ -45,44 +45,16 @@ void ObjectiveSSE::update(Data data, int childnode, std::array<std::vector<int>,
 		int n_setminus = diff[1].size();
 		std::vector<double> observation;
 		for (int i = 0; i < n_setplus; i++) {
-			//printVectorInt(diff[0]);
 			observation = data.row(diff[0][i]);
-			//printVectorDouble(observation);
 			this->models[childnode]->update(observation, '+');
 			this->values[childnode] += pow((observation[data.getTargetIndex()] - this->models[childnode]->predictSingle(observation)), 2);
 		}
 		for (int i = 0; i < n_setminus; i++) {
-			//printVectorInt(diff[1]);
 			observation = data.row(diff[1][i]);
 			this->models[childnode]->update(observation, '-');
 			this->values[childnode] -= pow((observation[data.getTargetIndex()] - this->models[childnode]->predictSingle(observation)), 2);
 		}
 	}
-	/*
-	std::vector<double> target_obs = data.col(data.getTargetIndex());
-	double cumsum_target = cumsum(target_obs);
-	int n_target = target_obs.size();
-	double mean_target = cumsum_target / n_target;
-
-	double obj_upd = obj_prev;
-	int n_setplus = diff[0].size();
-	int n_setminus = diff[1].size();
-	double element;
-	for (int i = 0; i < n_setplus; i++) {
-		n_target += n_setplus;
-		element = data.elem(diff[0][i], data.getTargetIndex());
-		cumsum_target += element;
-		mean_target = cumsum_target / n_target;
-		obj_upd += pow((element - mean_target), 2);
-	}
-	for (int i = 0; i < n_setminus; i++) {
-		n_target -= n_setminus;
-		element = data.elem(diff[1][i], data.getTargetIndex());
-		cumsum_target -= element;
-		mean_target = cumsum_target / n_target;
-		obj_upd -= pow((element - mean_target), 2);
-	}
-	*/
 }
 
 

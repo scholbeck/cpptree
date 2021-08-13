@@ -105,7 +105,6 @@ std::string Node::createDecisionRule(Split s, int child_ix) {
 			}
 		}
 	}
-	
 	return rule;
 }
 
@@ -123,7 +122,8 @@ std::vector<Node*> Node::split() {
 	ObjectiveSSE obj = ObjectiveSSE(this->tree->getArgs());
 	double child_obj_val, opt_obj_val;
 	int optsplit_ix = -1;
-	opt_obj_val = obj.compute(this->data);
+	this->obj_val = obj.compute(this->data);
+	opt_obj_val = this->obj_val;
 	if (!splits.empty()) {
 		for (int i = 0; i < n_splits; i++) {
 			// loop over every split
@@ -161,10 +161,11 @@ std::vector<Node*> Node::split() {
 		// if a split has been found, do:
 		std::vector<Data> childnode_data;
 		for (int i = 0; i < n_children; i++) {
-			Data subset = this->data.subsetRows(splits[optsplit_ix].splitted_obs[i]);
-			std::string child_id = this->id + std::to_string(i);
-			std::string rule = this->createDecisionRule(splits[optsplit_ix], i);
-			Node* child = new Node(child_id, subset, this->tree, rule);
+			Node* child = new Node(
+				this->id + std::to_string(i),
+				this->data.subsetRows(splits[optsplit_ix].splitted_obs[i]),
+				this->tree,
+				this->createDecisionRule(splits[optsplit_ix], i));
 			child_nodes.push_back(child);
 		}
 	}
@@ -172,8 +173,7 @@ std::vector<Node*> Node::split() {
 }
 
 int Node::recursiveSplit() {
-	std::vector<Node*> child_nodes = this->split();
-	this->child_nodes = child_nodes;
+	this->child_nodes = this->split();
 	int n_child_nodes = 0; 
 	int ret = 0;
 	if (!child_nodes.empty()) {
@@ -184,7 +184,6 @@ int Node::recursiveSplit() {
 	} else {
 		this->is_leaf = true;
 	}
-	
 	return ret;
 }
 
