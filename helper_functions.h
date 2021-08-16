@@ -16,5 +16,6 @@ std::vector<int> initVectorSeq(int from, int to);
 std::vector<double> initVectorSeqDouble(int from, int to);
 std::array<std::vector<int>, 2> diffSet(std::vector<int> set_a, std::vector<int> set_b);
 bool checkObsSize(std::vector<std::vector<int>> split_obs, int min_node_size);
+double quantileSortedVec(double quantile, std::vector<double> vec);
 
 #endif 

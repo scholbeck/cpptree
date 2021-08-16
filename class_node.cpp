@@ -17,6 +17,7 @@ Node::Node(std::string id, Data data, Tree* tree, std::string decision_rule) {
 	this->id = id;
 	this->decision_rule = decision_rule;
 	this->child_cnt = 0;
+	this->child_nodes.reserve(tree->getArgs().getMaxChildren());
 	this->is_leaf = false;
 	this->tree->addNode(this);
 }
@@ -124,6 +125,7 @@ std::vector<Node*> Node::split() {
 	opt_obj_val = this->obj_val;
 	if (!splits.empty()) {
 		for (int i = 0; i < n_splits; i++) {
+			std::cout << i << std::flush;
 			// loop over every split
 			if (i == 0) {
 				// for the first split, the objective cannot be updated
@@ -154,6 +156,7 @@ std::vector<Node*> Node::split() {
 		}
 	}
 	std::vector<Node*> child_nodes;
+	child_nodes.reserve(n_children);
 	if (optsplit_ix != -1) {
 		// if a split has been found, do:
 		for (int i = 0; i < n_children; i++) {

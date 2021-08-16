@@ -20,5 +20,12 @@ class SplitGeneratorBinExh: public SplitGenerator {
 		std::vector<Split> generate();
 };
 
+class SplitGeneratorBinQuant: public SplitGenerator {
+	public:
+		SplitGeneratorBinQuant(Data data, Arguments args);
+		std::vector<Split> generate();
+};
+
+
 
 #endif 

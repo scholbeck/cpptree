@@ -2,7 +2,7 @@
 #include <array>
 #include <iostream>
 #include "helper_functions.h"
-
+#include <cmath>
 
 
 std::vector<int> initVectorLLUInt(int start, int end) {
@@ -163,4 +163,9 @@ double cumsum(std::vector<double> vec) {
 		cumsum += vec[i];
 	}
 	return cumsum;
+}
+
+double quantileSortedVec(double quantile, std::vector<double> vec) {
+	double n = (double) vec.size();
+	return vec[floor(quantile * n)];
 }

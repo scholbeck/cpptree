@@ -156,6 +156,7 @@ std::vector<std::string> Data::getColTypes() {
 
 Data Data::subset(std::vector<int> rows, std::vector<int> cols) {
 
+	std::sort(rows.begin(), rows.end());
 	std::sort(cols.begin(), cols.end());
 	int n_rows_subset = rows.size();
 	int n_cols_subset = cols.size();
@@ -164,13 +165,28 @@ Data Data::subset(std::vector<int> rows, std::vector<int> cols) {
 	subset.setCategEncodings(this->categ_encodings);
 	subset.setTargetIndex(this->target_index);
 	subset.setColTypes(this->coltypes);
+
 	for (int i = 0; i < n_rows_subset; i++) {
 		for (int j = 0; j < n_cols_subset; j++) {
 			(subset.rows[i])[j] = this->elem(rows[i], cols[j]);
 		}
 	}
+	/*
+	std::vector<std::map<double, int>> ordered_features_new;
+	ordered_features_new.reserve(n_cols_subset);
+	std::map<double, int> feature;
+	for (int j = 0; j < n_cols_subset; j++) {
+		feature = this->ordered_features[cols[j]];
+		for (int i = 0; i < n_rows_subset; i++) {
+			feature.erase(rows[i]);
+		}
+		ordered_features_new.push_back(feature);
+	}
+	*/
 	return subset;
 }
+
+
 
 Data Data::subsetRows(std::vector<int> rows) {
 	std::vector<int> cols = initVectorSeq(0, this->ncols()-1);
@@ -249,10 +265,12 @@ std::vector<std::vector<int>> Data::splitCategObs(int col_index) {
 
 
 std::vector<std::vector<int>> Data::splitBinaryObs(double split_value, int col_index) {
+	int n_elements = this->nrows();
 	std::vector<int> rows_left;
 	std::vector<int> rows_right;
+	rows_left.reserve(n_elements);
+	rows_right.reserve(n_elements);
 	std::vector<std::vector<int>> split_obs; 
-	int n_elements = this->nrows();
 	
 	for (int i = 0; i < n_elements; i++) {
 		if (this->elem(i, col_index) <= split_value) {
@@ -317,3 +335,16 @@ std::vector<Data> Data::split(Split split) {
 }
 
 
+void Data::orderFeatures() {
+	std::map<double, int> feat;
+	std::vector<double> id, values;
+	int n_rows = this->nrows();
+	int n_features = this->ncols()-2;
+	for (int j = 0; j < n_features; j++) {
+		values = this->col(j);
+		id = this->col(0);
+		for (int i = 0; i < n_rows; i++) {
+    		feat[id[i]] = values[i];
+		}
+	}
+}

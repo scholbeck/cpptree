@@ -80,8 +80,8 @@ void Tree::summary() {
 	this->root->getData().summary();
 	std::cout << "------------------------------------------------------\n";
 	std::cout << "TREE SUMMARY\n";
-	std::cout << "\tnodes: " << this->node_cnt << "\n";
-	std::cout << "\tleaf nodes: " << this->leafnode_cnt << "\n";
+	std::cout << "\tnodes : " << this->node_cnt << "\n";
+	std::cout << "\tleaf nodes : " << this->leafnode_cnt << "\n";
 	std::cout << "\tdepth : " << this->depth << "\n\n";
 	this->print();
 	/*
@@ -112,7 +112,8 @@ void Tree::printSubTree(Node* node) {
 		std::cout << "└──[" << node->getId() << "]\n"; // << "] (" << node->getModel()->getShortSummary() << " | obj = " << sstream.str() << ")\n";
 	} else {
 		if (node->isLeaf()) {
-			std::cout << std::string((level * 4) , ' ') << "├──" << repeatString((((this->depth) - level) * 4) + depth * 2, "─") << "<" << node->getDecisionRule() << ">──[*" << node->getId() << "]\n" ;//<< "] (" << node->getModel()->getShortSummary() << " | obj = " << sstream.str() << ")\n";
+			// std::cout << std::string((level * 4) , ' ') << "├──" << repeatString((((this->depth) - level) * 4) + depth * 2, "─") << "<" << node->getDecisionRule() << ">──[*" << node->getId() << "]\n" ;//<< "] (" << node->getModel()->getShortSummary() << " | obj = " << sstream.str() << ")\n";
+			std::cout << std::string((level * 4) , ' ') << "├──<" << node->getDecisionRule() << ">──[*" << node->getId() << "]\n" ;//<< "] (" << node->getModel()->getShortSummary() << " | obj = " << sstream.str() << ")\n";
 		} else {
 			std::cout << std::string((level * 4) , ' ') << "├──<" << node->getDecisionRule() << ">──[" << node->getId() << "]\n" ;//<< "] (" << node->getModel()->getShortSummary() << " | obj = " << sstream.str() << ")\n";
 		}

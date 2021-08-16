@@ -8,7 +8,7 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Fri Aug 13 19:47:49 2021
+# Make data base, printed on Mon Aug 16 19:58:30 2021
 
 # Variables
 
@@ -51,7 +51,7 @@ GDM_LANG = en_US
 # environment
 VSCODE_NLS_CONFIG = {"locale":"en-us","availableLanguages":{},"_languagePackSupport":true}
 # environment
-JOURNAL_STREAM = 9:42689
+JOURNAL_STREAM = 9:45657
 # environment
 XDG_CONFIG_DIRS = /etc/xdg/xdg-ubuntu:/etc/xdg
 # environment
@@ -79,7 +79,7 @@ VSCODE_VERBOSE_LOGGING = true
 # environment
 _ = /snap/code/71/usr/share/code/code
 # environment
-MANAGERPID = 1611
+MANAGERPID = 1618
 # environment
 LESSOPEN = | /usr/bin/lesspipe %s
 # environment
@@ -97,7 +97,7 @@ PATH = /home/scholbeck/bin:/home/scholbeck/bin:/usr/local/sbin:/usr/local/bin:/u
 # environment
 GPG_AGENT_INFO = /run/user/1000/gnupg/S.gpg-agent:0:1
 # environment
-SESSION_MANAGER = local/christian-ThinkPad-T480s:@/tmp/.ICE-unix/1820,unix/christian-ThinkPad-T480s:/tmp/.ICE-unix/1820
+SESSION_MANAGER = local/christian-ThinkPad-T480s:@/tmp/.ICE-unix/1817,unix/christian-ThinkPad-T480s:/tmp/.ICE-unix/1817
 # environment
 XDG_RUNTIME_DIR = /run/user/1000
 # environment
@@ -115,7 +115,7 @@ DISABLE_WAYLAND = 1
 # environment
 VSCODE_CRASH_REPORTER_START_OPTIONS = {"companyName":"Microsoft","productName":"VSCode","submitURL":"appcenter://code?aid=fba07a4d-84bd-4fc8-a125-9640fc8ce171&uid=d4c92552-81de-44ef-b0ac-f4c985dec6d5&iid=d4c92552-81de-44ef-b0ac-f4c985dec6d5&sid=d4c92552-81de-44ef-b0ac-f4c985dec6d5","uploadToServer":true}
 # environment
-INVOCATION_ID = 53b9d47661944a7ab7d1cf91fa9affaf
+INVOCATION_ID = 8100a79e50964512bd384117412fd6f6
 # environment
 GDK_PIXBUF_MODULEDIR = /snap/code/71/usr/lib/x86_64-linux-gnu/gdk-pixbuf-2.0/2.10.0/loaders
 # default
@@ -129,7 +129,7 @@ XDG_SESSION_DESKTOP = ubuntu
 # environment
 SSH_AUTH_SOCK = /run/user/1000/keyring/ssh
 # environment
-GIO_LAUNCHED_DESKTOP_FILE_PID = 56882
+GIO_LAUNCHED_DESKTOP_FILE_PID = 12128
 # automatic
 %F = $(notdir $%)
 # environment
@@ -143,7 +143,7 @@ PWD = /home/scholbeck/C_Projects/treelib
 # default
 .LOADED := 
 # environment
-SSH_AGENT_PID = 1771
+SSH_AGENT_PID = 1767
 # environment
 ORIGINAL_XDG_CURRENT_DESKTOP = ubuntu:GNOME
 # environment
@@ -193,11 +193,11 @@ SNAP_USER_DATA = /home/scholbeck/snap/code/71
 # environment
 SHLVL = 0
 # makefile (from 'Makefile', line 1)
-CC = g++ -oFast 
+CC = g++
 # environment
 GNOME_SHELL_SESSION_MODE = ubuntu
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-6fce8826-8b6c-4207-a1e4-4226b876721e.sock
+VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-85d78653-f981-4a76-aa17-9e32a251c8d0.sock
 # default
 MAKE_VERSION := 4.2.1
 # environment
@@ -279,16 +279,16 @@ CHROME_DESKTOP = code-url-handler.desktop
 # default
 .INCLUDE_DIRS = /usr/include /usr/local/include /usr/include
 # environment
- 
 GJS_DEBUG_OUTPUT = stderr
 # default
 .RECIPEPREFIX := 
 # environment
+ 
 LC_ADDRESS = de_DE.UTF-8
 # environment
 LANG = C
 # environment
-VSCODE_PID = 56927
+VSCODE_PID = 12172
 # variable set hash-table stats:
 # Load=138/1024=13%, Rehash=0, Collisions=20/163=12%
 
@@ -298,9 +298,9 @@ VSCODE_PID = 56927
 
 # Directories
 
-# . (device 66310, inode 6162272): 37 files, no impossibilities.
+# . (device 66310, inode 6162272): 38 files, no impossibilities.
 
-# 37 files, no impossibilities in 1 directories.
+# 38 files, no impossibilities in 1 directories.
 
 # Implicit Rules
 
@@ -319,13 +319,13 @@ gt2:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 24):
+#  recipe to execute (from 'Makefile', line 25):
 	./tree --filename data/gt_data1feature.csv --target 1 --sep , --task regr --algorithm exhaustive --objective sse --model mean --minsize 100 --children 2
 
 # Not a target:
 Makefile:
 #  Implicit rule search has been done.
-#  Last modified 2021-08-13 18:25:40.916467331
+#  Last modified 2021-08-16 19:58:00.748044811
 #  File has been updated.
 #  Successfully updated.
 
@@ -342,6 +342,13 @@ iris3way:
 #  File has not been updated.
 #  recipe to execute (from 'Makefile', line 16):
 	./tree --filename data/iris_10.data --target 4 --sep , --task classif --algorithm exhaustive --objective gini --model majorvote --minsize 1 --children 3
+
+gt3:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 28):
+	./tree --filename data/gt_2015.csv --target 1 --sep , --task regr --algorithm exhaustive --objective sse --model mean --minsize 100 --children 2
 
 mushroom:
 #  Implicit rule search has not been done.
@@ -375,7 +382,7 @@ main:
 #  Modification time never checked.
 #  File has not been updated.
 #  recipe to execute (from 'Makefile', line 4):
-	$(CC) -o tree main.cpp class_arguments.cpp class_factory.cpp class_reader.cpp class_data.cpp class_node.cpp class_split.cpp class_model.cpp class_objective.cpp class_tree.cpp class_aggregation.cpp class_splitgenerator.cpp helper_functions.cpp
+	$(CC) -O3 -o tree main.cpp class_arguments.cpp class_factory.cpp class_reader.cpp class_data.cpp class_node.cpp class_split.cpp class_model.cpp class_objective.cpp class_tree.cpp class_aggregation.cpp class_splitgenerator.cpp helper_functions.cpp
 	
 
 profile:
@@ -383,22 +390,22 @@ profile:
 #  Modification time never checked.
 #  File has not been updated.
 #  recipe to execute (from 'Makefile', line 7):
-		$(CC) -o tree -pg main.cpp class_arguments.cpp class_factory.cpp class_reader.cpp class_data.cpp class_node.cpp class_split.cpp class_model.cpp class_objective.cpp class_tree.cpp class_aggregation.cpp class_splitgenerator.cpp helper_functions.cpp
+		$(CC) -O3 -o tree -pg main.cpp class_arguments.cpp class_factory.cpp class_reader.cpp class_data.cpp class_node.cpp class_split.cpp class_model.cpp class_objective.cpp class_tree.cpp class_aggregation.cpp class_splitgenerator.cpp helper_functions.cpp
 
 # files hash-table stats:
-# Load=12/1024=1%, Rehash=0, Collisions=0/22=0%
+# Load=13/1024=1%, Rehash=0, Collisions=0/23=0%
 # VPATH Search Paths
 
 # No 'vpath' search paths.
 
 # No general ('VPATH' variable) search path.
 
-# strcache buffers: 1 (0) / strings = 50 / storage = 634 B / avg = 12 B
-# current buf: size = 8162 B / used = 634 B / count = 50 / avg = 12 B
+# strcache buffers: 1 (0) / strings = 52 / storage = 647 B / avg = 12 B
+# current buf: size = 8162 B / used = 647 B / count = 52 / avg = 12 B
 
-# strcache performance: lookups = 62 / hit rate = 19%
+# strcache performance: lookups = 65 / hit rate = 20%
 # hash-table stats:
-# Load=50/8192=1%, Rehash=0, Collisions=2/62=3%
-# Finished Make data base on Fri Aug 13 19:47:49 2021
+# Load=52/8192=1%, Rehash=0, Collisions=2/65=3%
+# Finished Make data base on Mon Aug 16 19:58:30 2021
 
  
