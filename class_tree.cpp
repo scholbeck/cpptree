@@ -6,12 +6,11 @@
 #include "class_data.h"
 #include "class_tree.h"
 #include "class_node.h"
-#include "class_optimizer.h"
 #include "class_arguments.h"
 #include "class_factory.h"
 #include <iomanip>
 
-Tree::Tree(Data data, Arguments args) : factory(args) {
+Tree::Tree(Data* data, Arguments args) : factory(args) {
 	this->node_cnt = 0;
 	this->leafnode_cnt = 0;
 	this->args = args;
@@ -71,13 +70,14 @@ int Tree::grow() {
 void Tree::freeNodeMemory() {
 	while (this->nodes.empty() == false) {
 		//delete(this->nodes.back()->getModel());
-		delete(this->nodes.back());
+		free(this->nodes.back()->getData());
+		free(this->nodes.back());
 		this->nodes.pop_back();
 	}
 }
 
 void Tree::summary() {
-	this->root->getData().summary();
+	this->root->getData()->summary();
 	std::cout << "------------------------------------------------------\n";
 	std::cout << "TREE SUMMARY\n";
 	std::cout << "\tnodes : " << this->node_cnt << "\n";

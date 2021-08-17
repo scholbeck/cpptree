@@ -11,7 +11,7 @@
 #include "helper_functions.h"
 #include <iomanip>
 
-Node::Node(std::string id, Data data, Tree* tree, std::string decision_rule) {
+Node::Node(std::string id, Data* data, Tree* tree, std::string decision_rule) {
 	this->tree = tree;
 	this->data = data;
 	this->id = id;
@@ -29,7 +29,7 @@ double Node::getObjValue() {
 std::string Node::getId() {
 	return id;
 }
-Data Node::getData() {
+Data* Node::getData() {
 	return this->data;
 }
 
@@ -63,7 +63,7 @@ void Node::summary() {
 		std::cout << "\tis leaf: no\n";
 	}
 	std::cout << "\tdecision rule: " << this->decision_rule << "\n";
-	this->data.sizeSummary();
+	this->data->sizeSummary();
 	this->mod->summary();
 	std::cout << "------------------------------------------------------\n";
 }
@@ -72,34 +72,34 @@ bool Node::isLeaf() {
 	return this->is_leaf;
 }
 
-std::string Node::createDecisionRule(Split s, int child_ix) {
-	int feature = s.getSplitFeatureIndex();
+std::string Node::createDecisionRule(Split* s, int child_ix) {
+	int feature = s->getSplitFeatureIndex();
 	std::string rule;
 	
 	std::ostringstream sstream;
 	sstream << std::setprecision(2) << std::fixed;
 	
-	if (s.getSplitType() == "num") {
-		int n_splits = s.getSplitValues().size();
+	if (s->getSplitType() == "num") {
+		int n_splits = s->getSplitValues().size();
 		// n split values = n+1 child nodes
 		if (child_ix == 0) {
-			sstream << s.getSplitValues()[0];
+			sstream << s->getSplitValues()[0];
 			rule = std::string("x") + std::to_string(feature) + std::string(" <= ") + sstream.str(); 
 		} else if (child_ix == n_splits) {
-			sstream << s.getSplitValues()[n_splits - 1];
+			sstream << s->getSplitValues()[n_splits - 1];
 			rule = std::string("x") + std::to_string(feature) + std::string(" > ") + sstream.str();
 		} else {
 			rule = std::string("x") + std::to_string(feature) + std::string(" ∈ ") + std::string(" ]");
-			sstream << s.getSplitValues()[child_ix - 1];
+			sstream << s->getSplitValues()[child_ix - 1];
 			rule += sstream.str() + std::string(" , ");
 			sstream.str(std::string());
 			sstream.clear();
 			// clear string stream
-			sstream << s.getSplitValues()[child_ix];
+			sstream << s->getSplitValues()[child_ix];
 			rule += sstream.str() + std::string("]"); 
 		}
 	} else {
-		std::map<std::string, int> levels = this->data.getCategEncodings().at(feature);
+		std::map<std::string, int> levels = this->data->getCategEncodings().at(feature);
 		for (auto it = levels.begin(); it != levels.end(); ++it) {
 			if (child_ix == it->second) {
 				rule = std::string("x") + std::to_string(feature) + std::string(" = ") + std::to_string(child_ix);
@@ -112,7 +112,7 @@ std::string Node::createDecisionRule(Split s, int child_ix) {
 
 std::vector<Node*> Node::split() {
 	SplitGenerator* split_generator = this->tree->getFactory().createSplitGenerator(this->data, this->tree->getArgs()); 
-	std::vector<Split> splits = split_generator->generate();
+	std::vector<Split*> splits = split_generator->generate();
 	free(split_generator);
 	int n_splits = splits.size();
 	std::array<std::vector<int>, 2> diff;
@@ -123,6 +123,7 @@ std::vector<Node*> Node::split() {
 	int optsplit_ix = -1;
 	this->obj_val = obj.compute(this->data);
 	opt_obj_val = this->obj_val;
+	Data* subset;
 	if (!splits.empty()) {
 		for (int i = 0; i < n_splits; ++i) {
 			//std::cout << i << std::flush;
@@ -130,13 +131,8 @@ std::vector<Node*> Node::split() {
 			if (i == 0) {
 				// for the first split, the objective cannot be updated
 				for (int j = 0; j < n_children; j++) {
-					//subset_data = this->data.subsetRows(split_obs_prev[j]);
-					//std::cout << "data nrows" << data.nrows() << std::endl;
-					//std::cout << "data summary\n";
-					//this->data.print();
-					//std::cout << "subset size" << splits[i].splitted_obs[j].size() << std::endl;
-					//printVectorInt(splits[i].splitted_obs[j]);
-					obj.init(this->data.subsetRows(splits[i].splitted_obs[j]), j);
+					subset = this->data->subsetRows(splits[i]->splitted_obs[j]);
+					obj.init(subset, j);
 					// objective is initialized with all initial observations
 				}
 			} else {
@@ -144,7 +140,7 @@ std::vector<Node*> Node::split() {
 				for (int j = 0; j < n_children; j++) {
 					//std::cout << j << std::flush;
 					// for each subset, do:
-					diff = diffSet(splits[i].splitted_obs[j], splits[i-1].splitted_obs[j]);
+					diff = diffSet(splits[i]->splitted_obs[j], splits[i-1]->splitted_obs[j]);
 					// diff[0] contains additional observations in the subset versus the previous split
 					// diff[1] contains removed observations in the subset versus the previous split 
 					obj.update(this->data, j, diff);
@@ -167,11 +163,15 @@ std::vector<Node*> Node::split() {
 		for (int i = 0; i < n_children; ++i) {
 			Node* child = new Node(
 				this->id + std::to_string(i),
-				this->data.subsetRows(splits[optsplit_ix].splitted_obs[i]),
+				this->data->subsetRows(splits[optsplit_ix]->splitted_obs[i]),
 				this->tree,
 				this->createDecisionRule(splits[optsplit_ix], i));
 			child_nodes.push_back(child);
 		}
+	}
+	free(subset);
+	for (int i = 0; i < n_splits; ++i) {
+		free(splits[i]);
 	}
 	return child_nodes;
 }

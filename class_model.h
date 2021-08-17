@@ -8,17 +8,17 @@
 class Model {
   
 	public:
-		Data training_data;
+		Data* training_data;
 		bool is_trained;
 		
 		Model();
-		void setTrainingData(Data data);
+		void setTrainingData(Data* data);
 		void checkTrained();
 		virtual void train() = 0;
 		virtual void update(std::vector<double> observation, char setdiff) = 0;
 		virtual void summary() = 0;
 		virtual std::string getShortSummary() = 0;
-		virtual std::vector<double> predictMult(Data data) = 0;
+		virtual std::vector<double> predictMult(Data* data) = 0;
 		virtual double predictSingle(std::vector<double> observation) = 0;
 };
 
@@ -35,7 +35,7 @@ class ModelAverage: public Model {
 		void summary();
 		virtual void update(std::vector<double> observation, char setdiff);
 		std::string getShortSummary();
-		std::vector<double> predictMult(Data data);
+		std::vector<double> predictMult(Data* data);
 		virtual double predictSingle(std::vector<double> observation);
 };
 
@@ -56,7 +56,7 @@ class ModelMajorityVote: public Model {
 		void train();
 		void summary();
 		std::string getShortSummary();
-		std::vector<double> predict(Data data);
+		std::vector<double> predict(Data* data);
 };
 
 */

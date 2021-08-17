@@ -9,7 +9,7 @@ class Reader {
   
   public:
     Reader();
-    Data read(std::string filename, char sep);
+    Data* read(std::string filename, char sep);
     std::vector<std::string> detectColTypes(std::vector<std::string> vec);
 };
 

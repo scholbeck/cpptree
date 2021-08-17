@@ -38,7 +38,7 @@ Model* Factory::createModel() {
 	return m;
 }
 
-SplitGenerator* Factory::createSplitGenerator(Data data, Arguments args) {
+SplitGenerator* Factory::createSplitGenerator(Data* data, Arguments args) {
 	SplitGenerator* g;
 	if (this->args.getAlgorithm() == "exhaustive") {
 		g = new SplitGeneratorBinExh(data, args);

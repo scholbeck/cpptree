@@ -166,7 +166,7 @@ std::vector<std::string> Data::getColTypes() {
 	return this->coltypes;
 }
 /*
-Data Data::subset(std::vector<int> rows, std::vector<int> cols) {
+Data* Data::subset(std::vector<int> rows, std::vector<int> cols) {
 
 	std::sort(rows.begin(), rows.end());
 	//printVectorInt(rows);
@@ -176,7 +176,7 @@ Data Data::subset(std::vector<int> rows, std::vector<int> cols) {
 	int n_cols = this->ncols();
 	int n_rows_subset = rows.size();
 	int n_cols_subset = cols.size();
-	Data subset;
+	Data* subset;
 	subset.init(n_rows_subset, n_cols_subset);
 	subset.setCategEncodings(this->categ_encodings);
 	subset.setTargetIndex(this->target_index);
@@ -208,19 +208,19 @@ Data Data::subset(std::vector<int> rows, std::vector<int> cols) {
 	return subset;
 }
 */
-Data Data::subset(std::vector<int> rows, std::vector<int> cols) {
+Data* Data::subset(std::vector<int> rows, std::vector<int> cols) {
 
 	std::sort(cols.begin(), cols.end());
 	int n_rows_subset = rows.size();
 	int n_cols_subset = cols.size();
-	Data subset;
-	subset.init(n_rows_subset, n_cols_subset);
-	subset.setCategEncodings(this->categ_encodings);
-	subset.setTargetIndex(this->target_index);
-	subset.setColTypes(this->coltypes);
+	Data* subset = new Data();
+	subset->init(n_rows_subset, n_cols_subset);
+	subset->setCategEncodings(this->categ_encodings);
+	subset->setTargetIndex(this->target_index);
+	subset-> setColTypes(this->coltypes);
 	for (int i = 0; i < n_rows_subset; ++i) {
 		for (int j = 0; j < n_cols_subset; j++) {
-			(subset.rows[i])[j] = this->elem(rows[i], cols[j]);
+			(subset->rows[i])[j] = this->elem(rows[i], cols[j]);
 		}
 	}
 	return subset;
@@ -228,16 +228,16 @@ Data Data::subset(std::vector<int> rows, std::vector<int> cols) {
 
 
 
-Data Data::subsetRows(std::vector<int> rows) {
+Data* Data::subsetRows(std::vector<int> rows) {
 	std::vector<int> cols = initVectorSeq(0, this->ncols()-1);
-	Data subset_data = this->subset(rows, cols);
+	Data* subset_data = this->subset(rows, cols);
 	return subset_data;
 }
 
-std::vector<Data> Data::splitCateg(int col_index) {
+std::vector<Data*> Data::splitCateg(int col_index) {
 	std::vector<int> cols = initVectorSeq(0, (this->ncols()) - 1); // init vector from 0 to highest column index
 	std::vector<int> level_rows;
-	std::vector<Data> data_partitioned;
+	std::vector<Data*> data_partitioned;
 	std::map<std::string, int> levels = this->categ_encodings.at(col_index);
 	int n_levels = levels.size();
 	int level;
@@ -250,16 +250,16 @@ std::vector<Data> Data::splitCateg(int col_index) {
 				level_rows.push_back(i);
 			}
 		}
-		Data subset = this->subset(level_rows, cols);
+		Data* subset = this->subset(level_rows, cols);
 		data_partitioned.push_back(subset);
 		level_rows.clear();
 	}
 	return data_partitioned;
 }
 
-std::vector<Data> Data::splitBinary(double split_value, int col_index) {
+std::vector<Data*> Data::splitBinary(double split_value, int col_index) {
 	std::vector<int> rows_left, rows_right;
-	std::vector<Data> data_partitioned;
+	std::vector<Data*> data_partitioned;
 	data_partitioned.resize(2);
 	int n_elements = this->nrows();
 	for (int i = 0; i < n_elements; ++i) {
@@ -331,8 +331,8 @@ std::vector<std::vector<int>> Data::splitObs(Split split) {
 		split_multiway.push_back(split_binary[1]);
 		
 		for (int i = 1; i < n_splits; ++i) {
-			Data right_subset = this->subsetRows(split_binary[1]);
-			split_binary = right_subset.splitBinaryObs(split_values[i], feature); // split last element in two
+			Data* right_subset = this->subsetRows(split_binary[1]);
+			split_binary = right_subset->splitBinaryObs(split_values[i], feature); // split last element in two
 			split_multiway.pop_back(); // remove last element which was split in two
 			split_multiway.push_back(split_binary[0]); // add resulting splits
 			split_multiway.push_back(split_binary[1]);
@@ -343,21 +343,21 @@ std::vector<std::vector<int>> Data::splitObs(Split split) {
 	return split_multiway;
 }
 
-std::vector<Data> Data::split(Split split) {
+std::vector<Data*>  Data::split(Split split) {
 	
-	std::vector<Data> split_multiway;
+	std::vector<Data*>  split_multiway;
 	if (split.getSplitType() == "num") {
 		std::vector<double> split_values = split.getSplitValues();
 		// split values have to be sorted and duplicates removed in split first!
 		int n_splits = split_values.size();
 		int feature = split.getSplitFeatureIndex();
-		std::vector<Data> split_binary;
+		std::vector<Data*>  split_binary;
 		split_binary = this->splitBinary(split_values[0], feature);
 		split_multiway.push_back(split_binary[0]);
 		split_multiway.push_back(split_binary[1]);
 		
 		for (int i = 1; i < n_splits; ++i) {
-			split_binary = (split_binary[1]).splitBinary(split_values[i], feature); // split last element in two
+			split_binary = split_binary[1]->splitBinary(split_values[i], feature); // split last element in two
 			split_multiway.pop_back(); // remove last element which was split in two
 			split_multiway.push_back(split_binary[0]); // add resulting splits
 			split_multiway.push_back(split_binary[1]);

@@ -8,7 +8,7 @@ Model::Model() {
 	this->is_trained = false;
 }
 
-void Model::setTrainingData(Data data) {
+void Model::setTrainingData(Data* data) {
 	this->training_data = data;
 }
 
@@ -28,8 +28,8 @@ ModelAverage::ModelAverage() : Model() {
 }
 
 void ModelAverage::train() {
-	int target_index = this->training_data.getTargetIndex();
-	std::vector<double> target_values = this->training_data.col(target_index);
+	int target_index = this->training_data->getTargetIndex();
+	std::vector<double> target_values = this->training_data->col(target_index);
 	this->cumsum_target = cumsum(target_values);
 	this->n = target_values.size();
 	this->mean_target = this->cumsum_target / this->n;
@@ -38,11 +38,11 @@ void ModelAverage::train() {
 
 void ModelAverage::update(std::vector<double> observation, char setdiff) {
 	if (setdiff == '+') {
-		this->cumsum_target += observation[this->training_data.getTargetIndex()];
+		this->cumsum_target += observation[this->training_data->getTargetIndex()];
 		this->n += 1;
 		this->mean_target = cumsum_target / this->n;
 	} else {
-		this->cumsum_target -= observation[this->training_data.getTargetIndex()];
+		this->cumsum_target -= observation[this->training_data->getTargetIndex()];
 		this->n -= 1;
 		this->mean_target = cumsum_target / this->n;
 	}
@@ -60,9 +60,9 @@ std::string ModelAverage::getShortSummary() {
 	return s;
 }
 
-std::vector<double> ModelAverage::predictMult(Data data) {
+std::vector<double> ModelAverage::predictMult(Data* data) {
 	this->checkTrained();
-	int n = data.nrows();
+	int n = data->nrows();
 	std::vector<double> predictions(n, mean_target);
 	return predictions;
 }
@@ -79,10 +79,10 @@ ModelMajorityVote::ModelMajorityVote() : Model() {
 }
 
 void ModelMajorityVote::train() {
-	int target_index = this->training_data.getTargetIndex();
-	int n_obs = this->training_data.nrows();
-	std::vector<double> target_values = this->training_data.col(target_index);
-	std::map<std::string, int> levels = this->training_data.getCategEncodings().at(target_index);
+	int target_index = this->training_data->getTargetIndex();
+	int n_obs = this->training_data->nrows();
+	std::vector<double> target_values = this->training_data->col(target_index);
+	std::map<std::string, int> levels = this->training_data->getCategEncodings().at(target_index);
 	std::map<int, double> probs;
 	int max_ix, l;
 	double max_cnt, level_cnt;
@@ -111,9 +111,9 @@ std::string ModelMajorityVote::getShortSummary() {
 	return s;
 }
 
-std::vector<double> ModelMajorityVote::predict(Data data) {
+std::vector<double> ModelMajorityVote::predict(Data* data) {
 	this->checkTrained();
-	int n_obs = data.nrows();
+	int n_obs = data->nrows();
 	std::vector<double> predictions(n_obs, this->majority_class);
 	return predictions;
 }

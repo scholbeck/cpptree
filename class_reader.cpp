@@ -55,7 +55,7 @@ std::vector<std::string> parseLine(std::string line, char sep) {
 	return word_vec;
 }
 
-Data Reader::read(std::string filename, char sep) {
+Data* Reader::read(std::string filename, char sep) {
 	
 	std::vector<std::vector<std::string>> rows_strings;
 	std::string line;
@@ -68,9 +68,9 @@ Data Reader::read(std::string filename, char sep) {
     std::vector<std::string> types = detectColTypes(rows_strings[0]);
     int n_rows = rows_strings.size();
     int n_cols = rows_strings[0].size();
-	Data data;
-	data.addCol(initVectorSeqDouble(0, n_rows));
-	data.setColTypes(types);
+	Data* data = new Data();
+	data->addCol(initVectorSeqDouble(0, n_rows));
+	data->setColTypes(types);
     std::vector<double> new_row;
     
     for (int i = 0; i < n_rows; i++) {
@@ -88,13 +88,13 @@ Data Reader::read(std::string filename, char sep) {
 					l++;
 				}
 				// create mapping for each categ feature j and for all its feature levels to integer 0, 1, 2, etc.
-				data.addCategEncoding(j + 1, m);
+				data->addCategEncoding(j + 1, m);
 				// add mapping to data object
 				new_row.push_back(m.at(rows_strings[i][j]));
 				// add mapped integer to data
 			}
 		}
-		data.addRow(new_row);
+		data->addRow(new_row);
 		new_row.clear();
 	}
 	

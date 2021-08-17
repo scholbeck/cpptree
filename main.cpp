@@ -7,7 +7,6 @@
 #include "class_arguments.h"
 #include "class_split.h"
 #include "class_model.h"
-#include "class_optimizer.h"
 #include "class_node.h"
 #include "class_tree.h"
 #include "class_reader.h"
@@ -119,31 +118,29 @@ int main(int argc, char *argv[]) {
 	
 	Arguments args;
 	Reader reader;
-	Data data;
 	
 	int arg_status = 0;
 	if ((arg_status = processArguments(argc, argv, &args)) == -1) {
 		return EXIT_FAILURE;
 	}
-	data = reader.read(args.getFilename(), args.getSep());
-	data.setTargetIndex(args.getTargetIndex() + 1);
+	Data* data = reader.read(args.getFilename(), args.getSep());
+	data->setTargetIndex(args.getTargetIndex() + 1);
 	/*
-    data.print();
-    data.summary();
+    data->print();
+    data->summary();
     
     Split s = Split(1);
-    s.addSplitValue(data.elem(10, 20));
+    s.addSplitValue(data->elem(10, 20));
     s.setFeatureIndex(3);
     s.setSplitType("num");
-    std::vector<std::vector<int>> new_data = data.splitObs(s);
+    std::vector<std::vector<int>> new_data = data->splitObs(s);
     printVectorInt(new_data[1]);
     */
     std::clock_t start;
     double duration;
-    start = std::clock();
-	
     Tree tree = Tree(data, args);
-	int ret = tree.grow();
+    start = std::clock();
+    int ret = tree.grow();
 	duration = (std::clock() - start) / (double) CLOCKS_PER_SEC;
     tree.summary();
 	std::cout << "Training complete. Duration: "<< duration << "sec\n";

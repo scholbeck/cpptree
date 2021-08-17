@@ -8,7 +8,7 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Tue Aug 17 17:32:30 2021
+# Make data base, printed on Tue Aug 17 20:06:38 2021
 
 # Variables
 
@@ -129,7 +129,7 @@ XDG_SESSION_DESKTOP = ubuntu
 # environment
 SSH_AUTH_SOCK = /run/user/1000/keyring/ssh
 # environment
-GIO_LAUNCHED_DESKTOP_FILE_PID = 16816
+GIO_LAUNCHED_DESKTOP_FILE_PID = 33890
 # automatic
 %F = $(notdir $%)
 # environment
@@ -197,14 +197,13 @@ CC = g++
 # environment
 GNOME_SHELL_SESSION_MODE = ubuntu
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-bf8a4313-1ce5-4c05-a70b-4df4c6050d13.sock
+VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-79848292-2c38-48bc-a529-c9d3f1ffab2e.sock
 # default
 MAKE_VERSION := 4.2.1
 # environment
 USER = scholbeck
 # environment
 SNAP_REVISION = 71
- 
 # environment
 LC_MONETARY = de_DE.UTF-8
 # makefile
@@ -288,7 +287,7 @@ LC_ADDRESS = de_DE.UTF-8
 # environment
 LANG = C
 # environment
-VSCODE_PID = 16859
+VSCODE_PID = 33934
 # variable set hash-table stats:
 # Load=138/1024=13%, Rehash=0, Collisions=20/163=12%
 
@@ -298,9 +297,9 @@ VSCODE_PID = 16859
 
 # Directories
 
-# . (device 66310, inode 6162272): 38 files, no impossibilities.
+# . (device 66310, inode 6162272): 36 files, no impossibilities.
 
-# 38 files, no impossibilities in 1 directories.
+# 36 files, no impossibilities in 1 directories.
 
 # Implicit Rules
 
@@ -314,6 +313,7 @@ all:
 #  Implicit rule search has been done.
 #  File does not exist.
 #  File has not been updated.
+ 
 
 gt2:
 #  Implicit rule search has not been done.
@@ -325,7 +325,7 @@ gt2:
 # Not a target:
 Makefile:
 #  Implicit rule search has been done.
-#  Last modified 2021-08-17 17:31:51.971845215
+#  Last modified 2021-08-17 20:06:23.711547806
 #  File has been updated.
 #  Successfully updated.
 
@@ -403,7 +403,7 @@ main:
 #  Modification time never checked.
 #  File has not been updated.
 #  recipe to execute (from 'Makefile', line 4):
-	$(CC) -O2 -o tree main.cpp class_arguments.cpp class_factory.cpp class_reader.cpp class_data.cpp class_node.cpp class_split.cpp class_model.cpp class_objective.cpp class_tree.cpp class_aggregation.cpp class_splitgenerator.cpp helper_functions.cpp
+	$(CC) -O3 -o tree main.cpp class_arguments.cpp class_factory.cpp class_reader.cpp class_data.cpp class_node.cpp class_split.cpp class_model.cpp class_objective.cpp class_tree.cpp class_aggregation.cpp class_splitgenerator.cpp helper_functions.cpp
 	
 
 # files hash-table stats:
@@ -413,14 +413,13 @@ main:
 # No 'vpath' search paths.
 
 # No general ('VPATH' variable) search path.
- 
 
-# strcache buffers: 1 (0) / strings = 54 / storage = 655 B / avg = 12 B
-# current buf: size = 8162 B / used = 655 B / count = 54 / avg = 12 B
+# strcache buffers: 1 (0) / strings = 52 / storage = 615 B / avg = 11 B
+# current buf: size = 8162 B / used = 615 B / count = 52 / avg = 11 B
 
-# strcache performance: lookups = 69 / hit rate = 21%
+# strcache performance: lookups = 67 / hit rate = 22%
 # hash-table stats:
-# Load=54/8192=1%, Rehash=0, Collisions=2/69=3%
-# Finished Make data base on Tue Aug 17 17:32:30 2021
+# Load=52/8192=1%, Rehash=0, Collisions=2/67=3%
+# Finished Make data base on Tue Aug 17 20:06:38 2021
 
  

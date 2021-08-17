@@ -2,7 +2,6 @@
 #define TREE_H
 
 #include "class_data.h"
-#include "class_optimizer.h"
 #include "class_node.h"
 #include "class_factory.h"
 
@@ -11,11 +10,11 @@ class Node;
 class Tree {
   
   public:
-    Tree(Data data, Arguments args);
+    Tree(Data* data, Arguments args);
     
     Arguments args;
     Factory factory;
-    Data data;
+    Data* data;
     Node* root;
     std::vector<Node*> nodes;
     int node_cnt;
