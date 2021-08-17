@@ -111,7 +111,7 @@ std::string Node::createDecisionRule(Split s, int child_ix) {
 
 
 std::vector<Node*> Node::split() {
-	SplitGenerator* split_generator = new SplitGeneratorBinExh(this->data, this->tree->getArgs());
+	SplitGenerator* split_generator = this->tree->getFactory().createSplitGenerator(this->data, this->tree->getArgs()); 
 	std::vector<Split> splits = split_generator->generate();
 	free(split_generator);
 	int n_splits = splits.size();
@@ -124,7 +124,7 @@ std::vector<Node*> Node::split() {
 	this->obj_val = obj.compute(this->data);
 	opt_obj_val = this->obj_val;
 	if (!splits.empty()) {
-		for (int i = 0; i < n_splits; i++) {
+		for (int i = 0; i < n_splits; ++i) {
 			//std::cout << i << std::flush;
 			// loop over every split
 			if (i == 0) {
@@ -164,7 +164,7 @@ std::vector<Node*> Node::split() {
 	child_nodes.reserve(n_children);
 	if (optsplit_ix != -1) {
 		// if a split has been found, do:
-		for (int i = 0; i < n_children; i++) {
+		for (int i = 0; i < n_children; ++i) {
 			Node* child = new Node(
 				this->id + std::to_string(i),
 				this->data.subsetRows(splits[optsplit_ix].splitted_obs[i]),
@@ -182,7 +182,7 @@ int Node::recursiveSplit() {
 	int ret = 0;
 	if (!child_nodes.empty()) {
 		n_child_nodes = child_nodes.size();
-		for (int i = 0; i < n_child_nodes; i++) {
+		for (int i = 0; i < n_child_nodes; ++i) {
 			ret += child_nodes[i]->recursiveSplit();	
 		}
 	} else {

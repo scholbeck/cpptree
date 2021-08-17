@@ -36,6 +36,69 @@ SplitGeneratorBinExh::SplitGeneratorBinExh(Data data, Arguments args) : SplitGen
 }
 
 std::vector<Split> SplitGeneratorBinExh::generate() {
+	int n_min = args.getMinNodeSize();
+	std::vector<Split> splits;
+	int n_rows = data.nrows();
+	int n_cols = data.ncols();
+	splits.reserve(n_rows * n_cols);
+	std::vector<int> col_ix_num, col_ix_categ, categ;
+	col_ix_num.reserve(n_cols);
+	col_ix_categ.reserve(n_cols);
+	for (int j = 1; j < n_cols; j++) {
+		// exclude first column with ID
+		if (this->data.getColTypes()[j] == "num") {
+			col_ix_num.push_back(j);
+		} else {
+			col_ix_categ.push_back(j);
+		}	
+	}
+	int n_cols_num = col_ix_num.size();
+	int n_cols_categ = col_ix_categ.size();
+	
+	Split current_split = Split(1);
+	int col;
+	//categorical features
+	for (int j = 0; j < n_cols_categ; j++) {
+		col = col_ix_categ[j];
+		if (col == this->data.getTargetIndex()) {
+			continue;
+		}
+		current_split.setFeatureIndex(col);
+		current_split.setSplitType("categ");
+		current_split.splitted_obs = this->data.splitObs(current_split);
+		if (this->checkMinNodeSize(current_split)) {
+			splits.push_back(current_split);	
+		}
+		current_split.clear();
+	}
+	// numeric features
+	std::vector<double> col_values;
+	for (int j = 0; j < n_cols_num; j++) {
+		col = col_ix_num[j];
+		if (col == this->data.getTargetIndex()) {
+			continue;
+		}
+		col_values = data.col(col);
+		std::sort(col_values.begin(), col_values.end());
+		// col_values.erase(std::unique(col_values.begin(), col_values.end()), col_values.end());
+		//int n_unique_values = col_values.size();
+		for (int i = n_min-1; i < n_rows-n_min; i++) {
+			if (col_values[i] == col_values[i-1]) {
+				continue;
+			}
+			current_split.addSplitValue(col_values[i]);
+			current_split.setSplitType("num");
+			current_split.setFeatureIndex(col);
+			current_split.splitted_obs = this->data.splitObs(current_split);
+			splits.push_back(current_split);
+			current_split.clear();
+		}
+		col_values.clear();
+	}
+	return splits;
+}
+/*
+std::vector<Split> SplitGeneratorBinExh::generate() {
 	std::vector<Split> splits;
 	int n_rows = data.nrows();
 	int n_cols = data.ncols();
@@ -114,6 +177,7 @@ std::vector<Split> SplitGeneratorBinExh::generate() {
 	}
 	return splits;
 }
+*/
 
 
 SplitGeneratorBinQuant::SplitGeneratorBinQuant(Data data, Arguments args) : SplitGenerator(data, args) {

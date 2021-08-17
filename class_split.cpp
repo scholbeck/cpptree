@@ -9,7 +9,7 @@ Split::Split(int max_splits) {
 	this->feature_index = -1;
 	this->max_splits = max_splits;
 	this->split_values.reserve(max_splits);
-	for (int i = 0; i <= max_splits; i++) {
+	for (int i = 0; i <= max_splits; ++i) {
 		std::vector<int> v(0, 1);
 		this->splitted_obs.push_back(v);
 	}
@@ -64,7 +64,7 @@ void Split::summary() {
 		std::cout << "\tsplit values : ";
 		int n_splits = this->split_values.size();
 		std::cout << "\t";
-		for (int i = 0; i < n_splits; i++) {
+		for (int i = 0; i < n_splits; ++i) {
 			std::cout << this->split_values[i] << " ";
 		}
 	}

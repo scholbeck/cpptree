@@ -8,7 +8,7 @@
 #include "class_arguments.h"
 #include "class_objective.h"
 #include "class_model.h"
-#include "class_optimizer.h"
+#include "class_splitgenerator.h"
 
 
 class Factory {
@@ -19,8 +19,8 @@ class Factory {
     Arguments args;
 
     Objective* createObjective();
-	Model* createModel();    
-    Optimizer* createOptimizer();
+	  Model* createModel();    
+    SplitGenerator* createSplitGenerator(Data data, Arguments args);
 
 };
 

@@ -26,7 +26,7 @@ void Tree::addNode(Node* node) {
 void Tree::gatherTreeInformation() {
 	int max_length = 1;
 	int current_length;
-	for (int i = 0; i < this->node_cnt; i++) {
+	for (int i = 0; i < this->node_cnt; ++i) {
 		if (this->nodes[i]->isLeaf()) {
 			this->leafnode_cnt++;
 		}
@@ -48,7 +48,7 @@ void Tree::sortNodesAsc() {
 	// not sure this is working perfectly fine
 	std::string left_id, current_id;
 	Node* node_pntr_tmp = NULL;
-	for (int i = 0; i < this->node_cnt; i++) {
+	for (int i = 0; i < this->node_cnt; ++i) {
 		left_id = this->nodes[i]->getId();
 		for (int j = i + 1; j < this->node_cnt; j++) {
 			current_id = this->nodes[j]->getId();
@@ -85,7 +85,7 @@ void Tree::summary() {
 	std::cout << "\tdepth : " << this->depth << "\n\n";
 	this->print();
 	/*
-	for (int i = 0; i < this->node_cnt; i++) {
+	for (int i = 0; i < this->node_cnt; ++i) {
 		this->nodes[i]->summary();
 	}
 	*/
@@ -99,7 +99,7 @@ Factory Tree::getFactory() {
 
 std::string repeatString(int n, std::string s) {
     std::ostringstream os;
-    for(int i = 0; i < n; i++)
+    for(int i = 0; i < n; ++i)
         os << s;
     return os.str();
 }
@@ -120,7 +120,7 @@ void Tree::printSubTree(Node* node) {
 	}
 	std::vector<Node*> child_nodes = node->getChildNodes();
 	int n_children = child_nodes.size();
-	for (int i = 0; i < n_children; i++) {
+	for (int i = 0; i < n_children; ++i) {
 		printSubTree(child_nodes[i]);
 	}
 }

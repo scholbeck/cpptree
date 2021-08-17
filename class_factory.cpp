@@ -6,7 +6,7 @@
 #include "class_factory.h"
 #include "class_objective.h"
 #include "class_model.h"
-#include "class_optimizer.h"
+#include "class_splitgenerator.h"
 
 Factory::Factory(Arguments args) {
 	this->args = args;
@@ -36,6 +36,14 @@ Model* Factory::createModel() {
 	}
 	*/
 	return m;
+}
+
+SplitGenerator* Factory::createSplitGenerator(Data data, Arguments args) {
+	SplitGenerator* g;
+	if (this->args.getAlgorithm() == "exhaustive") {
+		g = new SplitGeneratorBinExh(data, args);
+	}
+	return g;
 }
 
 /*

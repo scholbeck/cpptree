@@ -10,7 +10,7 @@
 #include <algorithm>
 
 Objective::Objective(Arguments args) {	
-	for (int i = 0; i < args.getMaxChildren(); i++) {
+	for (int i = 0; i < args.getMaxChildren(); ++i) {
 		Model* m = new ModelAverage();
 		this->models.push_back(m);
 		this->values.push_back(0);
@@ -33,7 +33,7 @@ double ObjectiveSSE::compute(Data data) {
 	int n = data.nrows();
 	double mean_target = mean(target_obs);
 	double cumsum = 0;
-	for (int i = 0; i < n; i++) {
+	for (int i = 0; i < n; ++i) {
 		cumsum += pow((data.elem(i, data.getTargetIndex()) - mean_target), 2);
 	}
 	return cumsum;
@@ -44,13 +44,13 @@ void ObjectiveSSE::update(Data data, int childnode, std::array<std::vector<int>,
 		int n_setplus = diff[0].size();
 		int n_setminus = diff[1].size();
 		std::vector<double> observation;
-		for (int i = 0; i < n_setplus; i++) {
-			observation = data.selectObs(diff[0][i]);
+		for (int i = 0; i < n_setplus; ++i) {
+			observation = data.row(diff[0][i]);
 			this->models[childnode]->update(observation, '+');
 			this->values[childnode] += pow((observation[data.getTargetIndex()] - this->models[childnode]->predictSingle(observation)), 2);
 		}
-		for (int i = 0; i < n_setminus; i++) {
-			observation = data.selectObs(diff[1][i]);
+		for (int i = 0; i < n_setminus; ++i) {
+			observation = data.row(diff[1][i]);
 			this->models[childnode]->update(observation, '-');
 			this->values[childnode] -= pow((observation[data.getTargetIndex()] - this->models[childnode]->predictSingle(observation)), 2);
 		}
@@ -73,7 +73,7 @@ double ObjectiveSSE::compute(Data data, std::vector<double> target_preds) {
 	std::vector<double> target_obs = data.col(data.getTargetIndex());
 	int n = data.nrows();
 	double cumsum = 0;
-	for (int i = 0; i < n; i++) {
+	for (int i = 0; i < n; ++i) {
 		cumsum += pow((target_preds[i] - target_obs[i]), 2);
 	}
 	return cumsum;

@@ -37,8 +37,8 @@ class Node {
     int recursiveSplit();
     std::vector<Node*> getChildNodes();
     void addChild(Node* child);
-	void setSplit(Split s);
-	std::string createDecisionRule(Split s, int child_ix);
+  	void setSplit(Split s);
+	  std::string createDecisionRule(Split s, int child_ix);
     void buildModel();
     Optimizer* createOptimizer();
 

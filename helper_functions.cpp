@@ -8,7 +8,7 @@
 std::vector<int> initVectorLLUInt(int start, int end) {
 	
 	std::vector<int> vec;
-	for (int i = start; i <= end; i++) {
+	for (int i = start; i <= end; ++i) {
 		vec.push_back(i);
 	}
 	return vec;
@@ -18,7 +18,7 @@ void printVectorLLUInt(std::vector<int> vec) {
 	
 	int n = vec.size();
 	printf("Printing vector:\n");
-	for (int i = 0; i < n; i++) {
+	for (int i = 0; i < n; ++i) {
 		std::cout << vec[i] << "\n";
 	}
 	printf("\n");
@@ -28,7 +28,7 @@ void printVectorInt(std::vector<int> vec) {
 	
 	int n = vec.size();
 	printf("Printing vector:\n");
-	for (int i = 0; i < n; i++) {
+	for (int i = 0; i < n; ++i) {
 		std::cout << vec[i] << "\n";
 	}
 	printf("\n");
@@ -38,7 +38,7 @@ void printVectorString(std::vector<std::string> vec) {
 	
 	int n = vec.size();
 	printf("Printing vector:\n");
-	for (int i = 0; i < n; i++) {
+	for (int i = 0; i < n; ++i) {
 		std::cout << vec[i] << "\n";
 	}
 	printf("\n");
@@ -48,7 +48,7 @@ void printVectorDouble(std::vector<double> vec) {
 	
 	int n = vec.size();
 	printf("Printing vector:\n");
-	for (int i = 0; i < n; i++) {
+	for (int i = 0; i < n; ++i) {
 		std::cout << vec[i] << "\n";
 	}
 	printf("\n");
@@ -58,7 +58,7 @@ double mean(std::vector<double> vec) {
 	
 	int n = vec.size();
 	double cumsum = 0;
-	for (int i = 0; i < n; i++) {
+	for (int i = 0; i < n; ++i) {
 		cumsum += vec[i];
 	}
 	return cumsum / n;
@@ -67,7 +67,7 @@ double mean(std::vector<double> vec) {
 
 std::vector<int> initVectorSeq(int from, int to) {
 	std::vector<int> seq;
-	for (int i = from; i <= to; i++) {
+	for (int i = from; i <= to; ++i) {
 		seq.push_back(i);
 	}
 	return seq;
@@ -76,7 +76,7 @@ std::vector<int> initVectorSeq(int from, int to) {
 
 std::vector<double> initVectorSeqDouble(int from, int to) {
 	std::vector<double> seq;
-	for (int i = from; i <= to; i++) {
+	for (int i = from; i <= to; ++i) {
 		seq.push_back((double) i);
 	}
 	return seq;
@@ -85,7 +85,7 @@ std::vector<double> initVectorSeqDouble(int from, int to) {
 
 std::vector<double> initVectorDoubleValue(double value, int size) {
 	std::vector<double> vec;
-	for (int i = 0; i < size; i++) {
+	for (int i = 0; i < size; ++i) {
 		vec.push_back(value);
 	}
 	return vec;
@@ -111,7 +111,7 @@ std::array<std::vector<int>, 2> diffSet(std::vector<int> set_a, std::vector<int>
 	int n_b = set_b.size();
 	bool in_a_notin_b = true;
 	bool in_b_notin_a = true;
-	for (int i = 0; i < n_a; i++) {
+	for (int i = 0; i < n_a; ++i) {
 		for (int j = 0; j < n_b; j++) {
 			if (set_a[i] == set_b[j]) {
 				in_a_notin_b = false;
@@ -122,7 +122,7 @@ std::array<std::vector<int>, 2> diffSet(std::vector<int> set_a, std::vector<int>
 			diff[0].push_back(set_a[i]);
 		}
 	}
-	for (int i = 0; i < n_b; i++) {
+	for (int i = 0; i < n_b; ++i) {
 		for (int j = 0; j < n_a; j++) {
 			if (set_b[i] == set_a[j]) {
 				in_b_notin_a = false;
@@ -141,7 +141,7 @@ bool checkObsSize(std::vector<std::vector<int>> split_obs, int min_node_size) {
 	bool geq_min = true;
 	if (split_obs.empty() == false) {
 		int n_splits = split_obs.size();
-		for (int i = 0; i < n_splits; i++) {
+		for (int i = 0; i < n_splits; ++i) {
 			if (split_obs[i].empty() == false) {
 				if (split_obs[i].size() < min_node_size) {
 					geq_min = false;
@@ -159,7 +159,7 @@ bool checkObsSize(std::vector<std::vector<int>> split_obs, int min_node_size) {
 double cumsum(std::vector<double> vec) {
 	int n = vec.size();
 	double cumsum = 0;
-	for (int i = 0; i < n; i++) {
+	for (int i = 0; i < n; ++i) {
 		cumsum += vec[i];
 	}
 	return cumsum;
