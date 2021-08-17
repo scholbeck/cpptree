@@ -8,7 +8,7 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Mon Aug 16 19:58:30 2021
+# Make data base, printed on Tue Aug 17 12:30:40 2021
 
 # Variables
 
@@ -51,7 +51,7 @@ GDM_LANG = en_US
 # environment
 VSCODE_NLS_CONFIG = {"locale":"en-us","availableLanguages":{},"_languagePackSupport":true}
 # environment
-JOURNAL_STREAM = 9:45657
+JOURNAL_STREAM = 9:49237
 # environment
 XDG_CONFIG_DIRS = /etc/xdg/xdg-ubuntu:/etc/xdg
 # environment
@@ -79,7 +79,7 @@ VSCODE_VERBOSE_LOGGING = true
 # environment
 _ = /snap/code/71/usr/share/code/code
 # environment
-MANAGERPID = 1618
+MANAGERPID = 1715
 # environment
 LESSOPEN = | /usr/bin/lesspipe %s
 # environment
@@ -97,7 +97,7 @@ PATH = /home/scholbeck/bin:/home/scholbeck/bin:/usr/local/sbin:/usr/local/bin:/u
 # environment
 GPG_AGENT_INFO = /run/user/1000/gnupg/S.gpg-agent:0:1
 # environment
-SESSION_MANAGER = local/christian-ThinkPad-T480s:@/tmp/.ICE-unix/1817,unix/christian-ThinkPad-T480s:/tmp/.ICE-unix/1817
+SESSION_MANAGER = local/christian-ThinkPad-T480s:@/tmp/.ICE-unix/1921,unix/christian-ThinkPad-T480s:/tmp/.ICE-unix/1921
 # environment
 XDG_RUNTIME_DIR = /run/user/1000
 # environment
@@ -115,7 +115,7 @@ DISABLE_WAYLAND = 1
 # environment
 VSCODE_CRASH_REPORTER_START_OPTIONS = {"companyName":"Microsoft","productName":"VSCode","submitURL":"appcenter://code?aid=fba07a4d-84bd-4fc8-a125-9640fc8ce171&uid=d4c92552-81de-44ef-b0ac-f4c985dec6d5&iid=d4c92552-81de-44ef-b0ac-f4c985dec6d5&sid=d4c92552-81de-44ef-b0ac-f4c985dec6d5","uploadToServer":true}
 # environment
-INVOCATION_ID = 8100a79e50964512bd384117412fd6f6
+INVOCATION_ID = 96e081d0e9e94546b0bb86eee37fbea2
 # environment
 GDK_PIXBUF_MODULEDIR = /snap/code/71/usr/lib/x86_64-linux-gnu/gdk-pixbuf-2.0/2.10.0/loaders
 # default
@@ -129,7 +129,7 @@ XDG_SESSION_DESKTOP = ubuntu
 # environment
 SSH_AUTH_SOCK = /run/user/1000/keyring/ssh
 # environment
-GIO_LAUNCHED_DESKTOP_FILE_PID = 12128
+GIO_LAUNCHED_DESKTOP_FILE_PID = 4597
 # automatic
 %F = $(notdir $%)
 # environment
@@ -143,7 +143,7 @@ PWD = /home/scholbeck/C_Projects/treelib
 # default
 .LOADED := 
 # environment
-SSH_AGENT_PID = 1767
+SSH_AGENT_PID = 1873
 # environment
 ORIGINAL_XDG_CURRENT_DESKTOP = ubuntu:GNOME
 # environment
@@ -197,7 +197,7 @@ CC = g++
 # environment
 GNOME_SHELL_SESSION_MODE = ubuntu
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-85d78653-f981-4a76-aa17-9e32a251c8d0.sock
+VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-9f15bd70-5083-4472-88b2-68fdd82ad2e7.sock
 # default
 MAKE_VERSION := 4.2.1
 # environment
@@ -283,12 +283,12 @@ GJS_DEBUG_OUTPUT = stderr
 # default
 .RECIPEPREFIX := 
 # environment
- 
 LC_ADDRESS = de_DE.UTF-8
 # environment
+ 
 LANG = C
 # environment
-VSCODE_PID = 12172
+VSCODE_PID = 4641
 # variable set hash-table stats:
 # Load=138/1024=13%, Rehash=0, Collisions=20/163=12%
 
@@ -406,6 +406,6 @@ profile:
 # strcache performance: lookups = 65 / hit rate = 20%
 # hash-table stats:
 # Load=52/8192=1%, Rehash=0, Collisions=2/65=3%
-# Finished Make data base on Mon Aug 16 19:58:30 2021
+# Finished Make data base on Tue Aug 17 12:30:40 2021
 
  

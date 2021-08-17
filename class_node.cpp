@@ -125,12 +125,17 @@ std::vector<Node*> Node::split() {
 	opt_obj_val = this->obj_val;
 	if (!splits.empty()) {
 		for (int i = 0; i < n_splits; i++) {
-			std::cout << i << std::flush;
+			//std::cout << i << std::flush;
 			// loop over every split
 			if (i == 0) {
 				// for the first split, the objective cannot be updated
 				for (int j = 0; j < n_children; j++) {
 					//subset_data = this->data.subsetRows(split_obs_prev[j]);
+					//std::cout << "data nrows" << data.nrows() << std::endl;
+					//std::cout << "data summary\n";
+					//this->data.print();
+					//std::cout << "subset size" << splits[i].splitted_obs[j].size() << std::endl;
+					//printVectorInt(splits[i].splitted_obs[j]);
 					obj.init(this->data.subsetRows(splits[i].splitted_obs[j]), j);
 					// objective is initialized with all initial observations
 				}

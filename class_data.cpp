@@ -81,11 +81,23 @@ std::vector<double> Data::row(int i) {
 	return this->rows[i];
 }
 
+std::vector<double> Data::selectObs(int id) {
+	int r;
+	int n = this->nrows();
+	for (int i = 0; i < n; i++) {
+		if (this->rows[i][0] == id) {
+			r = i;
+			break;
+		}
+	}
+	return this->rows[r];
+}
+
 std::vector<double> Data::col(int j) {
-	std::vector<double> c;
 	int n_rows = this->nrows();
+	std::vector<double> c(n_rows, 0);
 	for (int i = 0; i < n_rows; i++) {
-		c.push_back(this->row(i)[j]);
+		c[i] = this->rows[i][j];
 	}
 	return c;
 }
@@ -157,7 +169,11 @@ std::vector<std::string> Data::getColTypes() {
 Data Data::subset(std::vector<int> rows, std::vector<int> cols) {
 
 	std::sort(rows.begin(), rows.end());
+	//printVectorInt(rows);
 	std::sort(cols.begin(), cols.end());
+	//printVectorInt(cols);
+	int n_rows = this->nrows();
+	int n_cols = this->ncols();
 	int n_rows_subset = rows.size();
 	int n_cols_subset = cols.size();
 	Data subset;
@@ -167,8 +183,14 @@ Data Data::subset(std::vector<int> rows, std::vector<int> cols) {
 	subset.setColTypes(this->coltypes);
 
 	for (int i = 0; i < n_rows_subset; i++) {
-		for (int j = 0; j < n_cols_subset; j++) {
-			(subset.rows[i])[j] = this->elem(rows[i], cols[j]);
+		for (int l = 0; i < n_rows; l++) {
+			if (rows[i] == this->rows[l][0]) {
+				for (int j = 0; j < n_cols_subset; j++) {
+					//std::cout << i << rows[i] << " " << this->rows[l][j] << std::endl << std::flush;
+					subset.rows[i][j] = this->rows[l][j];
+				}
+				break;
+			}
 		}
 	}
 	/*

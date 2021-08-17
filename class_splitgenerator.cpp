@@ -72,6 +72,7 @@ std::vector<Split> SplitGeneratorBinExh::generate() {
 	}
 	// numeric features
 	std::vector<std::pair<double, int>> col_values;
+	col_values.reserve(n_rows);
 	for (int j = 0; j < n_cols_num; j++) {
 		col = col_ix_num[j];
 		if (col == this->data.getTargetIndex()) {
@@ -85,11 +86,12 @@ std::vector<Split> SplitGeneratorBinExh::generate() {
 		// col_values.erase(std::unique(col_values.begin(), col_values.end()), col_values.end());
 		//int n_unique_values = col_values.size();
 		std::vector<int> left, right;
+		left.reserve(n_rows);
+		right.reserve(n_rows);
 		for (int i = n_rows-1; i >= 0; i--) {
-			// std::cout << col_values[i].second << std::endl;
 			right.push_back(col_values[i].second);
 		}
-		for (int i = 0; i < n_rows; i++) {
+		for (int i = 0; i < n_rows-1; i++) {
 			left.push_back(col_values[i].second);
 			right.pop_back();
 			if ((i >= this->args.getMinNodeSize()-1) && (i < (n_rows - (this->args.getMinNodeSize())))) {

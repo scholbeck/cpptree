@@ -45,12 +45,12 @@ void ObjectiveSSE::update(Data data, int childnode, std::array<std::vector<int>,
 		int n_setminus = diff[1].size();
 		std::vector<double> observation;
 		for (int i = 0; i < n_setplus; i++) {
-			observation = data.row(diff[0][i]);
+			observation = data.selectObs(diff[0][i]);
 			this->models[childnode]->update(observation, '+');
 			this->values[childnode] += pow((observation[data.getTargetIndex()] - this->models[childnode]->predictSingle(observation)), 2);
 		}
 		for (int i = 0; i < n_setminus; i++) {
-			observation = data.row(diff[1][i]);
+			observation = data.selectObs(diff[1][i]);
 			this->models[childnode]->update(observation, '-');
 			this->values[childnode] -= pow((observation[data.getTargetIndex()] - this->models[childnode]->predictSingle(observation)), 2);
 		}
