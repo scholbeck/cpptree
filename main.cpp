@@ -79,13 +79,11 @@ int processArguments(int argc, char** argv, Arguments *arguments)
             break;
         }
     }
-    /*
+    
     if (arguments->getFilename() == "") {
 		printf("Filename not specified.\n");
 		return -1;
     }
-    * IMPLEMENT FILE READER
-    */
     if (arguments->getMinNodeSize() == 0) {
 		printf("Minimum node size not specified.\n");
 		return -1;
@@ -98,10 +96,12 @@ int processArguments(int argc, char** argv, Arguments *arguments)
 		printf("Objective function not specified.\n");
 		return -1;
     }
+    /*
     if (arguments->getModel() == "") {
 		printf("Model type not specified.\n");
 		return -1;
     }
+    */
     if (arguments->getAlgorithm() == "") {
 		printf("Search algorithm not specified.\n");
 		return -1;
@@ -125,17 +125,7 @@ int main(int argc, char *argv[]) {
 	}
 	Data* data = reader.read(args.getFilename(), args.getSep());
 	data->setTargetIndex(args.getTargetIndex() + 1);
-	/*
-    data->print();
-    data->summary();
-    
-    Split s = Split(1);
-    s.addSplitValue(data->elem(10, 20));
-    s.setFeatureIndex(3);
-    s.setSplitType("num");
-    std::vector<std::vector<int>> new_data = data->splitObs(s);
-    printVectorInt(new_data[1]);
-    */
+
     std::clock_t start;
     double duration;
     Tree tree = Tree(data, args);

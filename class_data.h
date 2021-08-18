@@ -15,7 +15,6 @@ class Data {
     
 		std::vector<std::vector<double>> rows; // each row is a vector containg all col values
 		int target_index;
-		std::vector<std::map<double, int>> ordered_features; 
 		std::vector<std::string> coltypes;
 		std::map<int, std::map<std::string, int>> categ_encodings;
 		

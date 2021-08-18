@@ -18,7 +18,6 @@ void Model::checkTrained() {
 	}
 }
 
-
 // ModelAverage
 
 ModelAverage::ModelAverage() : Model() {

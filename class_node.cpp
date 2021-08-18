@@ -118,10 +118,10 @@ std::vector<Node*> Node::split() {
 	std::array<std::vector<int>, 2> diff;
 	AggregationAdditive aggreg;
 	int n_children = this->tree->getArgs().getMaxChildren();
-	ObjectiveSSE obj = ObjectiveSSE(this->tree->getArgs());
+	Objective* obj = this->tree->getFactory().createObjective();
 	double child_obj_val, opt_obj_val;
 	int optsplit_ix = -1;
-	this->obj_val = obj.compute(this->data);
+	this->obj_val = obj->compute(this->data);
 	opt_obj_val = this->obj_val;
 	Data* subset;
 	if (!splits.empty()) {
@@ -132,7 +132,7 @@ std::vector<Node*> Node::split() {
 				// for the first split, the objective cannot be updated
 				for (int j = 0; j < n_children; j++) {
 					subset = this->data->subsetRows(splits[i]->splitted_obs[j]);
-					obj.init(subset, j);
+					obj->init(subset, j);
 					// objective is initialized with all initial observations
 				}
 			} else {
@@ -143,13 +143,14 @@ std::vector<Node*> Node::split() {
 					diff = diffSet(splits[i]->splitted_obs[j], splits[i-1]->splitted_obs[j]);
 					// diff[0] contains additional observations in the subset versus the previous split
 					// diff[1] contains removed observations in the subset versus the previous split 
-					obj.update(this->data, j, diff);
+					obj->update(this->data, j, diff);
 					// update objective for subset (child node)
 				}
 			}
-			child_obj_val = aggreg.compute(obj.values);
+			child_obj_val = aggreg.compute(obj->values);
 			// aggregate objective of all child nodes
 			if (child_obj_val < opt_obj_val) {
+				std::cout << "yes" << std::endl;
 				opt_obj_val = child_obj_val;
 				optsplit_ix = i;
 			}
@@ -173,6 +174,7 @@ std::vector<Node*> Node::split() {
 	for (int i = 0; i < n_splits; ++i) {
 		free(splits[i]);
 	}
+	free(obj);
 	return child_nodes;
 }
 
