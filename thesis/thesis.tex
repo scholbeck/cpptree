@@ -15,7 +15,7 @@
 
 \begin{document}
 
-\title{A Software Package for Extendable Decision Trees in C++}
+\title{A Software Application for Extensible Decision Trees in C++}
 
 \begin{titlepage}
 	\centering
@@ -26,7 +26,7 @@
 	\vspace{0.5cm}
 	{\scshape\Large Bachelor Thesis in Computer Science\par}
 	\vspace{1.5cm}
-	{\huge\bfseries treelib - A Software Package for Extendable Decision Trees in C++\par}
+	{\huge\bfseries extreeme - A Software Application for Extensible Decision Trees in C++\par}
 	\vspace{2cm}
 	{\Large\itshape Christian Alexander Scholbeck\par}
 	\vfill
@@ -45,7 +45,7 @@
 \thispagestyle{empty}
 
 \begin{abstract}
-This thesis provides a software package for extendable decision trees written in C++. The package follows object-oriented and modular design principles. It works as a standalone application, or can be called by other programming languages. It supports both binary and multiway splitting, and can be extended with new optimizing algorithms, split criteria, models, and objectives. Supported application areas include classic predictive modeling with decision trees such as CART or C4.5, and advanced modeling such as model-based recursive partitioning. Furthermore, the modular design principle allows the extension of the package to support novel applications such as surrogate modeling for interpretable machine learning.
+This thesis provides a standalone software application for extensible decision trees written in C++. The package follows object-oriented and modular design principles. It works as a standalone application, or can be called by other programming languages. It supports both binary and multiway splitting, and can be extended with new optimizing algorithms, split criteria, models, and objectives. Supported application areas include classic predictive modeling with decision trees such as CART or C4.5, and advanced modeling such as model-based recursive partitioning. Furthermore, the modular design principle allows the extension of the package to support novel applications such as surrogate modeling for interpretable machine learning.
 \end{abstract}
 \vspace*{1cm}
 \tableofcontents
@@ -69,12 +69,14 @@ A critical drawback of decision trees is a high variance under perturbations of 
 %\par
 %The possibilities of applying decision trees in contexts other than such as interpretable machine learning are numerous. For instance, due to their intelligibility, decision trees are especially suited as a surrogate model for black box models, where the black box predictions are approximated by interpretable functions inside the leaf nodes.
 \par
-Applications for decision trees are diverse, e.g., predictive modeling \cite{hastie_elemstatlearn}, surrogate modeling \cite{schaaf_surrogate_tree}, or density estimation \cite{ram_density_estimation_tree}. This creates a requirement for an accessible, efficient, and extendable software implementation of decision trees. Accessible, to benefit a broad scientific community. Efficient, as the computational demand of optimizing splits grows considerably with the tree's complexity. Extendable, as different applications require different decision tree setups.
+Applications for decision trees are diverse, e.g., predictive modeling \cite{hastie_elemstatlearn}, surrogate modeling \cite{schaaf_surrogate_tree}, or density estimation \cite{ram_density_estimation_tree}. This creates a requirement for an accessible, efficient, and extensible software implementation of decision trees. Accessible, to benefit a broad scientific community. Efficient, as the computational demand of optimizing splits grows considerably with the tree's complexity. Extensible, as different applications require different decision tree setups.
 \par
 
-\subsection{Contributions and Structure} The central contribution of this thesis is a from-the-ground-up implementation of extendable decision trees as an open-source software package. The package is written in \texttt{C++} to achieve a high degree of computational efficiency, while preserving object-oriented principles and portability to other programming languages. The package follows modular design principles to achieve a maximum degree of extensibility.
+\subsection{Contributions} The central contribution of this thesis is the from-the-ground-up implementation of 
+\textbf{extreeme}, a standalone software application for \textbf{ex}tensible decision \textbf{tree}s with extre\textbf{me} performance.
+It is written in \texttt{C++} to achieve a high degree of computational efficiency, while preserving object-oriented principles and portability to other programming languages. The software design follows modular principles to achieve maximum extensibility.
 \par
-The written thesis provides a short theoretical overview on decision trees, describes the software design and extensibility, and demonstrates the package on simulated and real data. Over the years, the number of published decision tree algorithms has grown tremendously. The purpose of the theoretical section is not to provide an exhaustive review of available techniques, which would go beyond the scope of a thesis. Instead, it shall provide a compact introduction to the topic and pave the way for the description and demonstration of the software package.
+The written thesis provides a short theoretical overview on decision trees, describes the software design and extensibility, and demonstrates the application on real data. Over the years, the number of published decision tree algorithms has grown tremendously. The purpose of the theoretical section is not to provide an exhaustive review of available techniques, which would go beyond the scope of a thesis. Instead, it shall provide a compact introduction to the topic, and background for the software presentation.
 
 \subsection{Software Description}
 
@@ -85,15 +87,15 @@ new optimizing algorithms, split criteria, node models, and objectives.
 
 \section{Related Work}
 
-An initial software implementation of MOB was published as part of the \texttt{party} package \cite{party_package} for the \texttt{R} programming languge for statistical computing \cite{r_citation}. A more flexible version, which supports more inference options and is extendable to new models, was introduced in the \texttt{partykit} package \cite{partykit_package}. 
+An initial software implementation of MOB was published as part of the \texttt{party} package \cite{party_package} for the \texttt{R} programming languge for statistical computing \cite{r_citation}. A more flexible version, which supports more inference options and is extensible to new models, was introduced in the \texttt{partykit} package \cite{partykit_package}. 
 \par
 The \texttt{R} language is able to directly call \texttt{C} or \texttt{C++} code, which warrants significant speedups in computational execution time \cite{eddelbuettel_rcpp}. However, software implementations which are solely written in \texttt{R} code such as \texttt{partykit} pose a considerable bottleneck in computational speed.
-The software package \texttt{ranger} \cite{ranger_package} provides a fast implementation of random forests in \texttt{C++} and can be directly called from the identically named \texttt{R} package. However, it is restricted to random forests and intextendable regression trees.
+The software package \texttt{ranger} \cite{ranger_package} provides a fast implementation of random forests in \texttt{C++} and can be directly called from the identically named \texttt{R} package. However, it is restricted to random forests and intextensible regression trees.
 
 \section{Theory}
 
 A decision tree is a hierarchical structure based on recursive partitioning of the data. Each partitioning of the data is referred to as a node, whereas a final partitioning is referred to as a leaf node.
-The starting point of a decision tree, which encompasses the entire, unpartitioned data, corresponds to the root node. Nodes excluding leaf nodes and root node are also referred to as internal nodes.
+The starting point of a decision tree, which encompasses the entire, unpartitioned data, corresponds to the root node. Nodes excluding leaf nodes and the root node are also referred to as internal nodes.
 A split node becomes a parent node, and the resulting nodes become children or child nodes. Subsequent partitionings can be visualized as a series of decision rules, which together form a tree graph (see Fig. \ref{fig:tree_structure}). Decision trees are $k$-ary if each node has $k$ children.
 Binary trees with $k = 2$ are the most popular variant \cite{hastie_elemstatlearn}. Furthermore, there are trees with varying numbers of child nodes \cite{quinlan_c45}. Decision trees are often termed according to their application area, e.g., regression \cite{cart_1}, classification \cite{quinlan_c45, cart_1, kass_chaid}, survival \cite{derose_survival_tree}, or density estimation trees \cite{ram_density_estimation_tree}.
 
@@ -156,12 +158,12 @@ SSE(\Node) = \sum_{i \;:\; (x, y)^{(i)} \;\in\; \Node} \left(y^{(i)} - \widehat{
 \par
 The algorithm M5 \cite{quinlan_model_tree} is an extension of ordinary decision trees that trains linear regression models inside the leafs. It starts with growing a decision tree by minimizing the target standard deviation inside each node. It then punes the tree, and adds linear regression models to the leafs. M5' \cite{wang_m5} is a modification of M5, e.g., regarding the handling of missing values.
 \par
-Training linear leaf node models (via least squares), whereas the splits have been determined via minimization of the target standard deviation, results in suboptimal leaf node models. Instead, a more favorable approach is to use the same objective for both model estimation and splitting \cite{zeileis_mob}. The RETIS algorithm \cite{karalic_retis} minimizes the sum of child node SSE values. For each evaluated split, this requires the calculation of a least squares estimate for all models which quickly becomes infeasible in practice. Computational costs can be decreased by reducing the model complexity, e.g., by restricting the number of explanatory variables \cite{grimshaw_treed}, which limits predictive performance. In \cite{potts_incremental_model_tree} linear leaf node models are estimated incrementally through each split. The authors argue that splitting a node and estimating multiple linear models always provides a better or equal SSE compared to a single linear model.
+Training linear leaf node models (via least squares), whereas the splits have been determined via minimization of the target standard deviation, results in suboptimal leaf node models. Instead, a more favorable approach is to use the same objective for both model estimation and splitting \cite{zeileis_mob}. The RETIS algorithm \cite{karalic_retis} minimizes the sum of child node SSE values. For each evaluated split, this requires the calculation of a least squares estimate for all models which quickly becomes infeasible in practice. Computational costs can be decreased by reducing the model complexity, e.g., by restricting the number of explanatory variables \cite{grimshaw_treed}. However, this limits predictive performance. In \cite{potts_incremental_model_tree} linear leaf node models are estimated incrementally through each split. The authors argue that splitting a node and estimating multiple linear models always provides a better or equal SSE compared to a single linear model.
 Instead, the authors propose a statistical test based on the Chow test \cite{chow_inequality_test}. Furthermore, there is a large variety of techniques that support more complex models such as generalized linear models \cite{ciampi_glm_tree, loh_guide, gama_functional_tree, zeileis_mob}. For instance, MOB provides a framework for a multitude of parametric node models, where the splits are found through a model-specific parameter instability test.
 
 \subsection{Binary versus Multiway Splitting}
 
-Most techniques such as CART create binary decision trees. In theory, a series of binary splits is able to represent the same data partitioning as a multiway split  \cite{hastie_elemstatlearn} (see Fig. \ref{fig:binary_vs_multiway}). However, due to greedy optimization, a multiway split is rarely discovered by binary splitting \cite{wang_multiway_splits}. Binary decision trees are subject to a high variance, as a decision higher up cascades through the entire tree and results in different splits lower down the tree \cite{hastie_elemstatlearn}. 
+Most techniques such as CART create binary decision trees. In theory, a series of binary splits is able to represent the same data partitioning as a multiway split  \cite{hastie_elemstatlearn} (see Fig. \ref{fig:binary_vs_multiway}). However, due to greedy optimization, a multiway split is rarely captured by a series of binary splits in practice \cite{wang_multiway_splits}. Binary decision trees are subject to a high variance, as a decision higher up cascades through the entire tree and results in different splits lower down the tree \cite{hastie_elemstatlearn}. 
 \begin{figure}
     \centering
     \includegraphics[width = 0.59\linewidth]{thesis/figure/binary_splits.png}
@@ -174,12 +176,17 @@ Furthermore, a multiway split is easier comprehensible to the human mind, which 
 However, multiway splitting is considerably more expensive than binary splitting \cite{wang_multiway_splits}.
 When allowing for multiway splits, the tree can be $k$-ary, i.e., each node has $k$ children regardless of the data structure, or the number of children is chosen adaptively. The latter creates two predicaments. First, the objective function cannot be updated from one split to the next, thereby considerably increasing computational costs (see Section \ref{sec:computational_speedups}). Second, more splits can be expected to always provide a better fit, which implies a regularization problem between the aggregated child node objective and the number of splits \cite{wang_multiway_splits}.
 
-\section{Computational Speedups}
+\section{Complexity Analysis and Algorithmic Strategy}
 \label{sec:computational_speedups}
 
 With a growing complexity, e.g., due to the cost of training node models for every split or multiway splitting, the computational cost of decision trees grows considerably. This puts a great importance on an efficient split search, which can be achieved in multiple ways.
 First, computations can be parallelized, e.g., after splitting a node, the computations in all child nodes are independent of each other and can run in parallel.
 Second, for each node there is a large number of split points to be evaluated. Instead of recomputing the objective and model for each split from scratch, computations may be sped up by an update mechanism. Third, a split point generator can suggest split points with a higher probability of improving the objective than other points.
+
+\subsection{Algorithmic Strategy}
+
+
+
 
 \subsection{Updating Objective Functions}
 
