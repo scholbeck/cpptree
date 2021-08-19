@@ -57,7 +57,6 @@ std::vector<Split*> SplitGeneratorBinExh::generate() {
 	}
 	int n_cols_num = col_ix_num.size();
 	int n_cols_categ = col_ix_categ.size();
-	
 	int col;
 	//categorical features
 	for (int j = 0; j < n_cols_categ; j++) {
@@ -65,12 +64,16 @@ std::vector<Split*> SplitGeneratorBinExh::generate() {
 		if (col == this->data->getTargetIndex()) {
 			continue;
 		}
-		Split* current_split = new Split(1);
-		current_split->setFeatureIndex(col);
-		current_split->setSplitType("categ");
-		current_split->splitted_obs = this->data->splitObs(*current_split);
-		if (this->checkMinNodeSize(current_split)) {
-			splits.push_back(current_split);	
+		std::vector<std::vector<std::vector<int>>> level_permuts = this->data->computeCategPermuts(col, this->args.getMaxChildren());
+		int n_permuts = level_permuts.size();
+		for (int i = 0; i < n_permuts; i++) {
+			std::map<std::string, int> levels = this->data->getCategEncodings().at(col);
+			Split* current_split = new SplitCateg(1, levels);
+			current_split->setFeatureIndex(col);;
+			current_split->splitted_obs = this->data->splitCategObs(this->args.getMaxChildren(), level_permuts[i]);
+			if (this->checkMinNodeSize(current_split)) {
+				splits.push_back(current_split);	
+			}
 		}
 	}
 	// numeric features
@@ -84,17 +87,16 @@ std::vector<Split*> SplitGeneratorBinExh::generate() {
 		std::sort(col_values.begin(), col_values.end());
 		// col_values.erase(std::unique(col_values.begin(), col_values.end()), col_values.end());
 		//int n_unique_values = col_values.size();
-		for (int i = n_min-1; i < (n_rows-n_min); i++) {
-			Split* current_split = new Split(1);
+		for (int i = (n_min - 1); i < (n_rows - n_min); i++) {
 			if (col_values[i] == col_values[i-1]) {
 				continue;
 			}
+			Split* current_split = new SplitNum(1);
 			current_split->addSplitValue(col_values[i]);
-			current_split->setSplitType("num");
 			current_split->setFeatureIndex(col);
-			current_split->splitted_obs = this->data->splitObs(*current_split);
+			current_split->splitted_obs = this->data->splitObs(current_split);
 			if (this->checkMinNodeSize(current_split)) {
-				splits.push_back(current_split);	
+				splits.push_back(current_split);
 			}
 		}
 		col_values.clear();

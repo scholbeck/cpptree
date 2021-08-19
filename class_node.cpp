@@ -72,11 +72,10 @@ bool Node::isLeaf() {
 
 std::string Node::createDecisionRule(Split* s, int child_ix) {
 	int feature = s->getSplitFeatureIndex();
-	std::string rule;
-	
-	std::ostringstream sstream;
-	sstream << std::setprecision(2) << std::fixed;
-	
+	std::string rule = s->createDecisionRule(child_ix);
+
+	return rule;
+	/*
 	if (s->getSplitType() == "num") {
 		int n_splits = s->getSplitValues().size();
 		// n split values = n+1 child nodes
@@ -97,6 +96,7 @@ std::string Node::createDecisionRule(Split* s, int child_ix) {
 			rule += sstream.str() + std::string("]"); 
 		}
 	} else {
+		// categ split feature
 		std::map<std::string, int> levels = this->data->getCategEncodings().at(feature);
 		for (auto it = levels.begin(); it != levels.end(); ++it) {
 			if (child_ix == it->second) {
@@ -105,6 +105,7 @@ std::string Node::createDecisionRule(Split* s, int child_ix) {
 		}
 	}
 	return rule;
+	*/
 }
 
 

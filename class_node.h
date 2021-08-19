@@ -28,7 +28,7 @@ class Node {
     std::string getDecisionRule();
     std::string getId();
     Model* getModel();
-    Split getSplitData();
+    Split* getSplitData();
     void setModel(Model* mod);
     void summary();
     Data* getData();
@@ -37,7 +37,7 @@ class Node {
     int recursiveSplit();
     std::vector<Node*> getChildNodes();
     void addChild(Node* child);
-	  void setSplit(Split s);
+	  void setSplit(Split* s);
 	  std::string createDecisionRule(Split* s, int child_ix);
     void buildModel();
 

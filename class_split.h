@@ -3,7 +3,7 @@
 
 #include <string>
 #include <vector>
-#include <deque>
+#include <map>
 
 class Model;
 
@@ -14,28 +14,39 @@ class Split {
 		
 		double node_obj_val;
 		int feature_index;
-		std::string split_type;
 		int split_cnt;
 		int max_splits;
 		std::vector<double> split_values;
 		std::vector<Model*> child_node_models;
 		std::vector<std::vector<int>> splitted_obs;
 		
+		virtual std::string createDecisionRule(int child_ix) = 0;
 		int getSplitFeatureIndex();
 		void setFeatureIndex(int feature_index);
-		std::string getSplitType();
-		void setSplitType(std::string split_type);
 		std::vector<double> getSplitValues();
 		void addSplitValue(double splitpoint);
 		void addChildNodeModel(Model* mod);
 		std::vector<Model*> getChildNodeModels();
 		void clear();
-		void summary();
 		void sortSplitValues();
 };
 
+class SplitNum : public Split {
 
+	public:
+		SplitNum(int max_splits);
+		std::string createDecisionRule(int child_ix);
+};
 
+class SplitCateg : public Split {
+
+	public:
+		std::map<std::string, int> levels;
+		std::vector<std::vector<int>> subset_level_sets;
+		
+		SplitCateg(int max_splits, std::map<std::string, int> levels);
+		std::string createDecisionRule(int child_ix);
+};
 
 
 #endif 

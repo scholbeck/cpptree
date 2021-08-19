@@ -8,7 +8,7 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Thu Aug 19 15:30:26 2021
+# Make data base, printed on Thu Aug 19 19:00:33 2021
 
 # Variables
 
@@ -221,7 +221,6 @@ MAKE_COMMAND := make
 # automatic
 *F = $(notdir $*)
 # environment
- 
 LANGUAGE = en_US
 # environment
 XDG_SEAT_PATH = /org/freedesktop/DisplayManager/Seat0
@@ -298,6 +297,7 @@ VSCODE_PID = 6802
 
 # Directories
 
+ 
 # . (device 66310, inode 6162272): 37 files, no impossibilities.
 
 # 37 files, no impossibilities in 1 directories.
@@ -325,7 +325,7 @@ gt2:
 # Not a target:
 Makefile:
 #  Implicit rule search has been done.
-#  Last modified 2021-08-19 15:30:05.704786194
+#  Last modified 2021-08-19 18:59:33.109097777
 #  File has been updated.
 #  Successfully updated.
 
@@ -376,7 +376,7 @@ mushroom:
 #  Modification time never checked.
 #  File has not been updated.
 #  recipe to execute (from 'Makefile', line 25):
-	./tree --filename data/mushroom.data --target 1 --sep , --task classif --algorithm exhaustive --objective gini --model majorvote --minsize 20 --children 2
+	./tree --filename data/mushroom.data --target 22 --sep , --task classif --algorithm exhaustive --objective gini --minsize 10 --children 2
 
 # Not a target:
 .DEFAULT:
@@ -420,6 +420,6 @@ main:
 # strcache performance: lookups = 68 / hit rate = 22%
 # hash-table stats:
 # Load=53/8192=1%, Rehash=0, Collisions=2/68=3%
-# Finished Make data base on Thu Aug 19 15:30:26 2021
+# Finished Make data base on Thu Aug 19 19:00:33 2021
 
  
