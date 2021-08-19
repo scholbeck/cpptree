@@ -31,7 +31,8 @@ int processArguments(int argc, char** argv, Arguments *arguments)
             {"task", required_argument, nullptr, 1600},
             {"sep", required_argument, nullptr, 1700},
             {"target", required_argument, nullptr, 1800},
-            {"help", no_argument, nullptr, 1900}
+            {"maxdepth", required_argument, nullptr, 1900},
+            {"help", no_argument, nullptr, 2000}
     };
 	
     while (true)
@@ -50,7 +51,11 @@ int processArguments(int argc, char** argv, Arguments *arguments)
             arguments->setMaxChildren((int) atol(optarg));
             break;
         case 1200:
-            arguments->setMinNodeSize((int) atol(optarg));
+            if (optarg == "") {
+                 arguments->setMinNodeSize(1);
+            } else {
+                 arguments->setMinNodeSize((int) atol(optarg));
+            }
             break;
         case 1300:
             arguments->setAlgorithm(std::string(optarg));
@@ -71,9 +76,16 @@ int processArguments(int argc, char** argv, Arguments *arguments)
             arguments->setTargetIndex((int) atol(optarg));
             break;
         case 1900:
+             if (optarg == "") {
+                 arguments->setMaxDepth(30);
+            } else {
+                 arguments->setMaxDepth((int) atol(optarg));
+            }
+            break;
+        case 2000:
             printHelp();
             break;
-        case '?': // Unrecognized option
+        case '?':
         default:
             printHelp();
             break;
@@ -123,6 +135,7 @@ int main(int argc, char *argv[]) {
 	if ((arg_status = processArguments(argc, argv, &args)) == -1) {
 		return EXIT_FAILURE;
 	}
+    args.checkArgs();
 	Data* data = reader.read(args.getFilename(), args.getSep());
 	data->setTargetIndex(args.getTargetIndex() + 1);
 

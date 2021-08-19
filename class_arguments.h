@@ -14,6 +14,7 @@ class Arguments {
     int target;
     int max_children;
     int min_node_size;
+	int max_depth;
     std::string algorithm;
     std::string objective;
     std::string model;
@@ -46,6 +47,11 @@ class Arguments {
 	
 	char getSep();
 	void setSep(char sep);
+
+	int getMaxDepth();
+	void setMaxDepth(int max_depth);
+
+	void checkArgs();
 };
 
 

@@ -73,3 +73,17 @@ void Arguments::setSep(char sep) {
 }
 
 
+int Arguments::getMaxDepth() {
+	return this->max_depth;
+}
+void Arguments::setMaxDepth(int max_depth) {
+	this->max_depth = max_depth;
+}
+
+void Arguments::checkArgs() {
+	if (this->max_depth == 0) {
+		this->max_depth = 30;
+	}
+}
+
+

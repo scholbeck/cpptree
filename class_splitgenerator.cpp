@@ -7,6 +7,8 @@
 #include <cmath>
 #include <array>
 #include <vector>
+#include <time.h>
+#include <stdlib.h>
 
 
 
@@ -36,6 +38,7 @@ SplitGeneratorBinExh::SplitGeneratorBinExh(Data* data, Arguments args) : SplitGe
 }
 
 std::vector<Split*> SplitGeneratorBinExh::generate() {
+	
 	int n_min = args.getMinNodeSize();
 	std::vector<Split*> splits;
 	int n_rows = data->nrows();
@@ -55,7 +58,7 @@ std::vector<Split*> SplitGeneratorBinExh::generate() {
 	int n_cols_num = col_ix_num.size();
 	int n_cols_categ = col_ix_categ.size();
 	
-		int col;
+	int col;
 	//categorical features
 	for (int j = 0; j < n_cols_categ; j++) {
 		col = col_ix_categ[j];
@@ -81,7 +84,7 @@ std::vector<Split*> SplitGeneratorBinExh::generate() {
 		std::sort(col_values.begin(), col_values.end());
 		// col_values.erase(std::unique(col_values.begin(), col_values.end()), col_values.end());
 		//int n_unique_values = col_values.size();
-		for (int i = n_min-1; i < n_rows-n_min; i++) {
+		for (int i = n_min-1; i < (n_rows-n_min); i++) {
 			Split* current_split = new Split(1);
 			if (col_values[i] == col_values[i-1]) {
 				continue;
@@ -90,12 +93,42 @@ std::vector<Split*> SplitGeneratorBinExh::generate() {
 			current_split->setSplitType("num");
 			current_split->setFeatureIndex(col);
 			current_split->splitted_obs = this->data->splitObs(*current_split);
-			splits.push_back(current_split);
+			if (this->checkMinNodeSize(current_split)) {
+				splits.push_back(current_split);	
+			}
 		}
 		col_values.clear();
 	}
 	return splits;
 }
+/*
+SplitGeneratorMultRand::SplitGeneratorMultRand(Data* data, Arguments args) : SplitGenerator(data, args) {
+	//
+}
+
+std::vector<Split*> SplitGeneratorMultRand::generate() {
+	int n_min = args.getMinNodeSize();
+	std::vector<Split*> splits;
+	int n_rows = data->nrows();
+	int n_cols = data->ncols();
+	splits.reserve(n_rows * n_cols);
+	std::vector<int> col_ix_num, col_ix_categ, categ;
+	col_ix_num.reserve(n_cols);
+	col_ix_categ.reserve(n_cols);
+	for (int j = 1; j < n_cols; j++) {
+		// exclude first column with ID
+		if (this->data->getColTypes()[j] == "num") {
+			col_ix_num.push_back(j);
+		} else {
+			col_ix_categ.push_back(j);
+		}
+	}
+	srand(time(NULL));   // Initialization, should only be called once.
+	int rnd_col = rand() % n_cols;      // Returns a pseudo-random integer between 0 and RAND_MAX.
+	int rnd_row = rand() % n_rows;
+	
+}
+*/
 /*
 std::vector<Split> SplitGeneratorBinExh::generate() {
 	std::vector<Split> splits;

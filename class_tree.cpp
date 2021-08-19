@@ -30,7 +30,7 @@ void Tree::gatherTreeInformation() {
 			this->leafnode_cnt++;
 		}
 		// gather leaf node count
-		current_length = this->nodes[i]->getId().length();
+		current_length = this->nodes[i]->getId().length()-1;
 		if (current_length > max_length) {
 			max_length = current_length;
 		}

@@ -63,8 +63,6 @@ void Node::summary() {
 		std::cout << "\tis leaf: no\n";
 	}
 	std::cout << "\tdecision rule: " << this->decision_rule << "\n";
-	this->data->sizeSummary();
-	this->mod->summary();
 	std::cout << "------------------------------------------------------\n";
 }
 
@@ -132,6 +130,7 @@ std::vector<Node*> Node::split() {
 				// for the first split, the objective cannot be updated
 				for (int j = 0; j < n_children; j++) {
 					subset = this->data->subsetRows(splits[i]->splitted_obs[j]);
+					//subset->summary();
 					obj->init(subset, j);
 					// objective is initialized with all initial observations
 				}
@@ -150,7 +149,6 @@ std::vector<Node*> Node::split() {
 			child_obj_val = aggreg.compute(obj->values);
 			// aggregate objective of all child nodes
 			if (child_obj_val < opt_obj_val) {
-				std::cout << "yes" << std::endl;
 				opt_obj_val = child_obj_val;
 				optsplit_ix = i;
 			}
@@ -170,7 +168,7 @@ std::vector<Node*> Node::split() {
 			child_nodes.push_back(child);
 		}
 	}
-	free(subset);
+	//free(subset);
 	for (int i = 0; i < n_splits; ++i) {
 		free(splits[i]);
 	}
@@ -179,12 +177,17 @@ std::vector<Node*> Node::split() {
 }
 
 int Node::recursiveSplit() {
+	if ((this->getId().length() -1) == this->tree->getArgs().getMaxDepth()) {
+		this->is_leaf = true;
+		return 0;
+	}
 	this->child_nodes = this->split();
 	int n_child_nodes = 0; 
 	int ret = 0;
 	if (!child_nodes.empty()) {
 		n_child_nodes = child_nodes.size();
 		for (int i = 0; i < n_child_nodes; ++i) {
+			//child_nodes[i]->summary();
 			ret += child_nodes[i]->recursiveSplit();	
 		}
 	} else {
