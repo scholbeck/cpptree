@@ -1,11 +1,13 @@
 #ifndef SPLIT_H
 #define SPLIT_H
 
+#include "class_data.h"
 #include <string>
 #include <vector>
 #include <map>
 
 class Model;
+class Data;
 
 class Split {
 
@@ -21,7 +23,9 @@ class Split {
 		std::vector<std::vector<int>> splitted_obs;
 		
 		virtual std::string createDecisionRule(int child_ix) = 0;
+		virtual void computePartitionings(Data* data) = 0;
 		int getSplitFeatureIndex();
+		int nsplits();
 		void setFeatureIndex(int feature_index);
 		std::vector<double> getSplitValues();
 		void addSplitValue(double splitpoint);
@@ -36,6 +40,9 @@ class SplitNum : public Split {
 	public:
 		SplitNum(int max_splits);
 		std::string createDecisionRule(int child_ix);
+		void computePartitionings(Data* data);
+		std::vector<std::vector<int>> splitBinaryObs(Data* data, double split_value, int col_index);
+
 };
 
 class SplitCateg : public Split {
@@ -46,6 +53,8 @@ class SplitCateg : public Split {
 		
 		SplitCateg(int max_splits, std::map<std::string, int> levels);
 		std::string createDecisionRule(int child_ix);
+		void setLevelPartitionings(std::vector<std::vector<int>> level_sets);
+		void computePartitionings(Data* data);
 };
 
 

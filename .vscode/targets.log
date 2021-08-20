@@ -8,7 +8,7 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Thu Aug 19 19:00:33 2021
+# Make data base, printed on Fri Aug 20 11:22:53 2021
 
 # Variables
 
@@ -45,13 +45,13 @@ CURDIR := /home/scholbeck/C_Projects/treelib
 # makefile
 SHELL = /bin/sh
 # environment
-SNAP_DATA = /var/snap/code/71
+SNAP_DATA = /var/snap/code/72
 # environment
 GDM_LANG = en_US
 # environment
 VSCODE_NLS_CONFIG = {"locale":"en-us","availableLanguages":{},"_languagePackSupport":true}
 # environment
-JOURNAL_STREAM = 9:43772
+JOURNAL_STREAM = 9:37681
 # environment
 XDG_CONFIG_DIRS = /etc/xdg/xdg-ubuntu:/etc/xdg
 # environment
@@ -77,9 +77,9 @@ DBUS_SESSION_BUS_ADDRESS = unix:path=/run/user/1000/bus
 # environment
 VSCODE_VERBOSE_LOGGING = true
 # environment
-_ = /snap/code/71/usr/share/code/code
+_ = /snap/code/72/usr/share/code/code
 # environment
-MANAGERPID = 1568
+MANAGERPID = 1770
 # environment
 LESSOPEN = | /usr/bin/lesspipe %s
 # environment
@@ -89,7 +89,7 @@ VSCODE_CWD = /home/scholbeck
 # environment
 XDG_SESSION_PATH = /org/freedesktop/DisplayManager/Session0
 # environment
-GSETTINGS_SCHEMA_DIR = /snap/code/71/usr/share/glib-2.0/schemas
+GSETTINGS_SCHEMA_DIR = /snap/code/72/usr/share/glib-2.0/schemas
 # default
 MAKE_HOST := x86_64-pc-linux-gnu
 # environment
@@ -97,15 +97,15 @@ PATH = /home/scholbeck/bin:/home/scholbeck/bin:/usr/local/sbin:/usr/local/bin:/u
 # environment
 GPG_AGENT_INFO = /run/user/1000/gnupg/S.gpg-agent:0:1
 # environment
-SESSION_MANAGER = local/christian-ThinkPad-T480s:@/tmp/.ICE-unix/1764,unix/christian-ThinkPad-T480s:/tmp/.ICE-unix/1764
+SESSION_MANAGER = local/christian-ThinkPad-T480s:@/tmp/.ICE-unix/1980,unix/christian-ThinkPad-T480s:/tmp/.ICE-unix/1980
 # environment
 XDG_RUNTIME_DIR = /run/user/1000
 # environment
 GDK_PIXBUF_MODULE_FILE = /home/scholbeck/snap/code/common/.cache/gdk-pixbuf-loaders.cache
 # environment
-SNAP = /snap/code/71
+SNAP = /snap/code/72
 # environment
-SNAP_VERSION = 379476f0
+SNAP_VERSION = 3866c355
 # environment
 XDG_MENU_PREFIX = gnome-
 # environment
@@ -115,9 +115,9 @@ DISABLE_WAYLAND = 1
 # environment
 VSCODE_CRASH_REPORTER_START_OPTIONS = {"companyName":"Microsoft","productName":"VSCode","submitURL":"appcenter://code?aid=fba07a4d-84bd-4fc8-a125-9640fc8ce171&uid=d4c92552-81de-44ef-b0ac-f4c985dec6d5&iid=d4c92552-81de-44ef-b0ac-f4c985dec6d5&sid=d4c92552-81de-44ef-b0ac-f4c985dec6d5","uploadToServer":true}
 # environment
-INVOCATION_ID = 96e0ac849cf749afa44441ce204ea1fb
+INVOCATION_ID = b9d8b5a4871848c5b08a4f8bfb246c5b
 # environment
-GDK_PIXBUF_MODULEDIR = /snap/code/71/usr/lib/x86_64-linux-gnu/gdk-pixbuf-2.0/2.10.0/loaders
+GDK_PIXBUF_MODULEDIR = /snap/code/72/usr/lib/x86_64-linux-gnu/gdk-pixbuf-2.0/2.10.0/loaders
 # default
 .FEATURES := target-specific order-only second-expansion else-if shortest-stem undefine oneshell archives jobserver output-sync check-symlink load
 # environment
@@ -129,7 +129,7 @@ XDG_SESSION_DESKTOP = ubuntu
 # environment
 SSH_AUTH_SOCK = /run/user/1000/keyring/ssh
 # environment
-GIO_LAUNCHED_DESKTOP_FILE_PID = 6757
+GIO_LAUNCHED_DESKTOP_FILE_PID = 8200
 # automatic
 %F = $(notdir $%)
 # environment
@@ -143,7 +143,7 @@ PWD = /home/scholbeck/C_Projects/treelib
 # default
 .LOADED := 
 # environment
-SSH_AGENT_PID = 1715
+SSH_AGENT_PID = 1931
 # environment
 ORIGINAL_XDG_CURRENT_DESKTOP = ubuntu:GNOME
 # environment
@@ -157,7 +157,7 @@ LESSCLOSE = /usr/bin/lesspipe %s %s
 # environment
 VSCODE_CLI = 1
 # environment
-VSCODE_CODE_CACHE_PATH = /home/scholbeck/.config/Code/CachedData/379476f0e13988d90fab105c5c19e7abc8b1dea8
+VSCODE_CODE_CACHE_PATH = /home/scholbeck/.config/Code/CachedData/3866c3553be8b268c8a7f8c0482c0c0177aa8bfa
 # environment
 LOGNAME = scholbeck
 # environment
@@ -189,7 +189,7 @@ MAKECMDGOALS := all
 # environment
 QT_IM_MODULE = ibus
 # environment
-SNAP_USER_DATA = /home/scholbeck/snap/code/71
+SNAP_USER_DATA = /home/scholbeck/snap/code/72
 # environment
 SHLVL = 0
 # makefile (from 'Makefile', line 1)
@@ -197,13 +197,13 @@ CC = g++
 # environment
 GNOME_SHELL_SESSION_MODE = ubuntu
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-0cfbf092-1586-4d78-bae8-c370afb035e6.sock
+VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-590142c0-bb18-48c6-96fc-1591d575d082.sock
 # default
 MAKE_VERSION := 4.2.1
 # environment
 USER = scholbeck
 # environment
-SNAP_REVISION = 71
+SNAP_REVISION = 72
 # environment
 LC_MONETARY = de_DE.UTF-8
 # makefile
@@ -225,7 +225,7 @@ LANGUAGE = en_US
 # environment
 XDG_SEAT_PATH = /org/freedesktop/DisplayManager/Seat0
 # environment
-VSCODE_IPC_HOOK = /run/user/1000/vscode-14c041f9-1.59.0-main.sock
+VSCODE_IPC_HOOK = /run/user/1000/vscode-14c041f9-1.59.1-main.sock
 # environment
 BAMF_DESKTOP_FILE_HINT = /var/lib/snapd/desktop/applications/code_code.desktop
 # makefile
@@ -282,12 +282,13 @@ CHROME_DESKTOP = code-url-handler.desktop
 GJS_DEBUG_OUTPUT = stderr
 # default
 .RECIPEPREFIX := 
+ 
 # environment
 LC_ADDRESS = de_DE.UTF-8
 # environment
 LANG = C
 # environment
-VSCODE_PID = 6802
+VSCODE_PID = 8245
 # variable set hash-table stats:
 # Load=138/1024=13%, Rehash=0, Collisions=20/163=12%
 
@@ -297,7 +298,6 @@ VSCODE_PID = 6802
 
 # Directories
 
- 
 # . (device 66310, inode 6162272): 37 files, no impossibilities.
 
 # 37 files, no impossibilities in 1 directories.
@@ -420,6 +420,6 @@ main:
 # strcache performance: lookups = 68 / hit rate = 22%
 # hash-table stats:
 # Load=53/8192=1%, Rehash=0, Collisions=2/68=3%
-# Finished Make data base on Thu Aug 19 19:00:33 2021
+# Finished Make data base on Fri Aug 20 11:22:53 2021
 
  

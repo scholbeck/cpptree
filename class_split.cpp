@@ -18,7 +18,9 @@ Split::Split(int max_splits) {
 		this->splitted_obs.push_back(v);
 	}
 }
-
+int Split::nsplits() {
+	return this->max_splits;
+}
 void Split::sortSplitValues() {
 	std::sort(this->split_values.begin(), this->split_values.end());
 	this->split_values.erase(unique(this->split_values.begin(), this->split_values.end()), this->split_values.end()); // remove duplicate split values
@@ -100,6 +102,25 @@ std::string SplitNum::createDecisionRule(int child_ix) {
 	return rule;
 }
 
+void SplitNum::computePartitionings(Data* data) {
+	std::vector<std::vector<int>> split_multiway;
+	std::vector<double> split_values = this->getSplitValues();
+	// split values have to be sorted and duplicates removed in split first!
+	int n_splits = split_values.size();
+	int feature = this->getSplitFeatureIndex();
+	std::vector<std::vector<int>> split_binary;
+	split_binary = data->splitBinaryObs(split_values[0], feature);
+	split_multiway.push_back(split_binary[0]);
+	split_multiway.push_back(split_binary[1]);
+	for (int i = 1; i < n_splits; ++i) {
+		Data* right_subset = data->subsetRows(split_binary[1]);
+		split_binary = right_subset->splitBinaryObs(split_values[i], feature); // split last element in two
+		split_multiway.pop_back(); // remove last element which was split in two
+		split_multiway.push_back(split_binary[0]); // add resulting splits
+		split_multiway.push_back(split_binary[1]);
+	}
+	this->splitted_obs = split_multiway;
+}
 
 SplitCateg::SplitCateg(int max_splits, std::map<std::string, int> levels) : Split(max_splits) {
 	this->levels = levels;
@@ -111,13 +132,30 @@ std::string SplitCateg::createDecisionRule(int child_ix) {
 	std::ostringstream sstream;
 	sstream << std::setprecision(2) << std::fixed;
 	int n_splits = this->getSplitValues().size();
-	//for (int i = 0; i < this->subset_level_sets.size(); i++) {
 	int n_subset_size = subset_level_sets[child_ix].size();
-	for (int j = 0; j < (n_subset_size - 1); j++) {
-			rule += std::to_string(subset_level_sets[child_ix][j]) + " | ";
+	rule += std::to_string(subset_level_sets[child_ix][0]);
+	for (int j = 1; j < n_subset_size; j++) {
+			rule += " | " + std::to_string(subset_level_sets[child_ix][j]);
 	}
-	rule += std::to_string(subset_level_sets[child_ix][n_subset_size]);
-	//}
 	return rule;
 }
 
+void SplitCateg::setLevelPartitionings(std::vector<std::vector<int>> level_sets) {
+	this->subset_level_sets = level_sets;
+}
+
+void SplitCateg::computePartitionings(Data* data) {
+	int n_obs = data->nrows();
+	int n_subsets = this->subset_level_sets.size();
+	int n_levels_per_subset;
+	for (int s = 0; s < n_subsets; s++) {
+		n_levels_per_subset = subset_level_sets[s].size();
+		for (int l = 0; l < n_levels_per_subset; l++) {
+			for (int i = 0; i < n_obs; i++) {
+				if (data->elem(i, this->getSplitFeatureIndex()) == this->subset_level_sets[s][l]) {
+					this->splitted_obs[s].push_back(i);
+				}
+			}
+		}	
+	}	
+}
