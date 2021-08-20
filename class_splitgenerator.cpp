@@ -107,7 +107,9 @@ std::vector<Split*> SplitGeneratorBinExh::generate() {
 	return splits;
 }
 
-/*
+
+
+
 SplitGeneratorMultRand::SplitGeneratorMultRand(Data* data, Arguments args) : SplitGenerator(data, args) {
 	//
 }
@@ -130,11 +132,27 @@ std::vector<Split*> SplitGeneratorMultRand::generate() {
 		}
 	}
 	srand(time(NULL));   // Initialization, should only be called once.
-	int rnd_col = rand() % n_cols;      // Returns a pseudo-random integer between 0 and RAND_MAX.
-	int rnd_row = rand() % n_rows;
-	
+		
+	int k = 100;
+	int n_cols_num = col_ix_num.size();
+	std::vector<double> split_values;
+	for (int j = 0; j < k; j++) {
+		int rnd_col = rand() % n_cols_num;      // Returns a pseudo-random integer between 0 and RAND_MAX.
+		SplitNum* current_split = new SplitNum(args.getMaxChildren() - 1);
+		current_split->setFeatureIndex(col_ix_num[rnd_col]);
+		for (int i = 0; i < args.getMaxChildren() - 1; i++) {
+			int rnd_row = rand() % n_rows;
+			current_split->addSplitValue(this->data->elem(rnd_row, rnd_col));
+			//std::cout << rnd_row << std::endl;
+		}
+		current_split->computePartitionings(this->data);
+		if (this->checkMinNodeSize(current_split)) {
+			splits.push_back(current_split);
+		}
+	}
+	return splits;
 }
-*/
+
 /*
 std::vector<Split> SplitGeneratorBinExh::generate() {
 	std::vector<Split> splits;

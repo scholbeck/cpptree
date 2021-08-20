@@ -20,6 +20,7 @@ class SplitGeneratorBinExh: public SplitGenerator {
 		std::vector<Split*> generate();
 };
 
+
 class SplitGeneratorMultRand: public SplitGenerator {
 	public:
 		SplitGeneratorMultRand(Data* data, Arguments args);

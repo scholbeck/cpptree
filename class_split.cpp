@@ -27,6 +27,7 @@ void Split::sortSplitValues() {
 }
 void Split::addSplitValue(double value) {
 	(this->split_values).push_back(value);
+	std::sort(this->split_values.begin(), this->split_values.end());
 }
 
 std::vector<double> Split::getSplitValues() {

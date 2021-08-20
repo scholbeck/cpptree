@@ -32,8 +32,10 @@ Model* Factory::createModel() {
 
 SplitGenerator* Factory::createSplitGenerator(Data* data, Arguments args) {
 	SplitGenerator* g;
-	if (this->args.getAlgorithm() == "exhaustive") {
+	if ((this->args.getAlgorithm() == "exhaustive") && (this->args.getMaxChildren() == 2)) {
 		g = new SplitGeneratorBinExh(data, args);
+	} else if ((this->args.getAlgorithm() == "random") && (this->args.getMaxChildren() > 2)) {
+		g = new SplitGeneratorMultRand(data, args);
 	}
 	return g;
 }

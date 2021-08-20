@@ -18,6 +18,9 @@ clean:
 iris:
 	./tree --filename data/iris.data --target 4 --sep , --task classif --algorithm exhaustive --objective gini --minsize 10 --children 2 --maxdepth 10
 
+irismult:
+	./tree --filename data/iris.data --target 4 --sep , --task classif --algorithm random --objective gini --minsize 1 --children 5 --maxdepth 10
+
 iris3way:
 	./tree --filename data/iris_10.data --target 4 --sep , --task classif --algorithm exhaustive --objective gini --model majorvote --minsize 1 --children 3
 
@@ -26,6 +29,9 @@ mushroom:
 
 gt:
 	./tree --filename data/gt_data2.csv --target 1 --sep , --task regr --algorithm exhaustive --objective sse --model mean --minsize 10 --maxdepth 10 --children 2
+
+gtmult:
+	./tree --filename data/gt_data2.csv --target 1 --sep , --task regr --algorithm random --objective sse --model mean --minsize 10 --maxdepth 10 --children 3
 
 gt2:
 	./tree --filename data/gt_data1feature.csv --target 1 --sep , --task regr --algorithm exhaustive --objective sse --model mean --minsize 100 --children 2
