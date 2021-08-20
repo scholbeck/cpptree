@@ -6,6 +6,7 @@
 #include "class_data.h"
 #include "class_split.h"
 #include "iostream"
+#include "helper_functions.h"
 #include <algorithm>
 #include <iomanip>
 
@@ -104,23 +105,71 @@ std::string SplitNum::createDecisionRule(int child_ix) {
 }
 
 void SplitNum::computePartitionings(Data* data) {
-	std::vector<std::vector<int>> split_multiway;
-	std::vector<double> split_values = this->getSplitValues();
-	// split values have to be sorted and duplicates removed in split first!
-	int n_splits = split_values.size();
+	int n_obs = data->nrows();
 	int feature = this->getSplitFeatureIndex();
-	std::vector<std::vector<int>> split_binary;
-	split_binary = data->splitBinaryObs(split_values[0], feature);
-	split_multiway.push_back(split_binary[0]);
-	split_multiway.push_back(split_binary[1]);
-	for (int i = 1; i < n_splits; ++i) {
-		Data* right_subset = data->subsetRows(split_binary[1]);
-		split_binary = right_subset->splitBinaryObs(split_values[i], feature); // split last element in two
-		split_multiway.pop_back(); // remove last element which was split in two
-		split_multiway.push_back(split_binary[0]); // add resulting splits
-		split_multiway.push_back(split_binary[1]);
+	std::vector<double> split_values = this->getSplitValues();
+	int n_splits = split_values.size();
+	std::vector<std::vector<int>> split_multiway;
+	for (int l = 0; l <= n_splits; l++) {
+		std::vector<int> subset_obs;
+		split_multiway.push_back(subset_obs);
+	}
+	// split values need to be sorted asc.
+	bool rightmost_node = true;
+	for (int i = 0; i < n_obs; i++) {
+		for (int j = 0; j < n_splits; j++) {
+			if (data->elem(i, feature) <= split_values[j]) {
+				split_multiway[j].push_back(i);
+				rightmost_node = false;
+				break;
+			}
+		}
+		if (rightmost_node == true) {
+			split_multiway[n_splits].push_back(i);
+		}
+		rightmost_node = true;
+		
 	}
 	this->splitted_obs = split_multiway;
+}
+	/*
+	std::vector<std::vector<int>> split_binary = data->splitBinaryObs(split_values[0], feature);
+	std::cout << "left node" << std::endl;
+	printVectorInt(split_binary[0]);
+	std::cout << "right node" << std::endl;
+	printVectorInt(split_binary[1]);
+	split_multiway.push_back(split_binary[0]);
+	split_multiway.push_back(split_binary[1]);
+	Data* right_subset;
+	if (!(split_binary[0].size() == 0) || (split_binary[0].size() == 0)) {
+		for (int i = 1; i < n_splits; ++i) {
+			right_subset = data->subsetRows(split_binary[1]);
+			split_binary = right_subset->splitBinaryObs(split_values[i], feature); // split last element in two
+			split_multiway.pop_back(); // remove last element which was split in two
+			split_multiway.push_back(split_binary[0]); // add resulting splits
+			split_multiway.push_back(split_binary[1]);
+			std::cout << "middle node" << std::endl;
+			printVectorInt(split_binary[0]);
+			std::cout << "rightmost node" << std::endl;
+			printVectorInt(split_binary[1]);
+			std::cout << split_binary[1].empty() << std::endl;
+		}
+	}
+	//free(right_subset);
+	this->splitted_obs = split_multiway;
+}
+	*/
+
+void SplitNum::summary() {
+	std::cout << "SPLIT SUMMARY\n";
+	std::cout << "\tsplit feature : " << this->getSplitFeatureIndex() << "\n";
+	std::cout << "\tsplit values : ";
+	int n_splits = this->split_values.size();
+	std::cout << "\t";
+	for (int i = 0; i < n_splits; ++i) {
+		std::cout << this->split_values[i] << " ";
+	}
+	std::cout << "\n";
 }
 
 SplitCateg::SplitCateg(int max_splits, std::map<std::string, int> levels) : Split(max_splits) {
@@ -160,3 +209,5 @@ void SplitCateg::computePartitionings(Data* data) {
 		}	
 	}	
 }
+
+void SplitCateg::summary() {}

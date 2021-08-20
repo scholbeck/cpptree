@@ -241,6 +241,7 @@ std::vector<std::vector<int>> Data::splitBinaryObs(double split_value, int col_i
 	rows_left.reserve(n_elements);
 	rows_right.reserve(n_elements);
 	std::vector<std::vector<int>> split_obs;
+	
 	for (int i = 0; i < n_elements; ++i) {
 		if (this->elem(i, col_index) <= split_value) {
 			rows_left.push_back(i);
@@ -253,29 +254,8 @@ std::vector<std::vector<int>> Data::splitBinaryObs(double split_value, int col_i
 	return split_obs;
 }
 
-std::vector<std::vector<std::vector<int>>> Data::computeCategPermuts(int col_index, int n_nodes) {
-	std::map<std::string, int> levels = this->categ_encodings.at(col_index);
-	int n_levels = levels.size();
-	std::vector<std::vector<std::vector<int>>> levels_partitioned;
-	std::vector<int> levels_left;
-	std::vector<int> levels_right;
-	std::vector<std::vector<int>> levels_combined;
-	for (int i = 0; i < n_levels; i++) {
-		levels_left.push_back(i);
-		for (int j = 0; j < n_levels; j++) {
-			if (i != j) {
-				levels_right.push_back(j);
-			}
-		}
-		levels_combined.push_back(levels_left);
-		levels_combined.push_back(levels_right);
-		levels_partitioned.push_back(levels_combined);
-		levels_left.clear();
-		levels_right.clear();
-		levels_combined.clear();
-	}
-	return levels_partitioned;
-}
+
+
 
 /*
 std::vector<Data*> Data::splitCateg(int col_index) {
@@ -446,3 +426,26 @@ void Data::orderFeatures() {
 
 */
 
+std::vector<std::vector<std::vector<int>>> Data::computeCategPermuts(int col_index, int n_nodes) {
+	std::map<std::string, int> levels = this->categ_encodings.at(col_index);
+	int n_levels = levels.size();
+	std::vector<std::vector<std::vector<int>>> levels_partitioned;
+	std::vector<int> levels_left;
+	std::vector<int> levels_right;
+	std::vector<std::vector<int>> levels_combined;
+	for (int i = 0; i < n_levels; i++) {
+		levels_left.push_back(i);
+		for (int j = 0; j < n_nodes; j++) {
+			if (i != j) {
+				levels_right.push_back(j);
+			}
+		}
+		levels_combined.push_back(levels_left);
+		levels_combined.push_back(levels_right);
+		levels_partitioned.push_back(levels_combined);
+		levels_left.clear();
+		levels_right.clear();
+		levels_combined.clear();
+	}
+	return levels_partitioned;
+}

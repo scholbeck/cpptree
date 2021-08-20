@@ -22,7 +22,7 @@ bool SplitGenerator::checkMinNodeSize(Split* split) {
 		geq_min_node_size = false;
 	} else {
 		for (int i = 0; i < this->args.getMaxChildren(); i++) {
-			if ((split->splitted_obs[i].empty()) |
+			if ((split->splitted_obs[i].empty()) ||
 				(split->splitted_obs[i].size() < this->args.getMinNodeSize())) {
 					geq_min_node_size = false;
 			}
@@ -131,23 +131,32 @@ std::vector<Split*> SplitGeneratorMultRand::generate() {
 			col_ix_categ.push_back(j);
 		}
 	}
-	srand(time(NULL));   // Initialization, should only be called once.
-		
-	int k = 100;
+	srand(0);
+	int k = 10;
 	int n_cols_num = col_ix_num.size();
 	std::vector<double> split_values;
+	std::vector<double> col_values;
 	for (int j = 0; j < k; j++) {
-		int rnd_col = rand() % n_cols_num;      // Returns a pseudo-random integer between 0 and RAND_MAX.
+		int rnd_col = rand() % n_cols_num;     // Returns a pseudo-random integer between 0 and RAND_MAX.
+		col_values = data->col(col_ix_num[rnd_col]);
+		std::sort(col_values.begin(), col_values.end());
+		col_values.erase(std::unique(col_values.begin(), col_values.end()), col_values.end());
+		int n_unique_values = col_values.size();
 		SplitNum* current_split = new SplitNum(args.getMaxChildren() - 1);
 		current_split->setFeatureIndex(col_ix_num[rnd_col]);
-		for (int i = 0; i < args.getMaxChildren() - 1; i++) {
-			int rnd_row = rand() % n_rows;
-			current_split->addSplitValue(this->data->elem(rnd_row, rnd_col));
-			//std::cout << rnd_row << std::endl;
+		int rnd_obs_prev = rand() % n_unique_values;
+		int rnd_obs_current = rnd_obs_prev;
+		for (int i = 0; i < args.getMaxChildren() - 1; i++) {			
+			while (rnd_obs_current == rnd_obs_prev) {
+				rnd_obs_current = rand() % n_unique_values;
+			}
+			rnd_obs_prev = rnd_obs_current;
+			current_split->addSplitValue(col_values[rnd_obs_current]);
 		}
 		current_split->computePartitionings(this->data);
 		if (this->checkMinNodeSize(current_split)) {
 			splits.push_back(current_split);
+			//current_split->summary();
 		}
 	}
 	return splits;

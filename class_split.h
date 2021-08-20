@@ -33,6 +33,7 @@ class Split {
 		std::vector<Model*> getChildNodeModels();
 		void clear();
 		void sortSplitValues();
+		virtual void summary() = 0;
 };
 
 class SplitNum : public Split {
@@ -42,7 +43,7 @@ class SplitNum : public Split {
 		std::string createDecisionRule(int child_ix);
 		void computePartitionings(Data* data);
 		std::vector<std::vector<int>> splitBinaryObs(Data* data, double split_value, int col_index);
-
+		void summary();
 };
 
 class SplitCateg : public Split {
@@ -55,6 +56,7 @@ class SplitCateg : public Split {
 		std::string createDecisionRule(int child_ix);
 		void setLevelPartitionings(std::vector<std::vector<int>> level_sets);
 		void computePartitionings(Data* data);
+		void summary();
 };
 
 
