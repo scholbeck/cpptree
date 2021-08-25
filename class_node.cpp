@@ -125,7 +125,6 @@ std::vector<Node*> Node::split() {
 	Data* subset;
 	if (!splits.empty()) {
 		for (int i = 0; i < n_splits; ++i) {
-			//std::cout << i << std::flush;
 			// loop over every split
 			if (i == 0) {
 				// for the first split, the objective cannot be updated
