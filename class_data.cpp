@@ -13,6 +13,14 @@ Data::Data() {
 	
 }
 
+bool Data::selfCheck() {
+	bool ret = true;
+	if ((this->target_index < 0) | (this->target_index > (this->ncols() - 1))) {
+		ret = false;
+	}
+	return ret;
+}
+
 int Data::getTargetIndex() {
 	return this->target_index;
 }
@@ -217,7 +225,7 @@ Data* Data::subset(std::vector<int> rows, std::vector<int> cols) {
 	subset->init(n_rows_subset, n_cols_subset);
 	subset->setCategEncodings(this->categ_encodings);
 	subset->setTargetIndex(this->target_index);
-	subset-> setColTypes(this->coltypes);
+	subset->setColTypes(this->coltypes);
 	for (int i = 0; i < n_rows_subset; ++i) {
 		for (int j = 0; j < n_cols_subset; j++) {
 			(subset->rows[i])[j] = this->elem(rows[i], cols[j]);

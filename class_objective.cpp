@@ -26,6 +26,7 @@ ObjectiveSSE::ObjectiveSSE(Arguments args) : Objective(args) {
 void ObjectiveSSE::init(Data* data, int childnode) {
 	this->models[childnode]->setTrainingData(data);
 	this->models[childnode]->train();
+	this->values[childnode] = this->compute(data);
 }
 
 double ObjectiveSSE::compute(Data* data) {

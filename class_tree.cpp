@@ -43,24 +43,6 @@ Arguments Tree::getArgs() {
 	return this->args;
 }
 
-void Tree::sortNodesAsc() {
-	// not sure this is working perfectly fine
-	std::string left_id, current_id;
-	Node* node_pntr_tmp = NULL;
-	for (int i = 0; i < this->node_cnt; ++i) {
-		left_id = this->nodes[i]->getId();
-		for (int j = i + 1; j < this->node_cnt; j++) {
-			current_id = this->nodes[j]->getId();
-			if ((std::stoi(current_id) < std::stoi(left_id)) && (current_id.length() <= left_id.length())) {
-				node_pntr_tmp = this->nodes[i];
-				this->nodes[i] = this->nodes[j];
-				this->nodes[j] = node_pntr_tmp;
-			}
-		}
-	}
-	
-}
-
 int Tree::grow() {
 	int ret = this->root->recursiveSplit();
 	this->gatherTreeInformation();

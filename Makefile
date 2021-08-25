@@ -15,6 +15,9 @@ val:
 clean:
 	rm -f main
 
+boston:
+	./tree --filename data/bh.data --target 13 --sep , --task regr --algorithm exhaustive --objective sse --minsize 10 --children 2 --maxdepth 10
+
 iris:
 	./tree --filename data/iris.data --target 4 --sep , --task classif --algorithm exhaustive --objective gini --minsize 10 --children 2 --maxdepth 10
 

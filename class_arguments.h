@@ -51,6 +51,7 @@ class Arguments {
 	int getMaxDepth();
 	void setMaxDepth(int max_depth);
 
+	int processArguments(int argc, char** argv);
 	void checkArgs();
 };
 

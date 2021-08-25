@@ -14,130 +14,22 @@
 #include <ctime>
 
 
-void printHelp() {
-	std::cout << "Required arguments: filename, children, minsize, algorithm, objective, model.\n";
-	std::cout << "Example: ./tree --algorithm exhaustive --objective sse --model mean --minsize 30 --children 2.\n";
-}
-
-int processArguments(int argc, char** argv, Arguments *arguments)
-{
-	const option long_opts[] = {
-            {"filename", required_argument, nullptr, 1000},
-            {"children", required_argument, nullptr, 1100},
-            {"minsize", required_argument, nullptr, 1200},
-            {"algorithm", required_argument, nullptr, 1300},
-            {"objective", required_argument, nullptr, 1400},
-            {"model", required_argument, nullptr, 1500},
-            {"task", required_argument, nullptr, 1600},
-            {"sep", required_argument, nullptr, 1700},
-            {"target", required_argument, nullptr, 1800},
-            {"maxdepth", required_argument, nullptr, 1900},
-            {"help", no_argument, nullptr, 2000}
-    };
-	
-    while (true)
-    {
-        const int opt = getopt_long(argc, argv, "", long_opts, nullptr);
-
-        if (-1 == opt)
-            break;
-
-        switch (opt)
-        {
-        case 1000:
-            arguments->setFilename(std::string(optarg));
-            break;
-        case 1100:
-            arguments->setMaxChildren((int) atol(optarg));
-            break;
-        case 1200:
-            if (optarg == "") {
-                 arguments->setMinNodeSize(1);
-            } else {
-                 arguments->setMinNodeSize((int) atol(optarg));
-            }
-            break;
-        case 1300:
-            arguments->setAlgorithm(std::string(optarg));
-            break;
-        case 1400:
-            arguments->setObjective(std::string(optarg));
-            break;  
-		case 1500:
-            arguments->setModel(std::string(optarg));
-            break; 
-		case 1600:
-            arguments->setTask(std::string(optarg));
-            break;
-        case 1700:
-            arguments->setSep(*optarg);
-            break;
-        case 1800:
-            arguments->setTargetIndex((int) atol(optarg));
-            break;
-        case 1900:
-             if (optarg == "") {
-                 arguments->setMaxDepth(30);
-            } else {
-                 arguments->setMaxDepth((int) atol(optarg));
-            }
-            break;
-        case 2000:
-            printHelp();
-            break;
-        case '?':
-        default:
-            printHelp();
-            break;
-        }
-    }
-    
-    if (arguments->getFilename() == "") {
-		printf("Filename not specified.\n");
-		return -1;
-    }
-    if (arguments->getMinNodeSize() == 0) {
-		printf("Minimum node size not specified.\n");
-		return -1;
-    }
-    if (arguments->getMaxChildren() == 0) {
-		printf("Maximum child number not specified.\n");
-		return -1;
-    }
-    if (arguments->getObjective() == "") {
-		printf("Objective function not specified.\n");
-		return -1;
-    }
-    /*
-    if (arguments->getModel() == "") {
-		printf("Model type not specified.\n");
-		return -1;
-    }
-    */
-    if (arguments->getAlgorithm() == "") {
-		printf("Search algorithm not specified.\n");
-		return -1;
-    }
-    
-    return 0;
-    
-}
-
-
-
-
 int main(int argc, char *argv[]) {
 	
 	Arguments args;
 	Reader reader;
 	
 	int arg_status = 0;
-	if ((arg_status = processArguments(argc, argv, &args)) == -1) {
+	if ((arg_status = args.processArguments(argc, argv)) == -1) {
 		return EXIT_FAILURE;
 	}
     args.checkArgs();
 	Data* data = reader.read(args.getFilename(), args.getSep());
 	data->setTargetIndex(args.getTargetIndex() + 1);
+    if (data->selfCheck() == false) {
+        std::cout << "Specified wrong target index. Aborting..\n";
+        return EXIT_FAILURE;
+    }
 
     std::clock_t start;
     double duration;

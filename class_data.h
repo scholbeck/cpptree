@@ -33,6 +33,7 @@ class Data {
 		void addCols(std::vector<std::vector<double>> col_vec);
 		
 		void print();
+		bool selfCheck();
 		int getTargetIndex();
 		double elem(int row_index, int col_index);
 		int nrows();

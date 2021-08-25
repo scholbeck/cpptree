@@ -86,4 +86,113 @@ void Arguments::checkArgs() {
 	}
 }
 
+void printHelp() {
+	std::cout << "Required arguments: filename, children, minsize, algorithm, objective, model.\n";
+	std::cout << "Example: ./tree --algorithm exhaustive --objective sse --model mean --minsize 30 --children 2.\n";
+}
+
+int Arguments::processArguments(int argc, char** argv)
+{
+	const option long_opts[] = {
+            {"filename", required_argument, nullptr, 1000},
+            {"children", required_argument, nullptr, 1100},
+            {"minsize", required_argument, nullptr, 1200},
+            {"algorithm", required_argument, nullptr, 1300},
+            {"objective", required_argument, nullptr, 1400},
+            {"model", required_argument, nullptr, 1500},
+            {"task", required_argument, nullptr, 1600},
+            {"sep", required_argument, nullptr, 1700},
+            {"target", required_argument, nullptr, 1800},
+            {"maxdepth", required_argument, nullptr, 1900},
+            {"help", no_argument, nullptr, 2000}
+    };
+	
+    while (true)
+    {
+        const int opt = getopt_long(argc, argv, "", long_opts, nullptr);
+
+        if (-1 == opt)
+            break;
+
+        switch (opt)
+        {
+        case 1000:
+            this->setFilename(std::string(optarg));
+            break;
+        case 1100:
+            this->setMaxChildren((int) atol(optarg));
+            break;
+        case 1200:
+            if (optarg == "") {
+                 this->setMinNodeSize(1);
+            } else {
+                 this->setMinNodeSize((int) atol(optarg));
+            }
+            break;
+        case 1300:
+            this->setAlgorithm(std::string(optarg));
+            break;
+        case 1400:
+            this->setObjective(std::string(optarg));
+            break;  
+		case 1500:
+            this->setModel(std::string(optarg));
+            break; 
+		case 1600:
+            this->setTask(std::string(optarg));
+            break;
+        case 1700:
+            this->setSep(*optarg);
+            break;
+        case 1800:
+            this->setTargetIndex((int) atol(optarg));
+            break;
+        case 1900:
+             if (optarg == "") {
+                 this->setMaxDepth(30);
+            } else {
+                 this->setMaxDepth((int) atol(optarg));
+            }
+            break;
+        case 2000:
+            printHelp();
+            break;
+        case '?':
+        default:
+            printHelp();
+            break;
+        }
+    }
+    
+    if (this->getFilename() == "") {
+		printf("Filename not specified.\n");
+		return -1;
+    }
+    if (this->getMinNodeSize() == 0) {
+		printf("Minimum node size not specified.\n");
+		return -1;
+    }
+    if (this->getMaxChildren() == 0) {
+		printf("Maximum child number not specified.\n");
+		return -1;
+    }
+    if (this->getObjective() == "") {
+		printf("Objective function not specified.\n");
+		return -1;
+    }
+    /*
+    if (this->getModel() == "") {
+		printf("Model type not specified.\n");
+		return -1;
+    }
+    */
+    if (this->getAlgorithm() == "") {
+		printf("Search algorithm not specified.\n");
+		return -1;
+    }
+    
+    return 0;
+    
+}
+
 
