@@ -18,7 +18,7 @@ void Model::checkTrained() {
 	}
 }
 
-// ModelAverage
+// mean target
 
 ModelAverage::ModelAverage() : Model() {
 	this->cumsum_target = 0;
@@ -69,6 +69,88 @@ std::vector<double> ModelAverage::predictMult(Data* data) {
 double ModelAverage::predictSingle(std::vector<double> observation) {
 	this->checkTrained();
 	return this->mean_target;
+}
+
+// linear regression
+
+ModelLinearRegression::ModelLinearRegression() : Model() {
+	this->learning_rate = 0.1;
+	this->n = 0;
+	int n_cols = this->training_data->ncols();
+	for (int j = 0; j < n_cols; j++) {
+		if (j == this->training_data->getTargetIndex()) {
+			continue;
+		}
+		this->params.insert({j, 0});
+			// update feature-specific param: derivative w.r.t. param = observation
+	}
+}
+
+void ModelLinearRegression::train() {
+	int target_index = this->training_data->getTargetIndex();
+	std::vector<double> target_values = this->training_data->col(target_index);
+	int n_rows = this->training_data->nrows();
+	int n_cols = this->training_data->ncols();
+	this->params.at(0) = -n_rows * this->learning_rate;
+	for (int i = 0; i < n; i++) {
+		// update constant
+		for (int j = 1; j < n_cols; j++) {
+			if (j == this->training_data->getTargetIndex()) {
+				continue;
+			}
+			this->params.at(j) = this->params.at(j) - this->learning_rate * this->training_data->elem(i, j);
+			// update feature-specific param: derivative w.r.t. param = observation
+		}
+	}
+	this->is_trained = true;
+}
+
+void ModelLinearRegression::update(std::vector<double> observation, char setdiff) {	
+	int n_cols = observation.size();
+	if (setdiff == '+') {
+		this->params.at(0) = this->params.at(0) - this->learning_rate;
+		for (int j = 1; j < n_cols; j++) {
+			if (j == this->training_data->getTargetIndex()) {
+				continue;
+			}
+			this->params.at(j) = this->params.at(j) - this->learning_rate * observation[j];
+			// update feature-specific param: derivative w.r.t. param = observation
+		}
+	} else {
+		this->params.at(0) = this->params.at(0) + this->learning_rate;
+		for (int j = 1; j < n_cols; j++) {
+			if (j == this->training_data->getTargetIndex()) {
+				continue;
+			}
+			this->params.at(j) = this->params.at(j) + this->learning_rate * observation[j];
+			// update feature-specific param: derivative w.r.t. param = observation
+		}
+	}
+}
+
+
+std::vector<double> ModelLinearRegression::predictMult(Data* data) {
+	this->checkTrained();
+	int n = data->nrows();
+	std::vector<double> predictions(n, 0);
+	for (int i = 0; i < n; i++) {
+		predictions[i] = this->predictSingle(data->row(i));
+	}
+	return predictions;
+}
+
+double ModelLinearRegression::predictSingle(std::vector<double> observation) {
+	this->checkTrained();
+	int n_cols = this->training_data->ncols();
+	double pred = this->params.at(0);
+	for (int j = 1; j < n_cols; j++) {
+		if (j == this->training_data->getTargetIndex()) {
+			continue;
+		}
+		pred += this->params.at(j) * observation[j];
+		// update feature-specific param: derivative w.r.t. param = observation
+	}
+	return pred;
 }
 
 // ModelMajorityVote

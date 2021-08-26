@@ -41,7 +41,15 @@ class ModelAverage: public Model {
 
 class ModelLinearRegression: public Model {
 	public:
-		//using Model::predict;
+		std::map<int, double> params;
+		double learning_rate;
+		int n;
+
+		ModelLinearRegression();
+		void train();
+		virtual void update(std::vector<double> observation, char setdiff);
+		std::vector<double> predictMult(Data* data);
+		virtual double predictSingle(std::vector<double> observation);
 };
 
 // Classification

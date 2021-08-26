@@ -8,7 +8,7 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Thu Aug 26 15:56:45 2021
+# Make data base, printed on Thu Aug 26 19:56:23 2021
 
 # Variables
 
@@ -129,7 +129,7 @@ XDG_SESSION_DESKTOP = ubuntu
 # environment
 SSH_AUTH_SOCK = /run/user/1000/keyring/ssh
 # environment
-GIO_LAUNCHED_DESKTOP_FILE_PID = 6986
+GIO_LAUNCHED_DESKTOP_FILE_PID = 30097
 # automatic
 %F = $(notdir $%)
 # environment
@@ -176,7 +176,6 @@ SNAP_USER_COMMON = /home/scholbeck/snap/code/common
 VSCODE_HANDLES_UNCAUGHT_ERRORS = true
 # environment
 GNOME_DESKTOP_SESSION_ID = this-is-deprecated
- 
 # automatic
 ^D = $(patsubst %/,%,$(dir $^))
 # environment
@@ -198,7 +197,7 @@ CC = g++
 # environment
 GNOME_SHELL_SESSION_MODE = ubuntu
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-f32a8e93-994e-42f1-ad2b-4b818488680a.sock
+VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-62082c66-8481-4e43-bae1-a8f466a9db47.sock
 # default
 MAKE_VERSION := 4.2.1
 # environment
@@ -256,6 +255,7 @@ SNAP_COOKIE = V1nge5Gce1baW0AHPwZl8M5BBlxAJEXY3TvUYP_DyZGLlJRAAgtV
 # environment
 LC_NUMERIC = de_DE.UTF-8
 # environment
+ 
 VSCODE_BROWSER_CODE_LOADING = bypassHeatCheck
 # automatic
 <F = $(notdir $<)
@@ -288,7 +288,7 @@ LC_ADDRESS = de_DE.UTF-8
 # environment
 LANG = C
 # environment
-VSCODE_PID = 7029
+VSCODE_PID = 30141
 # variable set hash-table stats:
 # Load=138/1024=13%, Rehash=0, Collisions=20/163=12%
 
@@ -298,9 +298,9 @@ VSCODE_PID = 7029
 
 # Directories
 
-# . (device 66310, inode 6162272): 37 files, no impossibilities.
+# . (device 66310, inode 6162272): 36 files, no impossibilities.
 
-# 37 files, no impossibilities in 1 directories.
+# 36 files, no impossibilities in 1 directories.
 
 # Implicit Rules
 
@@ -319,14 +319,13 @@ gt2:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 55):
- 
+#  recipe to execute (from 'Makefile', line 61):
 	./tree --filename data/gt_data1feature.csv --target 1 --sep , --task regr --algorithm exhaustive --objective sse --model mean --minsize 100 --children 2
 
 # Not a target:
 Makefile:
 #  Implicit rule search has been done.
-#  Last modified 2021-08-26 15:56:03.372400781
+#  Last modified 2021-08-26 19:55:58.35991596
 #  File has been updated.
 #  Successfully updated.
 
@@ -348,49 +347,56 @@ iris:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 28):
+#  recipe to execute (from 'Makefile', line 34):
 	./tree --filename data/iris.data --target 4 --sep , --task classif --algorithm exhaustive --objective gini --minsize 10 --children 2 --maxdepth 10
 
 iris3way:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 34):
+#  recipe to execute (from 'Makefile', line 40):
 	./tree --filename data/iris_10.data --target 4 --sep , --task classif --algorithm exhaustive --objective gini --model majorvote --minsize 1 --children 3
 
 gtmult5:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 52):
+#  recipe to execute (from 'Makefile', line 58):
 	./tree --filename data/gt_data2.csv --target 1 --sep , --task regr --algorithm random --objective sse --model mean --minsize 10 --maxdepth 10 --children 5
+
+bostonmult5:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 31):
+	./tree --filename data/bh.data --target 13 --sep , --task regr --algorithm random --objective sse --minsize 10 --children 5 --maxdepth 10
 
 irismult:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 31):
+#  recipe to execute (from 'Makefile', line 37):
 	./tree --filename data/iris.data --target 4 --sep , --task classif --algorithm random --objective gini --minsize 1 --children 3 --maxdepth 10
 
 mushroommult3:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 40):
+#  recipe to execute (from 'Makefile', line 46):
 	./tree --filename data/mushroom.data --target 22 --sep , --task classif --algorithm random --objective gini --minsize 1 --children 3
 
 gt3:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 58):
+#  recipe to execute (from 'Makefile', line 64):
 	./tree --filename data/gt_2015.csv --target 1 --sep , --task regr --algorithm exhaustive --objective sse --model mean --minsize 10 --maxdepth 30 --children 2
 
 gtmult4:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 49):
+#  recipe to execute (from 'Makefile', line 55):
 	./tree --filename data/gt_data2.csv --target 1 --sep , --task regr --algorithm random --objective sse --model mean --minsize 10 --maxdepth 10 --children 4
 
 gprof:
@@ -404,7 +410,7 @@ mushroom:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 37):
+#  recipe to execute (from 'Makefile', line 43):
 	./tree --filename data/mushroom.data --target 22 --sep , --task classif --algorithm exhaustive --objective gini --minsize 10 --children 2
 
 # Not a target:
@@ -417,14 +423,14 @@ bostonmult4:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 25):
+#  recipe to execute (from 'Makefile', line 28):
 	./tree --filename data/bh.data --target 13 --sep , --task regr --algorithm random --objective sse --minsize 10 --children 4 --maxdepth 10
 
 gtmult3:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 46):
+#  recipe to execute (from 'Makefile', line 52):
 	./tree --filename data/gt_data2.csv --target 1 --sep , --task regr --algorithm random --objective sse --model mean --minsize 10 --maxdepth 10 --children 3
 
 clean:
@@ -438,14 +444,15 @@ bostonmult3:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 22):
+#  recipe to execute (from 'Makefile', line 25):
 	./tree --filename data/bh.data --target 13 --sep , --task regr --algorithm random --objective sse --minsize 10 --children 3 --maxdepth 10
 
 gt:
+ 
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 43):
+#  recipe to execute (from 'Makefile', line 49):
 	./tree --filename data/gt_data2.csv --target 1 --sep , --task regr --algorithm exhaustive --objective sse --model mean --minsize 10 --maxdepth 10 --children 2
 
 boston:
@@ -453,31 +460,37 @@ boston:
 #  Modification time never checked.
 #  File has not been updated.
 #  recipe to execute (from 'Makefile', line 19):
-	./tree --filename data/bh.data --target 13 --sep , --task regr --algorithm exhaustive --objective sse --minsize 10 --children 2 --maxdepth 10
+	./tree --filename data/bh.data --target 13 --sep , --task regr --algorithm exhaustive --objective sse --model mean --minsize 10 --children 2 --maxdepth 10
+
+bostonlinear:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 22):
+	./tree --filename data/bh.data --target 13 --sep , --task regr --algorithm exhaustive --objective sse --model linear --minsize 10 --children 2 --maxdepth 10
 
 main:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
- 
 #  File has not been updated.
 #  recipe to execute (from 'Makefile', line 4):
 	$(CC) -O3 -o tree main.cpp class_arguments.cpp class_factory.cpp class_reader.cpp class_data.cpp class_node.cpp class_split.cpp class_model.cpp class_objective.cpp class_tree.cpp class_aggregation.cpp class_splitgenerator.cpp helper_functions.cpp
 	
 
 # files hash-table stats:
-# Load=23/1024=2%, Rehash=0, Collisions=1/33=3%
+# Load=25/1024=2%, Rehash=0, Collisions=1/35=3%
 # VPATH Search Paths
 
 # No 'vpath' search paths.
 
 # No general ('VPATH' variable) search path.
 
-# strcache buffers: 1 (0) / strings = 61 / storage = 706 B / avg = 11 B
-# current buf: size = 8162 B / used = 706 B / count = 61 / avg = 11 B
+# strcache buffers: 1 (0) / strings = 62 / storage = 726 B / avg = 11 B
+# current buf: size = 8162 B / used = 726 B / count = 62 / avg = 11 B
 
-# strcache performance: lookups = 84 / hit rate = 27%
+# strcache performance: lookups = 87 / hit rate = 28%
 # hash-table stats:
-# Load=61/8192=1%, Rehash=0, Collisions=2/84=2%
-# Finished Make data base on Thu Aug 26 15:56:45 2021
+# Load=62/8192=1%, Rehash=0, Collisions=2/87=2%
+# Finished Make data base on Thu Aug 26 19:56:23 2021
 
  

@@ -1,24 +1,132 @@
-./tree --filename data/iris.data --target 4 --sep , --task classif --algorithm random --objective gini --minsize 1 --children 5 --maxdepth 10
+./tree --filename data/mushroom.data --target 22 --sep , --task classif --algorithm exhaustive --objective gini --minsize 10 --children 2
 DATA SUMMARY
-	matrix of dimension : 150 x 6
-	target : column 5 
-	column types : | (0 : ID) | (1 : num) | (2 : num) | (3 : num) | (4 : num) | (5 : categ) | 
+	matrix of dimension : 715 x 24
+	target : column 23 
+	column types : | (0 : ID) | (1 : categ) | (2 : categ) | (3 : categ) | (4 : categ) | (5 : categ) | (6 : categ) | (7 : categ) | (8 : categ) | (9 : categ) | (10 : categ) | (11 : categ) | (12 : categ) | (13 : categ) | (14 : categ) | (15 : categ) | (16 : categ) | (17 : categ) | (18 : categ) | (19 : categ) | (20 : categ) | (21 : categ) | (22 : categ) | (23 : categ) | 
 	categorical encodings :
+		column 1 : 
+			e = 0
+			p = 1
+		column 2 : 
+			b = 0
+			f = 1
+			s = 2
+			x = 3
+		column 3 : 
+			f = 0
+			s = 1
+			y = 2
+		column 4 : 
+			g = 0
+			n = 1
+			w = 2
+			y = 3
 		column 5 : 
-			Iris-setosa = 0
-			Iris-versicolor = 1
-			Iris-virginica = 2
+			f = 0
+			t = 1
+		column 6 : 
+			a = 0
+			l = 1
+			n = 2
+			p = 3
+		column 7 : 
+			f = 0
+		column 8 : 
+			c = 0
+			w = 1
+		column 9 : 
+			b = 0
+			n = 1
+		column 10 : 
+			g = 0
+			h = 1
+			k = 2
+			n = 3
+			p = 4
+			u = 5
+			w = 6
+		column 11 : 
+			e = 0
+			t = 1
+		column 12 : 
+			b = 0
+			c = 1
+			e = 2
+			r = 3
+		column 13 : 
+			f = 0
+			s = 1
+		column 14 : 
+			f = 0
+			s = 1
+			y = 2
+		column 15 : 
+			g = 0
+			p = 1
+			w = 2
+		column 16 : 
+			g = 0
+			p = 1
+			w = 2
+		column 17 : 
+			p = 0
+		column 18 : 
+			w = 0
+		column 19 : 
+			o = 0
+		column 20 : 
+			e = 0
+			p = 1
+		column 21 : 
+			k = 0
+			n = 1
+			u = 2
+		column 22 : 
+			a = 0
+			n = 1
+			s = 2
+			v = 3
+			y = 4
+		column 23 : 
+			d = 0
+			g = 1
+			m = 2
+			p = 3
+			u = 4
 ------------------------------------------------------
 TREE SUMMARY
-	nodes : 6
-	leaf nodes : 5
-	depth : 1
+	nodes : 29
+	leaf nodes : 15
+	depth : 9
 
 └──[0]
-    ├──<x3 <= 2.50>──[*00]
-    ├──<x3 ∈  ]2.50 , 3.00]>──[*01]
-    ├──<x3 ∈  ]3.00 , 3.00]>──[*02]
-    ├──<x3 ∈  ]3.00 , 3.00]>──[*03]
-    ├──<x3 > 3.00>──[*04]
+    ├──<x12 = 0>──[00]
+        ├──<x4 = 0 | 1 | 2>──[000]
+            ├──<x10 = 0 | 1 | 2 | 3>──[*0000]
+            ├──<x10 = 4 | 5 | 6>──[0001]
+                ├──<x2 = 0 | 1>──[*00010]
+                ├──<x2 = 2 | 3>──[*00011]
+        ├──<x4 = 3>──[001]
+            ├──<x21 = 0 | 1>──[*0010]
+            ├──<x21 = 2>──[*0011]
+    ├──<x12 = 1 | 2 | 3>──[01]
+        ├──<x13 = 0>──[010]
+            ├──<x21 = 0>──[*0100]
+            ├──<x21 = 1 | 2>──[*0101]
+        ├──<x13 = 1>──[011]
+            ├──<x14 = 0>──[*0110]
+            ├──<x14 = 1 | 2>──[0111]
+                ├──<x22 = 0>──[*01110]
+                ├──<x22 = 1 | 2 | 3 | 4>──[01111]
+                    ├──<x3 = 0>──[011110]
+                        ├──<x10 = 0 | 1 | 2 | 3>──[0111100]
+                            ├──<x10 = 0>──[*01111000]
+                            ├──<x10 = 1 | 2 | 3 | 4 | 5 | 6>──[01111001]
+                                ├──<x22 = 0 | 1 | 2 | 3>──[011110010]
+                                    ├──<x10 = 0 | 1 | 2>──[*0111100100]
+                                    ├──<x10 = 3 | 4 | 5 | 6>──[*0111100101]
+                                ├──<x22 = 4>──[*011110011]
+                        ├──<x10 = 4 | 5 | 6>──[*0111101]
+                    ├──<x3 = 1 | 2>──[*011111]
 ------------------------------------------------------
-Training complete. Duration: 0.005004sec
+Training complete. Duration: 0.045655sec

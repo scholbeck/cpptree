@@ -16,7 +16,10 @@ clean:
 	rm -f main
 
 boston:
-	./tree --filename data/bh.data --target 13 --sep , --task regr --algorithm exhaustive --objective sse --minsize 10 --children 2 --maxdepth 10
+	./tree --filename data/bh.data --target 13 --sep , --task regr --algorithm exhaustive --objective sse --model mean --minsize 10 --children 2 --maxdepth 10
+
+bostonlinear:
+	./tree --filename data/bh.data --target 13 --sep , --task regr --algorithm exhaustive --objective sse --model linear --minsize 10 --children 2 --maxdepth 10
 
 bostonmult3:
 	./tree --filename data/bh.data --target 13 --sep , --task regr --algorithm random --objective sse --minsize 10 --children 3 --maxdepth 10

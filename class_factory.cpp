@@ -26,6 +26,8 @@ Model* Factory::createModel() {
 	Model* m;
 	if (this->args.getModel() == "mean") {
 		m = new ModelAverage();
+	} else if (this->args.getModel() == "linear") {
+		m = new ModelAverage();
 	}
 	return m;
 }
