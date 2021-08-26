@@ -50,7 +50,7 @@ std::vector<Split*> SplitGeneratorBinExh::generate() {
 		// exclude first column with ID
 		if (this->data->getColTypes()[j] == "num") {
 			col_ix_num.push_back(j);
-		} else {
+		} else if (this->data->getColTypes()[j] == "categ") {
 			col_ix_categ.push_back(j);
 		}	
 	}
@@ -63,14 +63,15 @@ std::vector<Split*> SplitGeneratorBinExh::generate() {
 		if (col == this->data->getTargetIndex()) {
 			continue;
 		}
+		if (this->data->getNLevels(col) == 1) {
+			continue;
+		}
 		std::vector<std::vector<std::vector<int>>> level_permuts = this->data->computeCategPermuts(col, this->args.getMaxChildren());
 		int n_permuts = level_permuts.size();
 		for (int i = 0; i < n_permuts; i++) {
 			std::map<std::string, int> levels = this->data->getCategEncodings().at(col);
-			std::vector<std::vector<std::vector<int>>> level_permuts = data->computeCategPermuts(col, 2);
-			int n_permuts = level_permuts.size();
 			for (int p = 0; p < n_permuts; p++) {
-				SplitCateg* current_split = new SplitCateg(1, levels);
+				SplitCateg* current_split = new SplitCateg(this->args.getMaxChildren()-1, levels);
 				current_split->setFeatureIndex(col);
 				current_split->setLevelPartitionings(level_permuts[p]);
 				current_split->computePartitionings(this->data);
@@ -109,8 +110,6 @@ std::vector<Split*> SplitGeneratorBinExh::generate() {
 }
 
 
-
-
 SplitGeneratorMultRand::SplitGeneratorMultRand(Data* data, Arguments args) : SplitGenerator(data, args) {
 	//
 }
@@ -125,6 +124,7 @@ std::vector<Split*> SplitGeneratorMultRand::generate() {
 	std::vector<int> col_ix_num, col_ix_categ, categ;
 	col_ix_num.reserve(n_cols);
 	col_ix_categ.reserve(n_cols);
+
 	for (int j = 1; j < n_cols; j++) {
 		// exclude first column with ID
 		if (this->data->getColTypes()[j] == "num") {
@@ -133,8 +133,36 @@ std::vector<Split*> SplitGeneratorMultRand::generate() {
 			col_ix_categ.push_back(j);
 		}
 	}
-	
 	int n_cols_num = col_ix_num.size();
+	int n_cols_categ = col_ix_categ.size();
+	int col;
+
+	for (int j = 0; j < n_cols_categ; j++) {
+		col = col_ix_categ[j];
+		if (col == this->data->getTargetIndex()) {
+			continue;
+		}
+		if (this->data->getNLevels(col) < this->args.getMaxChildren()) {
+			continue;
+		}
+		std::vector<std::vector<std::vector<int>>> level_permuts = this->data->computeCategPermuts(col, this->args.getMaxChildren());
+		int n_permuts = level_permuts.size();
+		for (int i = 0; i < n_permuts; i++) {
+			std::map<std::string, int> levels = this->data->getCategEncodings().at(col);
+			for (int p = 0; p < n_permuts; p++) {
+				SplitCateg* current_split = new SplitCateg(this->args.getMaxChildren()-1, levels);
+				current_split->setFeatureIndex(col);
+				current_split->setLevelPartitionings(level_permuts[p]);
+				current_split->computePartitionings(this->data);
+				if (this->checkMinNodeSize(current_split)) {
+					splits.push_back(current_split);	
+				}
+			}
+		}
+	}
+
+
+	
 	std::vector<double> split_values;
 	std::vector<double> col_values;
 	for (int j = 0; j < n_cols_num; j++) {

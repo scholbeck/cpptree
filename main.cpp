@@ -30,7 +30,6 @@ int main(int argc, char *argv[]) {
         std::cout << "Specified wrong target index. Aborting..\n";
         return EXIT_FAILURE;
     }
-
     std::clock_t start;
     double duration;
     Tree tree = Tree(data, args);
@@ -40,7 +39,7 @@ int main(int argc, char *argv[]) {
     tree.summary();
 	std::cout << "Training complete. Duration: "<< duration << "sec\n";
 	tree.freeNodeMemory();
-	
+
 	return EXIT_SUCCESS;
 }
 

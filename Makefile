@@ -18,6 +18,15 @@ clean:
 boston:
 	./tree --filename data/bh.data --target 13 --sep , --task regr --algorithm exhaustive --objective sse --minsize 10 --children 2 --maxdepth 10
 
+bostonmult3:
+	./tree --filename data/bh.data --target 13 --sep , --task regr --algorithm random --objective sse --minsize 10 --children 3 --maxdepth 10
+
+bostonmult4:
+	./tree --filename data/bh.data --target 13 --sep , --task regr --algorithm random --objective sse --minsize 10 --children 4 --maxdepth 10
+
+bostonmult5:
+	./tree --filename data/bh.data --target 13 --sep , --task regr --algorithm random --objective sse --minsize 10 --children 5 --maxdepth 10
+
 iris:
 	./tree --filename data/iris.data --target 4 --sep , --task classif --algorithm exhaustive --objective gini --minsize 10 --children 2 --maxdepth 10
 
@@ -29,6 +38,9 @@ iris3way:
 
 mushroom:
 	./tree --filename data/mushroom.data --target 22 --sep , --task classif --algorithm exhaustive --objective gini --minsize 10 --children 2
+
+mushroommult3:
+	./tree --filename data/mushroom.data --target 22 --sep , --task classif --algorithm random --objective gini --minsize 1 --children 3
 
 gt:
 	./tree --filename data/gt_data2.csv --target 1 --sep , --task regr --algorithm exhaustive --objective sse --model mean --minsize 10 --maxdepth 10 --children 2

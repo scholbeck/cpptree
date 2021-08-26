@@ -123,6 +123,7 @@ std::vector<Node*> Node::split() {
 	this->obj_val = obj->compute(this->data);
 	opt_obj_val = this->obj_val;
 	Data* subset;
+
 	if (!splits.empty()) {
 		for (int i = 0; i < n_splits; ++i) {
 			// loop over every split
@@ -130,7 +131,6 @@ std::vector<Node*> Node::split() {
 				// for the first split, the objective cannot be updated
 				for (int j = 0; j < n_children; j++) {
 					subset = this->data->subsetRows(splits[i]->splitted_obs[j]);
-					subset->summary();
 					obj->init(subset, j);
 					// objective is initialized with all initial observations
 				}
@@ -162,7 +162,6 @@ std::vector<Node*> Node::split() {
 		for (int i = 0; i < n_children; ++i) {
 			Data* s = this->data->subsetRows(splits[optsplit_ix]->splitted_obs[i]);
 			s->setTargetIndex(this->data->getTargetIndex());
-			std::cout << "target " << s->getTargetIndex();
 			Node* child = new Node(
 				this->id + std::to_string(i),
 				s,

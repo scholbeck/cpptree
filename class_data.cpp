@@ -234,8 +234,6 @@ Data* Data::subset(std::vector<int> rows, std::vector<int> cols) {
 	return subset;
 }
 
-
-
 Data* Data::subsetRows(std::vector<int> rows) {
 	std::vector<int> cols = initVectorSeq(0, this->ncols()-1);
 	Data* subset_data = this->subset(rows, cols);
@@ -432,8 +430,6 @@ void Data::orderFeatures() {
 	}
 }
 
-*/
-
 std::vector<std::vector<std::vector<int>>> Data::computeCategPermuts(int col_index, int n_nodes) {
 	std::map<std::string, int> levels = this->categ_encodings.at(col_index);
 	int n_levels = levels.size();
@@ -456,4 +452,40 @@ std::vector<std::vector<std::vector<int>>> Data::computeCategPermuts(int col_ind
 		levels_combined.clear();
 	}
 	return levels_partitioned;
+}
+*/
+
+std::vector<std::vector<std::vector<int>>> Data::computeCategPermuts(int col_index, int n_subsets) {
+	std::map<std::string, int> levels = this->categ_encodings.at(col_index);
+	int n_levels = levels.size();
+	std::vector<std::vector<std::vector<int>>> levels_partitioned;
+	std::vector<std::vector<int>> single_partition;
+	single_partition.reserve(n_subsets);
+	std::vector<std::vector<int>> split_perms = permuteIndices(n_levels - 1, n_subsets - 1);
+	int n_perms = split_perms.size();
+	// split perms contains split points to partition level index sequence into subsets
+	for (int i = 0; i < n_perms; i++) {
+		// loop through each possible index permutation into subsets
+		for (int j = 0; j < (n_subsets - 1); j++) {
+			// for each index permutation, loop through all split points
+			// for k child nodes, there are k-1 split points
+			if (j == 0) {
+				single_partition.push_back(initVectorSeq(0, split_perms[i][j]));
+				// first split point creates level set from 0 to split point
+			} else {
+				single_partition.push_back(initVectorSeq(split_perms[i][j-1] + 1, split_perms[i][j]));
+				// subsequent split points create level sets from previous to next split point
+			}
+		}
+		single_partition.push_back(initVectorSeq(split_perms[i][n_subsets-2] + 1, n_levels - 1));
+		// last split point creates level set from split point at index (n_subsets-1)-1 to largest level index at n_levels - 1
+		levels_partitioned.push_back(single_partition);
+		single_partition.clear();
+	}
+	return levels_partitioned;
+}
+
+int Data::getNLevels(int col) {
+	std::map<std::string, int> levels = this->categ_encodings.at(col);
+	return levels.size();
 }

@@ -8,7 +8,7 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Wed Aug 25 15:57:29 2021
+# Make data base, printed on Thu Aug 26 15:56:45 2021
 
 # Variables
 
@@ -51,7 +51,7 @@ GDM_LANG = en_US
 # environment
 VSCODE_NLS_CONFIG = {"locale":"en-us","availableLanguages":{},"_languagePackSupport":true}
 # environment
-JOURNAL_STREAM = 9:45450
+JOURNAL_STREAM = 9:136308
 # environment
 XDG_CONFIG_DIRS = /etc/xdg/xdg-ubuntu:/etc/xdg
 # environment
@@ -79,7 +79,7 @@ VSCODE_VERBOSE_LOGGING = true
 # environment
 _ = /snap/code/72/usr/share/code/code
 # environment
-MANAGERPID = 1528
+MANAGERPID = 3229
 # environment
 LESSOPEN = | /usr/bin/lesspipe %s
 # environment
@@ -97,7 +97,7 @@ PATH = /home/scholbeck/bin:/home/scholbeck/bin:/usr/local/sbin:/usr/local/bin:/u
 # environment
 GPG_AGENT_INFO = /run/user/1000/gnupg/S.gpg-agent:0:1
 # environment
-SESSION_MANAGER = local/christian-ThinkPad-T480s:@/tmp/.ICE-unix/1726,unix/christian-ThinkPad-T480s:/tmp/.ICE-unix/1726
+SESSION_MANAGER = local/christian-ThinkPad-T480s:@/tmp/.ICE-unix/3487,unix/christian-ThinkPad-T480s:/tmp/.ICE-unix/3487
 # environment
 XDG_RUNTIME_DIR = /run/user/1000
 # environment
@@ -115,7 +115,7 @@ DISABLE_WAYLAND = 1
 # environment
 VSCODE_CRASH_REPORTER_START_OPTIONS = {"companyName":"Microsoft","productName":"VSCode","submitURL":"appcenter://code?aid=fba07a4d-84bd-4fc8-a125-9640fc8ce171&uid=d4c92552-81de-44ef-b0ac-f4c985dec6d5&iid=d4c92552-81de-44ef-b0ac-f4c985dec6d5&sid=d4c92552-81de-44ef-b0ac-f4c985dec6d5","uploadToServer":true}
 # environment
-INVOCATION_ID = 4a158f96e8684d0198289593d46c37ca
+INVOCATION_ID = a9eaf352bfc74547b14a78133a0048de
 # environment
 GDK_PIXBUF_MODULEDIR = /snap/code/72/usr/lib/x86_64-linux-gnu/gdk-pixbuf-2.0/2.10.0/loaders
 # default
@@ -129,7 +129,7 @@ XDG_SESSION_DESKTOP = ubuntu
 # environment
 SSH_AUTH_SOCK = /run/user/1000/keyring/ssh
 # environment
-GIO_LAUNCHED_DESKTOP_FILE_PID = 11074
+GIO_LAUNCHED_DESKTOP_FILE_PID = 6986
 # automatic
 %F = $(notdir $%)
 # environment
@@ -143,7 +143,7 @@ PWD = /home/scholbeck/C_Projects/treelib
 # default
 .LOADED := 
 # environment
-SSH_AGENT_PID = 1675
+SSH_AGENT_PID = 3415
 # environment
 ORIGINAL_XDG_CURRENT_DESKTOP = ubuntu:GNOME
 # environment
@@ -176,6 +176,7 @@ SNAP_USER_COMMON = /home/scholbeck/snap/code/common
 VSCODE_HANDLES_UNCAUGHT_ERRORS = true
 # environment
 GNOME_DESKTOP_SESSION_ID = this-is-deprecated
+ 
 # automatic
 ^D = $(patsubst %/,%,$(dir $^))
 # environment
@@ -197,7 +198,7 @@ CC = g++
 # environment
 GNOME_SHELL_SESSION_MODE = ubuntu
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-1232c090-529c-417d-aa0f-54b31e1b3bf8.sock
+VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-f32a8e93-994e-42f1-ad2b-4b818488680a.sock
 # default
 MAKE_VERSION := 4.2.1
 # environment
@@ -283,12 +284,11 @@ GJS_DEBUG_OUTPUT = stderr
 # default
 .RECIPEPREFIX := 
 # environment
- 
 LC_ADDRESS = de_DE.UTF-8
 # environment
 LANG = C
 # environment
-VSCODE_PID = 11118
+VSCODE_PID = 7029
 # variable set hash-table stats:
 # Load=138/1024=13%, Rehash=0, Collisions=20/163=12%
 
@@ -319,13 +319,14 @@ gt2:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 46):
+#  recipe to execute (from 'Makefile', line 55):
+ 
 	./tree --filename data/gt_data1feature.csv --target 1 --sep , --task regr --algorithm exhaustive --objective sse --model mean --minsize 100 --children 2
 
 # Not a target:
 Makefile:
 #  Implicit rule search has been done.
-#  Last modified 2021-08-25 15:57:14.54246875
+#  Last modified 2021-08-26 15:56:03.372400781
 #  File has been updated.
 #  Successfully updated.
 
@@ -347,42 +348,49 @@ iris:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 22):
+#  recipe to execute (from 'Makefile', line 28):
 	./tree --filename data/iris.data --target 4 --sep , --task classif --algorithm exhaustive --objective gini --minsize 10 --children 2 --maxdepth 10
 
 iris3way:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 28):
+#  recipe to execute (from 'Makefile', line 34):
 	./tree --filename data/iris_10.data --target 4 --sep , --task classif --algorithm exhaustive --objective gini --model majorvote --minsize 1 --children 3
 
 gtmult5:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 43):
+#  recipe to execute (from 'Makefile', line 52):
 	./tree --filename data/gt_data2.csv --target 1 --sep , --task regr --algorithm random --objective sse --model mean --minsize 10 --maxdepth 10 --children 5
 
 irismult:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 25):
+#  recipe to execute (from 'Makefile', line 31):
 	./tree --filename data/iris.data --target 4 --sep , --task classif --algorithm random --objective gini --minsize 1 --children 3 --maxdepth 10
+
+mushroommult3:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 40):
+	./tree --filename data/mushroom.data --target 22 --sep , --task classif --algorithm random --objective gini --minsize 1 --children 3
 
 gt3:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 49):
+#  recipe to execute (from 'Makefile', line 58):
 	./tree --filename data/gt_2015.csv --target 1 --sep , --task regr --algorithm exhaustive --objective sse --model mean --minsize 10 --maxdepth 30 --children 2
 
 gtmult4:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 40):
+#  recipe to execute (from 'Makefile', line 49):
 	./tree --filename data/gt_data2.csv --target 1 --sep , --task regr --algorithm random --objective sse --model mean --minsize 10 --maxdepth 10 --children 4
 
 gprof:
@@ -396,7 +404,7 @@ mushroom:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 31):
+#  recipe to execute (from 'Makefile', line 37):
 	./tree --filename data/mushroom.data --target 22 --sep , --task classif --algorithm exhaustive --objective gini --minsize 10 --children 2
 
 # Not a target:
@@ -405,11 +413,18 @@ mushroom:
 #  Modification time never checked.
 #  File has not been updated.
 
+bostonmult4:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 25):
+	./tree --filename data/bh.data --target 13 --sep , --task regr --algorithm random --objective sse --minsize 10 --children 4 --maxdepth 10
+
 gtmult3:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 37):
+#  recipe to execute (from 'Makefile', line 46):
 	./tree --filename data/gt_data2.csv --target 1 --sep , --task regr --algorithm random --objective sse --model mean --minsize 10 --maxdepth 10 --children 3
 
 clean:
@@ -419,11 +434,18 @@ clean:
 #  recipe to execute (from 'Makefile', line 16):
 	rm -f main
 
+bostonmult3:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'Makefile', line 22):
+	./tree --filename data/bh.data --target 13 --sep , --task regr --algorithm random --objective sse --minsize 10 --children 3 --maxdepth 10
+
 gt:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
-#  recipe to execute (from 'Makefile', line 34):
+#  recipe to execute (from 'Makefile', line 43):
 	./tree --filename data/gt_data2.csv --target 1 --sep , --task regr --algorithm exhaustive --objective sse --model mean --minsize 10 --maxdepth 10 --children 2
 
 boston:
@@ -431,31 +453,31 @@ boston:
 #  Modification time never checked.
 #  File has not been updated.
 #  recipe to execute (from 'Makefile', line 19):
-	./tree --filename data/bh.data --target 30 --sep , --task regr --algorithm exhaustive --objective sse --minsize 10 --children 2 --maxdepth 10
+	./tree --filename data/bh.data --target 13 --sep , --task regr --algorithm exhaustive --objective sse --minsize 10 --children 2 --maxdepth 10
 
 main:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
+ 
 #  File has not been updated.
 #  recipe to execute (from 'Makefile', line 4):
 	$(CC) -O3 -o tree main.cpp class_arguments.cpp class_factory.cpp class_reader.cpp class_data.cpp class_node.cpp class_split.cpp class_model.cpp class_objective.cpp class_tree.cpp class_aggregation.cpp class_splitgenerator.cpp helper_functions.cpp
 	
 
 # files hash-table stats:
-# Load=20/1024=2%, Rehash=0, Collisions=1/30=3%
+# Load=23/1024=2%, Rehash=0, Collisions=1/33=3%
 # VPATH Search Paths
 
 # No 'vpath' search paths.
 
 # No general ('VPATH' variable) search path.
 
-# strcache buffers: 1 (0) / strings = 58 / storage = 668 B / avg = 11 B
- 
-# current buf: size = 8162 B / used = 668 B / count = 58 / avg = 11 B
+# strcache buffers: 1 (0) / strings = 61 / storage = 706 B / avg = 11 B
+# current buf: size = 8162 B / used = 706 B / count = 61 / avg = 11 B
 
-# strcache performance: lookups = 78 / hit rate = 25%
+# strcache performance: lookups = 84 / hit rate = 27%
 # hash-table stats:
-# Load=58/8192=1%, Rehash=0, Collisions=2/78=3%
-# Finished Make data base on Wed Aug 25 15:57:29 2021
+# Load=61/8192=1%, Rehash=0, Collisions=2/84=2%
+# Finished Make data base on Thu Aug 26 15:56:45 2021
 
  

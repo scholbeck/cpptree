@@ -67,6 +67,7 @@ double mean(std::vector<double> vec) {
 
 std::vector<int> initVectorSeq(int from, int to) {
 	std::vector<int> seq;
+	seq.reserve(to - from);
 	for (int i = from; i <= to; ++i) {
 		seq.push_back(i);
 	}
@@ -169,3 +170,33 @@ double quantileSortedVec(double quantile, std::vector<double> vec) {
 	double n = (double) vec.size();
 	return vec[floor(quantile * n)];
 }
+
+
+long long int factorial(int n) {
+	long long int fctrl = (n == 1 || n == 0) ? 1 : factorial(n - 1) * n;
+	return fctrl;
+}
+
+std::vector<std::vector<int>> permuteIndices(int n, int k) {
+	std::vector<std::vector<int>> split_ix;
+	split_ix.reserve(factorial(n) / (factorial(n - k) * factorial(k)));
+
+    std::string bitmask(k, 1); // k leading 1s
+    bitmask.resize(n, 0); // n-k trailing 0s
+
+    // permute bitmask
+    do {
+		std::vector<int> combination;
+		combination.reserve(k);
+        for (int i = 0; i < n; ++i) {
+        // [0...n-1] integers
+            if (bitmask[i]) {
+				combination.push_back(i);
+			}
+        }
+        split_ix.push_back(combination);
+    } while (std::prev_permutation(bitmask.begin(), bitmask.end()));
+
+    return split_ix;
+}
+
