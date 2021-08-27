@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string>
+#include <vector>
 
 class Arguments {
   
@@ -20,6 +21,7 @@ class Arguments {
     std::string model;
     std::string task;
 	std::string print;
+	std::vector<std::string> coltypes;
     char sep;
     
     std::string getFilename();
@@ -54,6 +56,9 @@ class Arguments {
 
 	std::string getPrint();
 	void setPrint(std::string print);
+
+	std::vector<std::string> getColTypes();
+	void setColTypes(std::string coltypes);
 
 	int processArguments(int argc, char** argv);
 	void checkArgs();

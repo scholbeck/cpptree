@@ -6,11 +6,12 @@
 #include <vector>
 
 class Objective {
+	// virtual class
 	public:
     	Objective(Arguments args);
 		std::vector<Model*> models;
 		std::vector<double> values;
-		// vectors contain value for each child node
+		// vectors contain value / object for each child node
 		Arguments args;
     	virtual void init(Data* data, int childnode) = 0;
 		virtual double compute(Data* data, Model* mod) = 0;

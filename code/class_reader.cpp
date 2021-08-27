@@ -5,6 +5,7 @@
 #include "helper_functions.h"
 #include "class_data.h"
 #include "class_reader.h"
+#include "class_arguments.h"
 #include <cctype>
 #include <map>
 #include <set>
@@ -44,7 +45,7 @@ std::vector<std::string> parseLine(std::string line, char sep) {
 	std::string word;
 	int length = line.size();
 	for (int i = 0; i < length; i++) {
-		if (!isspace(line[i]) && (line[i] != sep)) {
+		if (line[i] != sep) {
 			word.push_back(line[i]);
 		} else {
 			word_vec.push_back(word);
@@ -55,8 +56,9 @@ std::vector<std::string> parseLine(std::string line, char sep) {
 	return word_vec;
 }
 
-Data* Reader::read(std::string filename, char sep) {
+Data* Reader::read(std::string filename, Arguments args) {
 	
+	char sep = args.getSep();
 	std::vector<std::vector<std::string>> rows_strings;
 	std::string line;
 	std::ifstream file;
@@ -65,21 +67,24 @@ Data* Reader::read(std::string filename, char sep) {
 	while (std::getline(file, line)) {
         rows_strings.push_back(parseLine(line, sep)); // read and parse remaining lines
     }
-    std::vector<std::string> types = detectColTypes(rows_strings[0]);
-    int n_rows = rows_strings.size();
+	std::vector<std::string> types;
+	if (args.getColTypes().empty()) {
+    	types = detectColTypes(rows_strings[0]);
+	} else {
+		types = args.getColTypes();
+	}
+	int n_rows = rows_strings.size();
     int n_cols = rows_strings[0].size();
 	Data* data = new Data();
 	data->addCol(initVectorSeqDouble(0, n_rows));
 	data->setColTypes(types);
     std::vector<double> new_row;
-    
     for (int i = 0; i < n_rows; i++) {
 		new_row.push_back(i);
 		for (int j = 0; j < n_cols; j++) {
 			if (types[j + 1] == "num") {
 				new_row.push_back(std::stod(rows_strings[i][j]));
 			} else if (types[j + 1] == "categ") {
-				// types[j] = "categ"
 				std::set<std::string> levels = detectLevels(rows_strings, j);
 				std::map<std::string, int> m;
 				int l = 0;

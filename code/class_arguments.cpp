@@ -3,6 +3,7 @@
 #include <getopt.h>
 #include <iostream>
 #include "class_arguments.h"
+#include <vector>
 
 Arguments::Arguments() {
   this->min_node_size = 0;
@@ -87,6 +88,25 @@ void Arguments::setPrint(std::string print) {
 	this->print = print;
 }
 
+std::vector<std::string> Arguments::getColTypes() {
+	return this->coltypes;
+}
+void Arguments::setColTypes(std::string coltypes) {
+  int n_types = coltypes.length() + 1;
+  // + 1 for ID column
+  std::vector<std::string> type_vec;
+  type_vec.reserve(n_types);
+  type_vec.push_back(std::string("ID"));
+  for (int i = 0; i < n_types; i++) {
+    if (coltypes[i] == 'n') {
+      type_vec.push_back(std::string("num"));
+    } else if (coltypes[i] == 'c') {
+      type_vec.push_back(std::string("categ"));
+    }
+  }
+  this->coltypes = type_vec;
+}
+
 void Arguments::checkArgs() {
 	if (this->max_depth == 0) {
 		this->max_depth = 30;
@@ -112,7 +132,8 @@ int Arguments::processArguments(int argc, char** argv)
             {"target", required_argument, nullptr, 1800},
             {"maxdepth", required_argument, nullptr, 1900},
             {"print", required_argument, nullptr, 2000},
-            {"help", no_argument, nullptr, 2100}
+            {"coltypes", required_argument, nullptr, 2100},
+            {"help", no_argument, nullptr, 2200}
     };
 	
     while (true)
@@ -162,6 +183,9 @@ int Arguments::processArguments(int argc, char** argv)
             this->setPrint(std::string(optarg));
             break;
         case 2100:
+            this->setColTypes(std::string(optarg));
+            break;
+        case 2200:
             printHelp();
             break;
         case '?':

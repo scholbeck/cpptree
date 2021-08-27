@@ -24,7 +24,7 @@ int main(int argc, char *argv[]) {
 		return EXIT_FAILURE;
 	}
     args.checkArgs();
-	Data* data = reader.read(args.getFilename(), args.getSep());
+	Data* data = reader.read(args.getFilename(), args);
 	data->setTargetIndex(args.getTargetIndex() + 1);
     if (data->selfCheck() == false) {
         std::cout << "Specified wrong target index. Aborting..\n";

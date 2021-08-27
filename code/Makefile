@@ -15,6 +15,12 @@ val:
 clean:
 	rm -f main
 
+credit:
+	./tree --filename ../data/credit.csv --coltypes cnccncccccccncccccccc --target 20 --sep , --task classif --algorithm exhaustive --objective gini --minsize 10 --children 2 --maxdepth 10
+
+creditmult3:
+	./tree --filename ../data/credit.csv --coltypes cnccncccccccncccccccc --target 20 --sep , --task classif --algorithm random --objective gini --minsize 10 --children 3 --maxdepth 10
+
 boston:
 	./tree --filename ../data/bh.data --target 13 --sep , --task regr --algorithm exhaustive --objective sse --model mean --minsize 10 --children 2 --maxdepth 10
 
@@ -31,7 +37,7 @@ bostonmult5:
 	./tree --filename ../data/bh.data --target 13 --sep , --task regr --algorithm random --objective sse --model mean --minsize 10 --children 5 --maxdepth 10
 
 iris:
-	./tree --filename ../data/iris.data --target 4 --sep , --task classif --algorithm exhaustive --objective gini --minsize 10 --children 2 --maxdepth 10
+	./tree --filename ../data/iris.data --coltypes nnnnc --target 4 --sep , --task classif --algorithm exhaustive --objective gini --minsize 10 --children 2 --maxdepth 10
 
 irismult:
 	./tree --filename ../data/iris.data --target 4 --sep , --task classif --algorithm random --objective gini --minsize 1 --children 3 --maxdepth 10
