@@ -19,6 +19,7 @@ class Arguments {
     std::string objective;
     std::string model;
     std::string task;
+	std::string print;
     char sep;
     
     std::string getFilename();
@@ -50,6 +51,9 @@ class Arguments {
 
 	int getMaxDepth();
 	void setMaxDepth(int max_depth);
+
+	std::string getPrint();
+	void setPrint(std::string print);
 
 	int processArguments(int argc, char** argv);
 	void checkArgs();

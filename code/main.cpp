@@ -36,8 +36,10 @@ int main(int argc, char *argv[]) {
     start = std::clock();
     int ret = tree.grow();
 	duration = (std::clock() - start) / (double) CLOCKS_PER_SEC;
-    tree.summary();
-	std::cout << "Training complete. Duration: "<< duration << "sec\n";
+    if (args.getPrint() == "true") {
+		tree.summary();
+		std::cout << "Training complete. Duration: " << duration << "sec\n";
+	}
 	tree.freeNodeMemory();
 
 	return EXIT_SUCCESS;

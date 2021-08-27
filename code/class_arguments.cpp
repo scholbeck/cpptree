@@ -80,6 +80,13 @@ void Arguments::setMaxDepth(int max_depth) {
 	this->max_depth = max_depth;
 }
 
+std::string Arguments::getPrint() {
+	return this->print;
+}
+void Arguments::setPrint(std::string print) {
+	this->print = print;
+}
+
 void Arguments::checkArgs() {
 	if (this->max_depth == 0) {
 		this->max_depth = 30;
@@ -104,7 +111,8 @@ int Arguments::processArguments(int argc, char** argv)
             {"sep", required_argument, nullptr, 1700},
             {"target", required_argument, nullptr, 1800},
             {"maxdepth", required_argument, nullptr, 1900},
-            {"help", no_argument, nullptr, 2000}
+            {"print", required_argument, nullptr, 2000},
+            {"help", no_argument, nullptr, 2100}
     };
 	
     while (true)
@@ -135,10 +143,10 @@ int Arguments::processArguments(int argc, char** argv)
         case 1400:
             this->setObjective(std::string(optarg));
             break;  
-		case 1500:
+	    	case 1500:
             this->setModel(std::string(optarg));
             break; 
-		case 1600:
+	    	case 1600:
             this->setTask(std::string(optarg));
             break;
         case 1700:
@@ -148,13 +156,12 @@ int Arguments::processArguments(int argc, char** argv)
             this->setTargetIndex((int) atol(optarg));
             break;
         case 1900:
-             if (optarg == "") {
-                 this->setMaxDepth(30);
-            } else {
-                 this->setMaxDepth((int) atol(optarg));
-            }
+            this->setMaxDepth((int) atol(optarg));
             break;
         case 2000:
+            this->setPrint(std::string(optarg));
+            break;
+        case 2100:
             printHelp();
             break;
         case '?':
@@ -165,20 +172,23 @@ int Arguments::processArguments(int argc, char** argv)
     }
     
     if (this->getFilename() == "") {
-		printf("Filename not specified.\n");
-		return -1;
+      printf("Filename not specified.\n");
+      return -1;
     }
     if (this->getMinNodeSize() == 0) {
-		printf("Minimum node size not specified.\n");
-		return -1;
+      printf("Minimum node size not specified.\n");
+      return -1;
     }
     if (this->getMaxChildren() == 0) {
-		printf("Maximum child number not specified.\n");
-		return -1;
+      printf("Maximum child number not specified.\n");
+      return -1;
     }
     if (this->getObjective() == "") {
-		printf("Objective function not specified.\n");
-		return -1;
+      printf("Objective function not specified.\n");
+      return -1;
+    }
+    if (this->getPrint() == "") {
+      this->setPrint("true");
     }
     /*
     if (this->getModel() == "") {
