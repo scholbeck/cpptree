@@ -23,12 +23,12 @@ Objective* Factory::createObjective() {
 }
 
 Model* Factory::createModel() {
-	Model* m;
-	if (this->args.getModel() == "mean") {
+	Model* m = nullptr;
+	if ((this->args.getModel() == "mean") && (this->args.getObjective() == "sse")) {
 		m = new ModelAverage();
-	} else if (this->args.getModel() == "linear") {
-		m = new ModelAverage();
-	}
+	} else if ((this->args.getModel() == "linear") && (this->args.getObjective() == "sse")) {
+		m = new ModelLinearRegression();
+	} else if ((this->args.getModel() == "") && (this->args.getObjective() == "gini")) {}
 	return m;
 }
 

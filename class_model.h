@@ -17,7 +17,6 @@ class Model {
 		virtual void train() = 0;
 		virtual void update(std::vector<double> observation, char setdiff) = 0;
 		virtual void summary() = 0;
-		virtual std::string getShortSummary() = 0;
 		virtual std::vector<double> predictMult(Data* data) = 0;
 		virtual double predictSingle(std::vector<double> observation) = 0;
 };
@@ -34,7 +33,6 @@ class ModelAverage: public Model {
 		void train();
 		void summary();
 		virtual void update(std::vector<double> observation, char setdiff);
-		std::string getShortSummary();
 		std::vector<double> predictMult(Data* data);
 		virtual double predictSingle(std::vector<double> observation);
 };
@@ -47,6 +45,7 @@ class ModelLinearRegression: public Model {
 
 		ModelLinearRegression();
 		void train();
+		void summary();
 		virtual void update(std::vector<double> observation, char setdiff);
 		std::vector<double> predictMult(Data* data);
 		virtual double predictSingle(std::vector<double> observation);

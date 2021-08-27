@@ -120,7 +120,12 @@ std::vector<Node*> Node::split() {
 	Objective* obj = this->tree->getFactory().createObjective();
 	double child_obj_val, opt_obj_val;
 	int optsplit_ix = -1;
-	this->obj_val = obj->compute(this->data);
+	Model* parent_mod = this->tree->getFactory().createModel();
+	if (parent_mod != nullptr) {
+		parent_mod->setTrainingData(this->data);
+		parent_mod->train();
+	}
+	this->obj_val = obj->compute(this->data, parent_mod);
 	opt_obj_val = this->obj_val;
 	Data* subset;
 

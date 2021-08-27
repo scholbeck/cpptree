@@ -26,18 +26,41 @@ ObjectiveSSE::ObjectiveSSE(Arguments args) : Objective(args) {
 void ObjectiveSSE::init(Data* data, int childnode) {
 	this->models[childnode]->setTrainingData(data);
 	this->models[childnode]->train();
-	this->values[childnode] = this->compute(data);
+	this->values[childnode] = this->compute(data, this->models[childnode]);
 }
 
-double ObjectiveSSE::compute(Data* data) {
+double ObjectiveSSE::compute(Data* data, Model* mod) {
 	std::vector<double> target_obs = data->col(data->getTargetIndex());
 	int n = data->nrows();
 	double mean_target = mean(target_obs);
 	double cumsum = 0;
+	double target, pred;
+	std::vector<double> observation;
 	for (int i = 0; i < n; ++i) {
-		cumsum += pow((data->elem(i, data->getTargetIndex()) - mean_target), 2);
+		observation = data->row(i);
+		pred = mod->predictSingle(observation);
+		target = observation[data->getTargetIndex()];
+		cumsum += pow((target - pred), 2);
 	}
 	return cumsum;
+}
+
+void ObjectiveSSE::update(Data* data, int childnode, std::array<std::vector<int>, 2> diff) {
+	if (!(diff[0].empty() && diff[1].empty())) {
+		int n_setplus = diff[0].size();
+		int n_setminus = diff[1].size();
+		std::vector<double> observation;
+		for (int i = 0; i < n_setplus; ++i) {
+			observation = data->row(diff[0][i]);
+			this->models[childnode]->update(observation, '+');
+			this->values[childnode] += pow((observation[data->getTargetIndex()] - this->models[childnode]->predictSingle(observation)), 2);
+		}
+		for (int i = 0; i < n_setminus; ++i) {
+			observation = data->row(diff[1][i]);
+			this->models[childnode]->update(observation, '-');
+			this->values[childnode] -= pow((observation[data->getTargetIndex()] - this->models[childnode]->predictSingle(observation)), 2);
+		}
+	}
 }
 
 
@@ -105,7 +128,7 @@ void ObjectiveGini::init(Data* data, int childnode) {
 	this->values[childnode] = gini;
 }
 
-double ObjectiveGini::compute(Data* data) {
+double ObjectiveGini::compute(Data* data, Model* mod) {
 	std::vector<double> target_obs = data->col(data->getTargetIndex());
 	int n_obs = data->nrows();
 	std::map<std::string, int> levels = data->getCategEncodings().at(data->getTargetIndex());

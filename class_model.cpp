@@ -52,13 +52,13 @@ void ModelAverage::summary() {
 	std::cout << "model summary:\nclass <Average>\n";	
 	std::cout << "mean target value = " << this->mean_target << "\n"; 
 }
-
+/*
 std::string ModelAverage::getShortSummary() {	
 	std::string s;
 	s = std::string("y = ") + std::to_string(this->mean_target);
 	return s;
 }
-
+*/
 std::vector<double> ModelAverage::predictMult(Data* data) {
 	this->checkTrained();
 	int n = data->nrows();
@@ -76,30 +76,29 @@ double ModelAverage::predictSingle(std::vector<double> observation) {
 ModelLinearRegression::ModelLinearRegression() : Model() {
 	this->learning_rate = 0.1;
 	this->n = 0;
+}
+
+void ModelLinearRegression::train() {
 	int n_cols = this->training_data->ncols();
 	for (int j = 0; j < n_cols; j++) {
 		if (j == this->training_data->getTargetIndex()) {
 			continue;
 		}
 		this->params.insert({j, 0});
-			// update feature-specific param: derivative w.r.t. param = observation
+			// create feature-specific empty param
 	}
-}
-
-void ModelLinearRegression::train() {
 	int target_index = this->training_data->getTargetIndex();
 	std::vector<double> target_values = this->training_data->col(target_index);
-	int n_rows = this->training_data->nrows();
-	int n_cols = this->training_data->ncols();
-	this->params.at(0) = -n_rows * this->learning_rate;
-	for (int i = 0; i < n; i++) {
-		// update constant
+	this->n = this->training_data->nrows();
+	this->params.at(0) = -(this->n) * this->learning_rate;
+	// update constant param
+	for (int i = 0; i < this->n; i++) {
 		for (int j = 1; j < n_cols; j++) {
 			if (j == this->training_data->getTargetIndex()) {
 				continue;
 			}
-			this->params.at(j) = this->params.at(j) - this->learning_rate * this->training_data->elem(i, j);
-			// update feature-specific param: derivative w.r.t. param = observation
+			this->params.at(j) = this->params.at(j) - (this->learning_rate * this->training_data->elem(i, j));
+			// update feature-specific param: derivative w.r.t. param = learning rate * observation
 		}
 	}
 	this->is_trained = true;
@@ -151,6 +150,9 @@ double ModelLinearRegression::predictSingle(std::vector<double> observation) {
 		// update feature-specific param: derivative w.r.t. param = observation
 	}
 	return pred;
+}
+
+void ModelLinearRegression::summary() {
 }
 
 // ModelMajorityVote
