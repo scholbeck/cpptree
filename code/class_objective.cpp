@@ -64,47 +64,6 @@ void ObjectiveSSE::update(Data* data, int childnode, std::array<std::vector<int>
 }
 
 
-/*
-ObjectiveSSE::ObjectiveSSE(Arguments args) : Objective(args) {
-
-}
-
-void ObjectiveSSE::init(Data* data, int childnode) {
-	this->models[childnode]->setTrainingData(data);
-	this->models[childnode]->train();
-	this->values[childnode] = this->compute(data);
-}
-
-double ObjectiveSSE::compute(Data* data) {
-	std::vector<double> target_obs = data->col(data->getTargetIndex());
-	int n = data->nrows();
-	double mean_target = mean(target_obs);
-	double cumsum = 0;
-	for (int i = 0; i < n; ++i) {
-		cumsum += pow((data->elem(i, data->getTargetIndex()) - mean_target), 2);
-	}
-	return cumsum;
-}
-
-void ObjectiveSSE::update(Data* data, int childnode, std::array<std::vector<int>, 2> diff) {
-	if (!(diff[0].empty() && diff[1].empty())) {
-		int n_setplus = diff[0].size();
-		int n_setminus = diff[1].size();
-		std::vector<double> observation;
-		for (int i = 0; i < n_setplus; ++i) {
-			observation = data->row(diff[0][i]);
-			this->models[childnode]->update(observation, '+');
-			this->values[childnode] += pow((observation[data->getTargetIndex()] - this->models[childnode]->predictSingle(observation)), 2);
-		}
-		for (int i = 0; i < n_setminus; ++i) {
-			observation = data->row(diff[1][i]);
-			this->models[childnode]->update(observation, '-');
-			this->values[childnode] -= pow((observation[data->getTargetIndex()] - this->models[childnode]->predictSingle(observation)), 2);
-		}
-	}
-}
-*/
-
 // ObjectiveGini
 
 ObjectiveGini::ObjectiveGini(Arguments args) : Objective(args) {
