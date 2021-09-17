@@ -5,36 +5,23 @@
 
 using namespace Rcpp;
 
-// rcpp_hello_world
-Rcpp::RObject rcpp_hello_world();
-RcppExport SEXP _xtree_rcpp_hello_world() {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    rcpp_result_gen = Rcpp::wrap(rcpp_hello_world());
-    return rcpp_result_gen;
-END_RCPP
-}
 // xtree
-void xtree(Rcpp::DataFrame r_data, int n_rows, int n_cols, int target_index, Rcpp::StringVector coltypes, Rcpp::List categ_encodings, Rcpp::StringVector params);
-RcppExport SEXP _xtree_xtree(SEXP r_dataSEXP, SEXP n_rowsSEXP, SEXP n_colsSEXP, SEXP target_indexSEXP, SEXP coltypesSEXP, SEXP categ_encodingsSEXP, SEXP paramsSEXP) {
+void xtree(Rcpp::DataFrame r_data, int target_index, Rcpp::StringVector coltypes, Rcpp::List categ_encodings, Rcpp::StringVector params);
+RcppExport SEXP _xtree_xtree(SEXP r_dataSEXP, SEXP target_indexSEXP, SEXP coltypesSEXP, SEXP categ_encodingsSEXP, SEXP paramsSEXP) {
 BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< Rcpp::DataFrame >::type r_data(r_dataSEXP);
-    Rcpp::traits::input_parameter< int >::type n_rows(n_rowsSEXP);
-    Rcpp::traits::input_parameter< int >::type n_cols(n_colsSEXP);
     Rcpp::traits::input_parameter< int >::type target_index(target_indexSEXP);
     Rcpp::traits::input_parameter< Rcpp::StringVector >::type coltypes(coltypesSEXP);
     Rcpp::traits::input_parameter< Rcpp::List >::type categ_encodings(categ_encodingsSEXP);
     Rcpp::traits::input_parameter< Rcpp::StringVector >::type params(paramsSEXP);
-    xtree(r_data, n_rows, n_cols, target_index, coltypes, categ_encodings, params);
+    xtree(r_data, target_index, coltypes, categ_encodings, params);
     return R_NilValue;
 END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_xtree_rcpp_hello_world", (DL_FUNC) &_xtree_rcpp_hello_world, 0},
-    {"_xtree_xtree", (DL_FUNC) &_xtree_xtree, 7},
+    {"_xtree_xtree", (DL_FUNC) &_xtree_xtree, 5},
     {NULL, NULL, 0}
 };
 

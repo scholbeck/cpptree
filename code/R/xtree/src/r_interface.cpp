@@ -5,15 +5,7 @@
 #include "class_tree.h"
 #include "class_arguments.h"
 #include "helper_functions.h"
-// [[Rcpp::export]]
-Rcpp::RObject rcpp_hello_world() {
 
-    Rcpp::CharacterVector x = Rcpp::CharacterVector::create( "foo", "bar" )  ;
-    Rcpp::NumericVector y = Rcpp::NumericVector::create( 0.0, 1.0 ) ;
-    Rcpp::List z  = Rcpp::List::create(x , y) ;
-
-    return z ;
-}
 
 void printDataToR(Data* data) {
   int n_rows = data->nrows();
@@ -64,7 +56,9 @@ std::vector<std::string> convertRcppStringVector(Rcpp::StringVector vec) {
 }
 
 
-Data* convertData(Rcpp::DataFrame r_data, int n_rows, int n_cols, int target_index, Rcpp::StringVector coltypes, Rcpp::List categ_encodings) {
+Data* convertData(Rcpp::DataFrame r_data, int target_index, Rcpp::StringVector coltypes, Rcpp::List categ_encodings) {
+  int n_rows = r_data.nrows();
+  int n_cols = r_data.size();
   Data* data = new Data();
   data->init(n_rows, n_cols + 1);
   // + 1 for ID column
@@ -138,13 +132,11 @@ void printTreeStructureToR(Tree* tree) {
 }
 
 // [[Rcpp::export]]
-void xtree(Rcpp::DataFrame r_data, 
-           int n_rows, int n_cols, int target_index,
+void xtree(Rcpp::DataFrame r_data, int target_index,
            Rcpp::StringVector coltypes, Rcpp::List categ_encodings,
            Rcpp::StringVector params) {
   
-  Data* data = convertData(
-    r_data, n_rows, n_cols, target_index, coltypes, categ_encodings);
+  Data* data = convertData(r_data, target_index, coltypes, categ_encodings);
   
   Arguments args;
   args.setMinNodeSize(10);
