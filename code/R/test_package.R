@@ -1,0 +1,11 @@
+setwd("xtree")
+library(Rcpp)
+library(devtools)
+
+load_all()
+df = read.csv("../../../data/bh.data", header = FALSE)
+types = convertColTypes(df)
+categ_encodings = convertCategEncodings(df)
+# convertData(df, nrow(df), ncol(df), 0, types, categ_encodings)
+params = c("lol")
+xtree(df, nrow(df), ncol(df), 1, types, categ_encodings, params)
