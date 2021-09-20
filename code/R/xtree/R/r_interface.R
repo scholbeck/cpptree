@@ -32,11 +32,58 @@ xtree = function(data, target, params) {
   return(tree)
 }
 
-
-
-library(partykit)
 as_party = function(tree, data) {
+  library(partykit)
+  strct = tree$getTreeStructure()
+  strct = data.frame(apply(strct, 2, as.character), stringsAsFactors = FALSE)
+  depth = tree$depth
   
+  node_list = list()
+  id_cnt = nrow(strct)
+  while (depth >= 0) {
+    id_vec = which(nchar(strct$ID) == depth + 1)
+
+    parent_nodes = strct[id_vec, ]
+    parent_nodes = parent_nodes[parent_nodes$is_leaf == 0, ]
+    leaf_nodes = strct[id_vec, ]
+    leaf_nodes = leaf_nodes[leaf_nodes$is_leaf == 1, ]
+    
+    leafnode_list = list()
+    for (i in 1:nrow(leaf_nodes)) {
+      n = partynode(id = id_cnt, info = list("ID" = leaf_nodes[i, "ID"]))
+      id_cnt = id_cnt - 1
+      leafnode_list = append(leafnode_list, list(n))
+    }
+    node_list = append(node_list, leafnode_list)
+    
+    parentnode_list = list()
+    if (nrow(parent_nodes) > 0) {
+      for (i in 1:nrow(parent_nodes)) {
+        parent_id = parent_nodes[i, "ID"]
+        childnode_candidate_id_vec = which(nchar(strct$ID) == depth + 2)
+        child_nodes = list()
+        for (j in 1:length(node_list)) {
+          x = node_list[[j]]
+          x_id_splitstring = unlist(strsplit(as.character(x$info$ID), ""))
+          x_id_pasted_prefix = paste0(x_id_splitstring[-length(x_id_splitstring)], collapse = "")
+          if (parent_id == x_id_pasted_prefix) {
+            child_nodes = append(child_nodes, list(x))
+          } else {}
+        }
+      split_feature = as.integer(strct[strct$ID == parent_id, "feature"])
+      split_values = as.numeric(strsplit(strct[strct$ID == parent_id, "values"], ","))
+      sp = partysplit(varid = split_feature, breaks = split_values)
+      n = partynode(id = id_cnt, split = sp, info = list("ID" = parent_id), kids = child_nodes)
+      id_cnt = id_cnt - 1
+      parentnode_list = append(parentnode_list, list(n))
+      }
+      node_list = append(node_list, parentnode_list)
+    }
+    depth = depth - 1
+  }
+  root = node_list[[length(node_list)]]
+  party_obj = party(root, data)
+  return(party_obj)
 }
 # party_interface = function(tree.summary, data) {
 #   options(scipen = 99)

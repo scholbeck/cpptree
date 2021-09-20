@@ -110,7 +110,7 @@ std::string Node::createDecisionRule(Split* s, int child_ix) {
 }
 
 
-std::vector<Node*> Node::split() {
+std::vector<Node*> Node::splitNode() {
     
 	SplitGenerator* split_generator = this->tree->getFactory().createSplitGenerator(this->data, this->tree->getArgs()); 
 	std::vector<Split*> splits = split_generator->generate();
@@ -165,6 +165,8 @@ std::vector<Node*> Node::split() {
 	child_nodes.reserve(n_children);
 
 	if (optsplit_ix != -1) {
+	  this->split_feature = splits[optsplit_ix]->getSplitFeatureIndex();
+	  this->split_values = splits[optsplit_ix]->getSplitValues();
 		// if a split has been found, do:
 		for (int i = 0; i < n_children; ++i) {
 			Data* s = this->data->subsetRows(splits[optsplit_ix]->splitted_obs[i]);
@@ -179,7 +181,7 @@ std::vector<Node*> Node::split() {
 	}
 	//free(subset);
 	for (int i = 0; i < n_splits; ++i) {
-		free(splits[i]);
+    free(splits[i]);
 	}
 	free(obj);
 	return child_nodes;
@@ -190,7 +192,7 @@ int Node::recursiveSplit() {
 		this->is_leaf = true;
 		return 0;
 	}
-	this->child_nodes = this->split();
+	this->child_nodes = this->splitNode();
 	int n_child_nodes = 0; 
 	int ret = 0;
 	if (!child_nodes.empty()) {

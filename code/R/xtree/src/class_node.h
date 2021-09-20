@@ -16,6 +16,8 @@ class Node {
     
     std::string id;
     Data* data;
+    int split_feature;
+    std::vector<double> split_values;
     std::string decision_rule; // rule that was used to to get from parent to this object
     Tree* tree;
     Model* mod;
@@ -33,7 +35,7 @@ class Node {
     void summary();
     Data* getData();
     bool isLeaf();
-    std::vector<Node*> split();
+    std::vector<Node*> splitNode();
     int recursiveSplit();
     std::vector<Node*> getChildNodes();
     void addChild(Node* child);

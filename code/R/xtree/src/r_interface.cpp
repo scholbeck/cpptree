@@ -141,7 +141,7 @@ XTree::XTree(Rcpp::DataFrame r_data, int target_index,
   args.setMinNodeSize(20);
   args.setAlgorithm("exhaustive");
   args.setMaxChildren(2);
-  args.setMaxDepth(30);
+  args.setMaxDepth(5);
   args.setModel("mean");
   args.setObjective("sse");
   this->tree = new Tree(data, args);
@@ -149,11 +149,41 @@ XTree::XTree(Rcpp::DataFrame r_data, int target_index,
 
 void XTree::grow() {
   this->tree->grow();
+  this->depth = this->tree->depth;
+  this->node_cnt = this->tree->node_cnt;
+  this->leafnode_cnt = this->tree->leafnode_cnt;
 }
 
 void XTree::print() {
   printTreeStructureToR(this->tree);
-  
 }
 
+Rcpp::DataFrame XTree::getTreeStructure() {
+  Rcpp::StringVector id_vec, split_vec, split_value_vec;
+  Rcpp::IntegerVector is_leaf_vec, split_feature_vec;
+  for (int i = 0; i < this->tree->node_cnt; i++) {
+    id_vec.push_back(this->tree->nodes[i]->getId());
+    split_vec.push_back(this->tree->nodes[i]->getDecisionRule());
+    is_leaf_vec.push_back((int) this->tree->nodes[i]->isLeaf());
+    split_feature_vec.push_back(this->tree->nodes[i]->split_feature);
+    std::vector<double> split_values = this->tree->nodes[i]->split_values;
+    int n_splits = split_values.size();
+    std::string s;
+    if (n_splits > 0) {
+      s = std::to_string(split_values[0]);
+      for (int i = 1; i < n_splits; i++) {
+        s += "," + std::to_string(split_values[i]);
+      }
+    }
+    split_value_vec.push_back(s);
+  }
+  Rcpp::DataFrame tree_structure = Rcpp::DataFrame::create(
+    Rcpp::Named("ID") = id_vec,
+    Rcpp::Named("split") = split_vec,
+    Rcpp::Named("is_leaf") = is_leaf_vec,
+    Rcpp::Named("feature") = split_feature_vec,
+    Rcpp::Named("values") = split_value_vec);
+  
+  return tree_structure;
+}
 
