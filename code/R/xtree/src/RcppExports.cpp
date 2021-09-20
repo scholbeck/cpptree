@@ -5,23 +5,11 @@
 
 using namespace Rcpp;
 
-// xtree
-void xtree(Rcpp::DataFrame r_data, int target_index, Rcpp::StringVector coltypes, Rcpp::List categ_encodings, Rcpp::StringVector params);
-RcppExport SEXP _xtree_xtree(SEXP r_dataSEXP, SEXP target_indexSEXP, SEXP coltypesSEXP, SEXP categ_encodingsSEXP, SEXP paramsSEXP) {
-BEGIN_RCPP
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< Rcpp::DataFrame >::type r_data(r_dataSEXP);
-    Rcpp::traits::input_parameter< int >::type target_index(target_indexSEXP);
-    Rcpp::traits::input_parameter< Rcpp::StringVector >::type coltypes(coltypesSEXP);
-    Rcpp::traits::input_parameter< Rcpp::List >::type categ_encodings(categ_encodingsSEXP);
-    Rcpp::traits::input_parameter< Rcpp::StringVector >::type params(paramsSEXP);
-    xtree(r_data, target_index, coltypes, categ_encodings, params);
-    return R_NilValue;
-END_RCPP
-}
+
+RcppExport SEXP _rcpp_module_boot_xtree();
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_xtree_xtree", (DL_FUNC) &_xtree_xtree, 5},
+    {"_rcpp_module_boot_xtree", (DL_FUNC) &_rcpp_module_boot_xtree, 0},
     {NULL, NULL, 0}
 };
 

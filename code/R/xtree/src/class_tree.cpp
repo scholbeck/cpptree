@@ -14,6 +14,7 @@ Tree::Tree(Data* data, Arguments args) : factory(args) {
 	this->node_cnt = 0;
 	this->leafnode_cnt = 0;
 	this->args = args;
+	this->factory = Factory(args);
 	this->root = new Node("0", data, this, "root");
 }
 

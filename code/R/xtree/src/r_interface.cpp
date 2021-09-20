@@ -1,6 +1,7 @@
 
 #include <Rcpp.h>
 #include <string>
+#include "r_interface.h"
 #include "class_data.h"
 #include "class_tree.h"
 #include "class_arguments.h"
@@ -21,10 +22,12 @@ void printDataToR(Data* data) {
 
 void printDataSummaryToR(Data* data) {
   Rcpp::Rcout << "DATA SUMMARY\n";
+  
   Rcpp::Rcout << "\tmatrix of dimension : " << data->nrows() << " x " << data->ncols() << "\n";
   Rcpp::Rcout << "\ttarget : column " << data->getTargetIndex() << " \n";
   Rcpp::Rcout << "\tcolumn types : ";
   std::vector<std::string> types = data->getColTypes();
+  
   
   std::map<std::string, int> levels;
   Rcpp::Rcout << "| (0 : ID) | ";
@@ -86,8 +89,6 @@ Data* convertData(Rcpp::DataFrame r_data, int target_index, Rcpp::StringVector c
       // j + 1 to account for ID column
     }
   }
-  //printDataToR(data);
-  //printDataSummaryToR(data);
   return data;
 }
 
@@ -131,23 +132,28 @@ void printTreeStructureToR(Tree* tree) {
   printSubTreeToR(tree->nodes[0]);
 }
 
-// [[Rcpp::export]]
-void xtree(Rcpp::DataFrame r_data, int target_index,
+XTree::XTree(Rcpp::DataFrame r_data, int target_index,
            Rcpp::StringVector coltypes, Rcpp::List categ_encodings,
            Rcpp::StringVector params) {
   
   Data* data = convertData(r_data, target_index, coltypes, categ_encodings);
-  
   Arguments args;
-  args.setMinNodeSize(10);
+  args.setMinNodeSize(20);
   args.setAlgorithm("exhaustive");
   args.setMaxChildren(2);
   args.setMaxDepth(30);
   args.setModel("mean");
   args.setObjective("sse");
-  
-  Tree t = Tree(data, args);
-  t.grow();
-  printTreeSummaryToR(&t);
-  t.freeNodeMemory();
+  this->tree = new Tree(data, args);
 }
+
+void XTree::grow() {
+  this->tree->grow();
+}
+
+void XTree::print() {
+  printTreeStructureToR(this->tree);
+  
+}
+
+

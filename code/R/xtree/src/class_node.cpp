@@ -8,6 +8,7 @@
 #include "class_data.h"
 #include "class_aggregation.h"
 #include "class_splitgenerator.h"
+#include <Rcpp.h>
 #include "helper_functions.h"
 #include <iomanip>
 
@@ -110,6 +111,7 @@ std::string Node::createDecisionRule(Split* s, int child_ix) {
 
 
 std::vector<Node*> Node::split() {
+    
 	SplitGenerator* split_generator = this->tree->getFactory().createSplitGenerator(this->data, this->tree->getArgs()); 
 	std::vector<Split*> splits = split_generator->generate();
 	free(split_generator);
@@ -128,7 +130,6 @@ std::vector<Node*> Node::split() {
 	this->obj_val = obj->compute(this->data, parent_mod);
 	opt_obj_val = this->obj_val;
 	Data* subset;
-
 	if (!splits.empty()) {
 		for (int i = 0; i < n_splits; ++i) {
 			// loop over every split
@@ -162,6 +163,7 @@ std::vector<Node*> Node::split() {
 	}
 	std::vector<Node*> child_nodes;
 	child_nodes.reserve(n_children);
+
 	if (optsplit_ix != -1) {
 		// if a split has been found, do:
 		for (int i = 0; i < n_children; ++i) {
