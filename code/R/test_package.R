@@ -4,15 +4,22 @@ library(devtools)
 library(xtree)
 
 load_all()
-df = read.csv("../../../data/bh.data", header = FALSE)
+df = read.csv("../../../data/seoulbike.csv", header = FALSE)
 params = c("lol")
 
 loadModule("xtree", TRUE)
 tree = xtree(df, 0, params)
 tree$grow()
 tree$print()
+partyobj = xtree::as_party(tree, df)
 
-p = as_party(tree, df)
-plot(p)
 library(ggparty)
-ggparty(p)
+ggparty(partyobj, add_vars = list(ID = "$node$info$ID")) +
+  geom_edge() +
+  geom_edge_label() +
+  geom_node_label(aes(label = splitvar),
+                  ids = "inner") +
+  geom_node_label(aes(label = ID),
+                  ids = "terminal")
+  
+  

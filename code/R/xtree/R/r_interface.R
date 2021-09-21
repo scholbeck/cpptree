@@ -36,31 +36,32 @@ as_party = function(tree, data) {
   library(partykit)
   strct = tree$getTreeStructure()
   strct = data.frame(apply(strct, 2, as.character), stringsAsFactors = FALSE)
+  strct$party_ID = as.integer(0:(nrow(strct) - 1))
   depth = tree$depth
   
   node_list = list()
-  id_cnt = nrow(strct)
   while (depth >= 0) {
     id_vec = which(nchar(strct$ID) == depth + 1)
-
     parent_nodes = strct[id_vec, ]
     parent_nodes = parent_nodes[parent_nodes$is_leaf == 0, ]
     leaf_nodes = strct[id_vec, ]
     leaf_nodes = leaf_nodes[leaf_nodes$is_leaf == 1, ]
     
     leafnode_list = list()
-    for (i in 1:nrow(leaf_nodes)) {
-      n = partynode(id = id_cnt, info = list("ID" = leaf_nodes[i, "ID"]))
-      id_cnt = id_cnt - 1
-      leafnode_list = append(leafnode_list, list(n))
+    if (nrow(leaf_nodes) > 0) {
+      for (i in 1:nrow(leaf_nodes)) {
+        party_id = leaf_nodes[i, "party_ID"]
+        n = partynode(id = party_id, info = list("ID" = leaf_nodes[i, "ID"]))
+        leafnode_list = append(leafnode_list, list(n))
+      }
+      node_list = append(node_list, leafnode_list)
     }
-    node_list = append(node_list, leafnode_list)
-    
-    parentnode_list = list()
     if (nrow(parent_nodes) > 0) {
+      parentnode_list = list()
       for (i in 1:nrow(parent_nodes)) {
         parent_id = parent_nodes[i, "ID"]
-        childnode_candidate_id_vec = which(nchar(strct$ID) == depth + 2)
+        party_id = parent_nodes[i, "party_ID"]
+        # childnode_candidate_id_vec = which(nchar(strct$ID) == depth + 2)
         child_nodes = list()
         for (j in 1:length(node_list)) {
           x = node_list[[j]]
@@ -70,12 +71,21 @@ as_party = function(tree, data) {
             child_nodes = append(child_nodes, list(x))
           } else {}
         }
-      split_feature = as.integer(strct[strct$ID == parent_id, "feature"])
-      split_values = as.numeric(strsplit(strct[strct$ID == parent_id, "values"], ","))
-      sp = partysplit(varid = split_feature, breaks = split_values)
-      n = partynode(id = id_cnt, split = sp, info = list("ID" = parent_id), kids = child_nodes)
-      id_cnt = id_cnt - 1
-      parentnode_list = append(parentnode_list, list(n))
+        child_postfixes = lapply(child_nodes, FUN = function(node) {
+          id = node$info$ID
+          id = unlist(strsplit(id, ""))
+          postfix = as.integer(id[length(id)])
+        })
+        child_nodes_sorted = lapply(1:length(child_nodes), FUN = function(x) NULL)
+        for (l in 1:length(child_postfixes)) {
+          postfix = child_postfixes[[l]]
+          child_nodes_sorted[postfix + 1] = child_nodes[l] 
+        }
+        split_feature = as.integer(strct[strct$ID == parent_id, "feature"])
+        split_values = as.numeric(strsplit(strct[strct$ID == parent_id, "values"], ","))
+        sp = partysplit(varid = split_feature, breaks = split_values)
+        n = partynode(id = party_id, split = sp, info = list("ID" = parent_id), kids = child_nodes_sorted)
+        parentnode_list = append(parentnode_list, list(n))
       }
       node_list = append(node_list, parentnode_list)
     }
@@ -85,109 +95,56 @@ as_party = function(tree, data) {
   party_obj = party(root, data)
   return(party_obj)
 }
-# party_interface = function(tree.summary, data) {
-#   options(scipen = 99)
-#   
-#   features = colnames(data)
-#   party.node.list = list()
-#   depth = max(tree.summary$depth)
-#   nodes = tree.summary[which(tree.summary$depth == depth), ]
-#   nodes.id = as.numeric(as.character(nodes$id))
-#   
-#   party.nodes = lapply(nodes.id, FUN = function(node.id) {
-#     
-#     node.ame = nodes[nodes$id == node.id, "ame"]
-#     node.sd = nodes[nodes$id == node.id, "ame.sd"]
-#     node.n = nodes[nodes$id == node.id, "n.observations"]
-#     node.frac = round(as.numeric(as.character(node.n)) / nrow(data) * 100, 2)
-#     node.frac = paste0(node.frac, "%")
-#     node.info = paste0("AME: ", node.ame, "\n", "SD: ", node.sd, "\n", "Frac.: ", node.frac)
-#     party.node = partynode(id = node.id, info = node.info)
-#     return(party.node)
-#   })
-#   
-#   party.node.list = append(party.node.list, party.nodes)
-#   depth = depth - 1
-#   
-#   while (depth > 0) {
-#     
-#     nodes = tree.summary[tree.summary$depth == depth, ]
-#     parent.nodes = nodes[!is.na(nodes$split.feature), ]
-#     leaf.nodes = nodes[is.na(nodes$split.feature), ]
-#     
-#     parent.party.nodes = lapply(1:nrow(parent.nodes), FUN = function(i) {
-#       
-#       node = parent.nodes[i, ]
-#       node.id = as.numeric(as.character(node$id))
-#       node.split.feature = node$split.feature
-#       node.split.value = node$split.value
-#       node.split.feature.index = which(features == node.split.feature)
-#       
-#       child.party.nodes = lapply(party.node.list, FUN = function(x) {
-#         
-#         x.splitstring = unlist(strsplit(as.character(x$id), ""))
-#         x.pasted = paste0(x.splitstring[-length(x.splitstring)], collapse = "")
-#         if (node.id == x.pasted) {
-#           return(x)
-#         } else {
-#         }
-#       })
-#       
-#       child.party.nodes = child.party.nodes[!unlist(lapply(child.party.nodes, is.null))]
-#       # drop NULL values
-#       
-#       child.party.directions = lapply(child.party.nodes, FUN = function(x) {
-#         
-#         x = unlist(strsplit(as.character(x$id), split = ""))
-#         if (x[length(x)] == "0") {
-#           return("child.left")
-#         } else {
-#           return("child.right")
-#         }
-#       })
-#       
-#       names(child.party.nodes) = child.party.directions
-#       child.party.node.left = child.party.nodes[["child.left"]]
-#       child.party.node.right = child.party.nodes[["child.right"]]
-#       
-#       party.node = partynode(
-#         node.id, split = partysplit(node.split.feature.index, node.split.value),
-#         kids = list(child.party.node.left, child.party.node.right))
-#       return(party.node)
-#     })
-#     
-#     if (nrow(leaf.nodes) > 0) {
-#       leaf.party.nodes = lapply(1:nrow(leaf.nodes), FUN = function(i) {
-#         node = leaf.nodes[i, ]
-#         node.id = as.numeric(as.character(node$id))
-#         node.ame = nodes[nodes$id == node.id, "ame"]
-#         node.sd = nodes[nodes$id == node.id, "ame.sd"]
-#         node.n = nodes[nodes$id == node.id, "n.observations"]
-#         node.frac = round(as.numeric(as.character(node.n)) / nrow(data) * 100, 2)
-#         node.frac = paste0(node.frac, "%")
-#         node.info = paste0("AME: ", node.ame, "\n", "SD: ", node.sd, "\n", "Frac.: ", node.frac)
-#         party.node = partynode(id = node.id, info = node.info)
-#         return(party.node)
-#       })
-#     } else {}
-#     
-#     party.node.list = append(party.node.list, parent.party.nodes)
-#     party.node.list = append(party.node.list, leaf.party.nodes)
-#     
-#     depth = depth - 1
-#   }
-#   
-#   tree.index = which(unlist(lapply(party.node.list, FUN = function(x) {
-#     x$id == 1
-#   })))
-#   
-#   party.tree = party.node.list[[tree.index]]
-#   party.tree = party(party.tree, data)
-#   # fitted = data.frame(
-#   #   "(fitted)" = fitted_node(party.tree,
-#   #                            data = data),
-#   #   "(response)" = data$marginal.effect),
-#   # terms = terms(marginal.effect ~ ., data = data),)
-#   return(party.tree)
-# }
 
+
+createPartyID = function(tree) {
+  strct = tree$getTreeStructure()
+  strct = data.frame(apply(strct, 2, as.character), stringsAsFactors = FALSE)
+  
+  n_nodes = nrow(strct)
+  strct$party_id = NA
+  current_id = "0"
+  num_cnt = 2
+  strct[which(strct$ID == 0), "party_id"] = 1
+  while (num_cnt <= n_nodes) {
+    row = which(strct$ID == current_id)
+    print(row)
+    print(current_id)
+    if (is.na(strct[row, "party_id"])) {
+      strct[row, "party_id"] = num_cnt
+      num_cnt = num_cnt + 1
+    } else {}
+      lower_tier_candidates = strct[which(nchar(strct$ID) == nchar(current_id) + 1), ]
+      lower_tier_ids = strsplit(as.character(lower_tier_candidates$ID), "")
+      lower_tier_children = unlist(lapply(lower_tier_ids, FUN = function(x) {
+        paste0(x[-length(x)], collapse = "") == current_id
+      }))
+      lower_tier_candidates = lower_tier_candidates[lower_tier_children, ]
+    if (nrow(lower_tier_candidates) > 0) {
+      # proceed to lower tier
+      splitted_id_vec = strsplit(lower_tier_candidates[ , ]$ID, "")
+      postfix_vec = unlist(lapply(splitted_id_vec, FUN = function(x) {
+        postfix = as.integer(x[length(x)])
+      }))
+      leftmost_ix = 1
+      while (!is.na(lower_tier_candidates[leftmost_ix, "party_id"])) {
+        leftmost_ix = leftmost_ix + 1
+      }
+      if (leftmost_ix <= length(postfix_vec)) {
+        # proceed to leftmost child without enumeration
+        current_id = lower_tier_candidates[leftmost_ix, "ID"]
+      } else {
+        # else backtrack to upper tier
+        current_id = unlist(strsplit(current_id, ""))
+        current_id = current_id[-length(current_id)]
+        current_id = paste0(current_id, collapse = "")
+      }
+    } else {
+      # backtrack to upper tier
+      current_id = unlist(strsplit(current_id, ""))
+      current_id = current_id[-length(current_id)]
+      current_id = paste0(current_id, collapse = "")
+    }
+  }
+}
+  
