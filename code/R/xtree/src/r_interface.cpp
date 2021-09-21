@@ -139,8 +139,8 @@ XTree::XTree(Rcpp::DataFrame r_data, int target_index,
   Data* data = convertData(r_data, target_index, coltypes, categ_encodings);
   Arguments args;
   args.setMinNodeSize(20);
-  args.setAlgorithm("exhaustive");
-  args.setMaxChildren(2);
+  args.setAlgorithm("random");
+  args.setMaxChildren(4);
   args.setMaxDepth(5);
   args.setModel("mean");
   args.setObjective("sse");

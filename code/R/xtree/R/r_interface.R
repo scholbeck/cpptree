@@ -82,7 +82,7 @@ as_party = function(tree, data) {
           child_nodes_sorted[postfix + 1] = child_nodes[l] 
         }
         split_feature = as.integer(strct[strct$ID == parent_id, "feature"])
-        split_values = as.numeric(strsplit(strct[strct$ID == parent_id, "values"], ","))
+        split_values = as.numeric(unlist(strsplit(strct[strct$ID == parent_id, "values"], ",")))
         sp = partysplit(varid = split_feature, breaks = split_values)
         n = partynode(id = party_id, split = sp, info = list("ID" = parent_id), kids = child_nodes_sorted)
         parentnode_list = append(parentnode_list, list(n))

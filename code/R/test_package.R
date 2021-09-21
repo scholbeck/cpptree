@@ -4,13 +4,14 @@ library(devtools)
 library(xtree)
 
 load_all()
-df = read.csv("../../../data/seoulbike.csv", header = FALSE)
+df = read.csv("../../../data/bh.data", header = FALSE)
 params = c("lol")
 
 loadModule("xtree", TRUE)
 tree = xtree(df, 0, params)
 tree$grow()
 tree$print()
+tree$getTreeStructure()
 partyobj = xtree::as_party(tree, df)
 
 library(ggparty)
