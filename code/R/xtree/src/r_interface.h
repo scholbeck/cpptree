@@ -4,15 +4,14 @@
 #include <Rcpp.h>
 #include "class_tree.h"
 
-class XTree {
+class RInterface {
     
   public:
     Tree* tree;
     int depth, node_cnt, leafnode_cnt;
     
-    XTree(Rcpp::DataFrame r_data, int target_index, Rcpp::StringVector coltypes,
-          Rcpp::StringVector params);
-    
+    RInterface(Rcpp::DataFrame r_data, Rcpp::StringVector coltypes, Rcpp::List params);
+      
     void grow();
     void print();
     Rcpp::DataFrame getTreeStructure();

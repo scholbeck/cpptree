@@ -174,42 +174,41 @@ void printTreeStructureToR(Tree* tree) {
   printSubTreeToR(tree->nodes[0]);
 }
 
-
-
-
-XTree::XTree(Rcpp::DataFrame r_data, int target_index,
-           Rcpp::StringVector coltypes,
-           Rcpp::StringVector params) {
+RInterface::RInterface(Rcpp::DataFrame r_data, Rcpp::StringVector coltypes,
+                       Rcpp::List params) {
   
-  Data* data = convertData(r_data, target_index, coltypes);
+  Data* data = convertData(r_data, params["target"], coltypes);
+  
   Arguments args;
-  args.setMinNodeSize(20);
-  args.setAlgorithm("exhaustive");
-  args.setMaxChildren(2);
-  args.setMaxDepth(5);
-  // args.setModel("mean");
-  args.setObjective("gini");
+  args.setTargetIndex(params["target"]);
+  args.setMinNodeSize(params["min_node_size"]);
+  args.setAlgorithm(params["search_algo_type"]);
+  args.setMaxChildren(params["n_children"]);
+  args.setMaxDepth(params["max_depth"]);
+  args.setModel(params["model_type"]);
+  args.setObjective(params["objective_type"]);
+  
   this->tree = new Tree(data, args);
 }
 
-void XTree::grow() {
+void RInterface::grow() {
   this->tree->grow();
   this->depth = this->tree->depth;
   this->node_cnt = this->tree->node_cnt;
   this->leafnode_cnt = this->tree->leafnode_cnt;
 }
 
-void XTree::print() {
+void RInterface::print() {
   printTreeStructureToR(this->tree);
 }
 
-Rcpp::DataFrame XTree::getTreeStructure() {
-  Rcpp::StringVector id_vec, split_vec, split_value_vec, split_type_vec, level_partitioning_vec;
+Rcpp::DataFrame RInterface::getTreeStructure() {
+  Rcpp::StringVector id_vec, parent_split_vec, split_value_vec, split_type_vec, level_partitioning_vec;
   Rcpp::IntegerVector is_leaf_vec, split_feature_vec;
   Split* split;
   for (int i = 0; i < this->tree->node_cnt; i++) {
     id_vec.push_back(this->tree->nodes[i]->getId());
-    split_vec.push_back(this->tree->nodes[i]->getDecisionRule());
+    parent_split_vec.push_back(this->tree->nodes[i]->getDecisionRule());
     is_leaf_vec.push_back(this->tree->nodes[i]->isLeaf());
     split = this->tree->nodes[i]->getSplitData();
     
@@ -266,7 +265,7 @@ Rcpp::DataFrame XTree::getTreeStructure() {
   }
   Rcpp::DataFrame tree_structure = Rcpp::DataFrame::create(
     Rcpp::Named("ID") = id_vec,
-    Rcpp::Named("split") = split_vec,
+    Rcpp::Named("parent_split") = parent_split_vec,
     Rcpp::Named("is_leaf") = is_leaf_vec,
     Rcpp::Named("feature") = split_feature_vec,
     Rcpp::Named("values") = split_value_vec,
@@ -276,3 +275,19 @@ Rcpp::DataFrame XTree::getTreeStructure() {
   return tree_structure;
 }
 
+
+RCPP_MODULE(xtree) {
+  
+  Rcpp::class_<RInterface>("ExtensibleTree")
+  
+  .constructor<Rcpp::DataFrame, Rcpp::StringVector, Rcpp::List>("Construct a tree object.")
+  .field("depth", &RInterface::depth)
+  .field("node_cnt", &RInterface::node_cnt)
+  .field("leafnode_cnt", &RInterface::leafnode_cnt)
+  .method("grow", &RInterface::grow)
+  .method("print", &RInterface::print)
+  .method("getTreeStructure", &RInterface::getTreeStructure)
+  ;
+}
+
+RCPP_EXPOSED_CLASS(ExtensibleTree)

@@ -68,11 +68,6 @@ void Tree::summary() {
 	std::cout << "\tleaf nodes : " << this->leafnode_cnt << "\n";
 	std::cout << "\tdepth : " << this->depth << "\n\n";
 	this->print();
-	/*
-	for (int i = 0; i < this->node_cnt; ++i) {
-		this->nodes[i]->summary();
-	}
-	*/
 	std::cout << "------------------------------------------------------\n";
 }
 

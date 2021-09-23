@@ -27,13 +27,11 @@ convertCategEncodings = function(data) {
   return(encodings)
 }
 
-xtree = function(data, target, params) {
+xtree = function(data, target, min_node_size, n_children, max_depth, objective_type, model_type = "", search_algo_type) {
   coltypes = convertColTypes(data)
-  # categ_encodings = convertCategEncodings(data)
-  # for (j in which(coltypes == "categ")) {
-  #   data[ , j] = as.integer(data[ , j])
-  # }
-  tree = XTree$new(data, target, coltypes, params)
+  params = list("n_children" = n_children, "objective_type" = objective_type, "model_type" = model_type, "search_algo_type" = search_algo_type,
+                "min_node_size" = min_node_size, "max_depth" = max_depth, "target" = target)
+  tree = ExtensibleTree$new(data, coltypes, params)
   return(tree)
 }
 

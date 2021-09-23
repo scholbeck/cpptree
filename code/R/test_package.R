@@ -1,23 +1,26 @@
 setwd("xtree")
 library(Rcpp)
 library(devtools)
-library(xtree)
 
 load_all()
-# df = read.csv("../../../data/bh.data", header = FALSE)
-# df$V4 = as.factor(df$V4)
-# df$V9 = as.factor(df$V9)
-df = iris
-df$iris = iris$Species
-params = c("lol")
+df = read.csv("../../../data/bh.data", header = FALSE)
+df$V4 = as.factor(df$V4)
+df$V9 = as.factor(df$V9)
+# df = iris
+# df$iris = iris$Species
 
-loadModule("xtree", TRUE)
-
-tree = xtree(df, 5, params)
+tree = xtree(df,
+             n_children = 3,
+             objective_type = "sse",
+             model_type = "mean",
+             search_algo_type = "random",
+             min_node_size = 10,
+             max_depth = 3,
+             target = 5)
 tree$grow()
 tree$print()
 tree$getTreeStructure()
-partyobj = xtree::convertToParty(tree, df)
+partyobj = convertToParty(tree, df)
 
 library(ggparty)
 ggparty(partyobj, add_vars = list(ID = "$node$info$ID")) +
