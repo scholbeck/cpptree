@@ -16,7 +16,8 @@ tree = xtree(df,
              search_algo_type = "random",
              min_node_size = 10,
              max_depth = 3,
-             target = 5)
+             target = 14)
+
 tree$grow()
 tree$print()
 tree$getTreeStructure()
