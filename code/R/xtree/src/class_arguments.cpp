@@ -152,7 +152,7 @@ int Arguments::processArguments(int argc, char** argv)
             this->setMaxChildren((int) atol(optarg));
             break;
         case 1200:
-            if (optarg == "") {
+            if (std::string(optarg) == "") {
                  this->setMinNodeSize(1);
             } else {
                  this->setMinNodeSize((int) atol(optarg));

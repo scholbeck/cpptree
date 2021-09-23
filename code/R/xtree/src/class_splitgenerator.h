@@ -9,7 +9,10 @@ class SplitGenerator {
   public:
     Data* data;
     Arguments args;
+    
     SplitGenerator(Data* data, Arguments args);
+    virtual ~SplitGenerator() {}
+    
     virtual std::vector<Split*> generate() = 0;
     bool checkMinNodeSize(Split* split);
 };

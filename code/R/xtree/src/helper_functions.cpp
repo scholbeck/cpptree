@@ -144,7 +144,7 @@ bool checkObsSize(std::vector<std::vector<int>> split_obs, int min_node_size) {
 		int n_splits = split_obs.size();
 		for (int i = 0; i < n_splits; ++i) {
 			if (split_obs[i].empty() == false) {
-				if (split_obs[i].size() < min_node_size) {
+				if ((int) split_obs[i].size() < min_node_size) {
 					geq_min = false;
 				}
 			} else {

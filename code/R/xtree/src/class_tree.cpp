@@ -16,6 +16,7 @@ Tree::Tree(Data* data, Arguments args) : factory(args) {
 	this->args = args;
 	this->factory = Factory(args);
 	this->root = new Node("0", data, this, "root");
+	this->root->split = nullptr;
 }
 
 void Tree::addNode(Node* node) {

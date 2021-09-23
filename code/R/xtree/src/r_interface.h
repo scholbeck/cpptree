@@ -11,7 +11,7 @@ class XTree {
     int depth, node_cnt, leafnode_cnt;
     
     XTree(Rcpp::DataFrame r_data, int target_index, Rcpp::StringVector coltypes,
-          Rcpp::List categ_encodings, Rcpp::StringVector params);
+          Rcpp::StringVector params);
     
     void grow();
     void print();

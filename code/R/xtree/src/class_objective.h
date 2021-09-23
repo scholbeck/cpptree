@@ -8,7 +8,9 @@
 class Objective {
 	// virtual class
 	public:
-    	Objective(Arguments args);
+    Objective(Arguments args);
+	  virtual ~Objective() {}
+		
 		std::vector<Model*> models;
 		std::vector<double> values;
 		// vectors contain value / object for each child node

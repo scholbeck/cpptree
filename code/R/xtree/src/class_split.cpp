@@ -19,6 +19,7 @@ Split::Split(int max_splits) {
 		this->splitted_obs.push_back(v);
 	}
 }
+
 int Split::nsplits() {
 	return this->max_splits;
 }
@@ -26,14 +27,12 @@ void Split::sortSplitValues() {
 	std::sort(this->split_values.begin(), this->split_values.end());
 	this->split_values.erase(unique(this->split_values.begin(), this->split_values.end()), this->split_values.end()); // remove duplicate split values
 }
+
 void Split::addSplitValue(double value) {
 	(this->split_values).push_back(value);
 	std::sort(this->split_values.begin(), this->split_values.end());
 }
 
-std::vector<double> Split::getSplitValues() {
-	return this->split_values;
-}
 
 void Split::addChildNodeModel(Model* mod) {
 	this->child_node_models.push_back(mod);
@@ -57,6 +56,19 @@ void Split::clear() {
 	this->split_values.reserve(this->max_splits);
 }
 
+std::vector<double> Split::getSplitValues() {
+  return this->split_values;
+}
+
+
+std::vector<std::vector<int>> Split::getLevelPartitionings() {
+  return this->subset_level_sets;
+}
+
+void Split::setLevelPartitionings(std::vector<std::vector<int>> level_sets) {
+  this->subset_level_sets = level_sets;
+}
+
 /*
 void Split::summary() {
 	std::cout << "SPLIT SUMMARY\n";
@@ -76,6 +88,10 @@ void Split::summary() {
 
 SplitNum::SplitNum(int max_splits) : Split(max_splits) {
 
+}
+
+std::string SplitNum::getSplitType() {
+  return(std::string("num"));
 }
 
 std::string SplitNum::createDecisionRule(int child_ix) {	
@@ -132,35 +148,9 @@ void SplitNum::computePartitionings(Data* data) {
 	}
 	this->splitted_obs = split_multiway;
 }
-	/*
-	std::vector<std::vector<int>> split_binary = data->splitBinaryObs(split_values[0], feature);
-	std::cout << "left node" << std::endl;
-	printVectorInt(split_binary[0]);
-	std::cout << "right node" << std::endl;
-	printVectorInt(split_binary[1]);
-	split_multiway.push_back(split_binary[0]);
-	split_multiway.push_back(split_binary[1]);
-	Data* right_subset;
-	if (!(split_binary[0].size() == 0) || (split_binary[0].size() == 0)) {
-		for (int i = 1; i < n_splits; ++i) {
-			right_subset = data->subsetRows(split_binary[1]);
-			split_binary = right_subset->splitBinaryObs(split_values[i], feature); // split last element in two
-			split_multiway.pop_back(); // remove last element which was split in two
-			split_multiway.push_back(split_binary[0]); // add resulting splits
-			split_multiway.push_back(split_binary[1]);
-			std::cout << "middle node" << std::endl;
-			printVectorInt(split_binary[0]);
-			std::cout << "rightmost node" << std::endl;
-			printVectorInt(split_binary[1]);
-			std::cout << split_binary[1].empty() << std::endl;
-		}
-	}
-	//free(right_subset);
-	this->splitted_obs = split_multiway;
-}
-	*/
 
 void SplitNum::summary() {
+	/*
 	std::cout << "SPLIT SUMMARY\n";
 	std::cout << "\tsplit feature : " << this->getSplitFeatureIndex() << "\n";
 	std::cout << "\tsplit values : ";
@@ -170,10 +160,16 @@ void SplitNum::summary() {
 		std::cout << this->split_values[i] << " ";
 	}
 	std::cout << "\n";
+	*/
 }
+
 
 SplitCateg::SplitCateg(int max_splits, std::map<std::string, int> levels) : Split(max_splits) {
 	this->levels = levels;
+}
+
+std::string SplitCateg::getSplitType() {
+  return(std::string("categ"));
 }
 
 std::string SplitCateg::createDecisionRule(int child_ix) {	
@@ -181,17 +177,12 @@ std::string SplitCateg::createDecisionRule(int child_ix) {
 	std::string rule = std::string("x") + std::to_string(feature) + std::string(" = ") ;
 	std::ostringstream sstream;
 	sstream << std::setprecision(2) << std::fixed;
-	int n_splits = this->getSplitValues().size();
 	int n_subset_size = subset_level_sets[child_ix].size();
 	rule += std::to_string(subset_level_sets[child_ix][0]);
 	for (int j = 1; j < n_subset_size; j++) {
 			rule += " | " + std::to_string(subset_level_sets[child_ix][j]);
 	}
 	return rule;
-}
-
-void SplitCateg::setLevelPartitionings(std::vector<std::vector<int>> level_sets) {
-	this->subset_level_sets = level_sets;
 }
 
 void SplitCateg::computePartitionings(Data* data) {

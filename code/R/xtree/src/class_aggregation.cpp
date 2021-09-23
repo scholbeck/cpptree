@@ -1,5 +1,4 @@
 #include "class_aggregation.h"
-#include "class_objective.h"
 
 Aggregation::Aggregation() {
 	//

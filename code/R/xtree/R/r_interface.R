@@ -18,7 +18,10 @@ convertCategEncodings = function(data) {
   types = convertColTypes(data)
   categ_ix = which(types == "categ")
   encodings = lapply(categ_ix, FUN = function(j) {
-    unique(as.double(data[ , j])) - 1
+    levels = levels(data[ , j])
+    encodings = unique(as.double(data[ , j])) - 1
+    l = list(levels, encodings)
+    return(l)
   })
   names(encodings) = categ_ix - 1
   return(encodings)
@@ -26,13 +29,15 @@ convertCategEncodings = function(data) {
 
 xtree = function(data, target, params) {
   coltypes = convertColTypes(data)
-  categ_encodings = convertCategEncodings(data)
-  
-  tree = XTree$new(data, target, coltypes, categ_encodings, params)
+  # categ_encodings = convertCategEncodings(data)
+  # for (j in which(coltypes == "categ")) {
+  #   data[ , j] = as.integer(data[ , j])
+  # }
+  tree = XTree$new(data, target, coltypes, params)
   return(tree)
 }
 
-as_party = function(tree, data) {
+convertToParty = function(tree, data) {
   library(partykit)
   strct = tree$getTreeStructure()
   strct = data.frame(apply(strct, 2, as.character), stringsAsFactors = FALSE)
@@ -82,10 +87,27 @@ as_party = function(tree, data) {
           child_nodes_sorted[postfix + 1] = child_nodes[l] 
         }
         split_feature = as.integer(strct[strct$ID == parent_id, "feature"])
-        split_values = as.numeric(unlist(strsplit(strct[strct$ID == parent_id, "values"], ",")))
-        sp = partysplit(varid = split_feature, breaks = split_values)
-        n = partynode(id = party_id, split = sp, info = list("ID" = parent_id), kids = child_nodes_sorted)
-        parentnode_list = append(parentnode_list, list(n))
+        split_type = strct[strct$ID == parent_id, "type"]
+        if (split_type == "num") {
+          split_values = as.numeric(unlist(strsplit(strct[strct$ID == parent_id, "values"], ",")))
+          sp = partysplit(varid = split_feature, breaks = split_values)
+          n = partynode(id = party_id, split = sp, info = list("ID" = parent_id), kids = child_nodes_sorted)
+          parentnode_list = append(parentnode_list, list(n))
+        } else if (split_type == "categ") {
+          split_ix = unlist(strsplit(strct[strct$ID == parent_id, "levels"], split = "|", fixed = TRUE))
+          split_ix = gsub("[{}]", "", split_ix)
+          split_ix = strsplit(split_ix, split = ",")
+          n_levels_per_subset = unlist(lapply(split_ix, FUN = function(x) length(x)))
+          split_ix = lapply(1:length(split_ix), FUN = function(s) {
+            x = unlist(split_ix[s])
+            x = rep(n_levels_per_subset[s], length(x))
+            return(x)
+          })
+          split_ix = unlist(split_ix)
+          sp = partysplit(varid = split_feature, index = split_ix)
+          n = partynode(id = party_id, split = sp, info = list("ID" = parent_id), kids = child_nodes_sorted)
+          parentnode_list = append(parentnode_list, list(n))
+        }
       }
       node_list = append(node_list, parentnode_list)
     }

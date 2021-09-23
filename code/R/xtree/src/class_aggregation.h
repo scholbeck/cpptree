@@ -1,9 +1,7 @@
 #ifndef AGGREGATION_H
 #define AGGREGATION_H
 
-#include "class_node.h"
-#include "class_objective.h"
-
+#include <vector>
 
 class Aggregation {
   

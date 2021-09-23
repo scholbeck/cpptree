@@ -58,8 +58,29 @@ std::vector<std::string> convertRcppStringVector(Rcpp::StringVector vec) {
   return conv_vec;
 }
 
+std::map<std::string, int> createCategEncodingMap(Rcpp::StringVector levels, Rcpp::IntegerVector mappings) {
+  int n = levels.size();
+  std::string l;
+  int encoding;
+  std::map<std::string, int> m;
+  for (int i = 0; i < n; i++) {
+    l = Rcpp::as<std::string>(levels[i]);
+    encoding = mappings[i];
+  }
+  m.insert(std::pair<std::string, int> (l, encoding));
+  return m;
+}
 
-Data* convertData(Rcpp::DataFrame r_data, int target_index, Rcpp::StringVector coltypes, Rcpp::List categ_encodings) {
+std::set<std::string> detectLevelsFromColumn(std::vector<std::string> col) {
+  std::set<std::string> levels;
+  int n = col.size();
+  for (int i = 0; i < n; i++) {
+    levels.insert(col[i]);
+  }
+  return levels;
+}
+
+Data* convertData(Rcpp::DataFrame r_data, int target_index, Rcpp::StringVector coltypes) {
   int n_rows = r_data.nrows();
   int n_cols = r_data.size();
   Data* data = new Data();
@@ -77,16 +98,37 @@ Data* convertData(Rcpp::DataFrame r_data, int target_index, Rcpp::StringVector c
     std::make_move_iterator(r_types_conv.end())
   );
   data->setColTypes(types);
-  Rcpp::NumericVector r_column;
+  Rcpp::NumericVector r_column_num;
+  std::vector<std::string> column_categ;
   std::vector<double> cpp_column;
-  
+
   // data columns
   for (int j = 0; j < n_cols; j++) {
-    r_column = r_data[j];
-    cpp_column = Rcpp::as<std::vector<double>>(r_column);
-    for (int i = 0; i < n_rows; i++) {
-      data->setElem(cpp_column[i], i , j + 1);
-      // j + 1 to account for ID column
+    if (coltypes[j] == "num") {
+      r_column_num = r_data[j];
+      cpp_column = Rcpp::as<std::vector<double>>(r_column_num);
+      for (int i = 0; i < n_rows; i++) {
+        data->setElem(cpp_column[i], i , j + 1);
+        // insert into (j + 1)th column to account for ID column
+      }
+    } else if (coltypes[j] == "categ") {
+      column_categ = convertRcppStringVector(r_data[j]);
+      std::set<std::string> levels = detectLevelsFromColumn(column_categ);
+      std::map<std::string, int> m;
+      int l = 0;
+      for (auto it = levels.begin(); it != levels.end(); ++it) {
+        m.insert(std::pair<std::string, int> (*it, l));
+        l++;
+      }
+      // create mapping for each categ feature j and for all its feature levels to integer 0, 1, 2, etc.
+      data->addCategEncoding(j + 1, m);
+      int elem;
+      for (int i = 0; i < n_rows; i++) {
+        elem = m.at(column_categ[i]);
+        data->setElem(elem, i , j + 1);
+        // insert into (j + 1)th column to account for ID column
+      }
+      
     }
   }
   return data;
@@ -132,18 +174,21 @@ void printTreeStructureToR(Tree* tree) {
   printSubTreeToR(tree->nodes[0]);
 }
 
+
+
+
 XTree::XTree(Rcpp::DataFrame r_data, int target_index,
-           Rcpp::StringVector coltypes, Rcpp::List categ_encodings,
+           Rcpp::StringVector coltypes,
            Rcpp::StringVector params) {
   
-  Data* data = convertData(r_data, target_index, coltypes, categ_encodings);
+  Data* data = convertData(r_data, target_index, coltypes);
   Arguments args;
   args.setMinNodeSize(20);
-  args.setAlgorithm("random");
-  args.setMaxChildren(4);
+  args.setAlgorithm("exhaustive");
+  args.setMaxChildren(2);
   args.setMaxDepth(5);
-  args.setModel("mean");
-  args.setObjective("sse");
+  // args.setModel("mean");
+  args.setObjective("gini");
   this->tree = new Tree(data, args);
 }
 
@@ -159,30 +204,74 @@ void XTree::print() {
 }
 
 Rcpp::DataFrame XTree::getTreeStructure() {
-  Rcpp::StringVector id_vec, split_vec, split_value_vec;
+  Rcpp::StringVector id_vec, split_vec, split_value_vec, split_type_vec, level_partitioning_vec;
   Rcpp::IntegerVector is_leaf_vec, split_feature_vec;
+  Split* split;
   for (int i = 0; i < this->tree->node_cnt; i++) {
     id_vec.push_back(this->tree->nodes[i]->getId());
     split_vec.push_back(this->tree->nodes[i]->getDecisionRule());
-    is_leaf_vec.push_back((int) this->tree->nodes[i]->isLeaf());
-    split_feature_vec.push_back(this->tree->nodes[i]->split_feature);
-    std::vector<double> split_values = this->tree->nodes[i]->split_values;
-    int n_splits = split_values.size();
-    std::string s;
-    if (n_splits > 0) {
-      s = std::to_string(split_values[0]);
+    is_leaf_vec.push_back(this->tree->nodes[i]->isLeaf());
+    split = this->tree->nodes[i]->getSplitData();
+    
+    if (split == nullptr) {
+      split_feature_vec.push_back(-1);
+      split_type_vec.push_back(std::string("NA"));
+      split_value_vec.push_back(std::string("NA"));
+      level_partitioning_vec.push_back(std::string("NA"));
+      continue;
+    }
+    
+    // Rcpp::Rcout << "feature" << split->getSplitFeatureIndex();
+    split_feature_vec.push_back(split->getSplitFeatureIndex());
+    std::string split_type = split->getSplitType();
+    split_type_vec.push_back(split_type);
+    
+    std::vector<double> split_values;
+    std::vector<std::vector<int>> level_partitionings;
+    
+    if (split_type == "num") {
+      level_partitioning_vec.push_back(std::string("NA"));
+      // push back placeholder vector for equal size
+      
+      split_values = split->getSplitValues();
+      int n_splits = split_values.size();
+      std::string s = std::to_string(split_values[0]);
       for (int i = 1; i < n_splits; i++) {
         s += "," + std::to_string(split_values[i]);
       }
+      
+      split_value_vec.push_back(s);
+    } else if (split_type == "categ") {
+      split_value_vec.push_back(std::string("NA"));
+      // push back placeholder value for equal size
+      level_partitionings = split->getLevelPartitionings();
+      int n_children = level_partitionings.size();
+      std::string s;
+      for (int i = 0; i < (n_children - 1); i++) {
+        s += "{" + std::to_string(level_partitionings[i][0]);
+        int n_levels_per_subset = level_partitionings[i].size();
+        for (int l = 1; l < n_levels_per_subset; l++) {
+          s += "," + std::to_string(level_partitionings[i][l]);
+        }
+        s += "}|";
+      }
+      s += "{" + std::to_string(level_partitionings[n_children - 1][0]);
+      int n_levels_per_subset = level_partitionings[n_children - 1].size();
+      for (int l = 1; l < n_levels_per_subset; l++) {
+        s += "," + std::to_string(level_partitionings[n_children - 1][l]);
+      }
+      s += "}";
+      level_partitioning_vec.push_back(s);
     }
-    split_value_vec.push_back(s);
   }
   Rcpp::DataFrame tree_structure = Rcpp::DataFrame::create(
     Rcpp::Named("ID") = id_vec,
     Rcpp::Named("split") = split_vec,
     Rcpp::Named("is_leaf") = is_leaf_vec,
     Rcpp::Named("feature") = split_feature_vec,
-    Rcpp::Named("values") = split_value_vec);
+    Rcpp::Named("values") = split_value_vec,
+    Rcpp::Named("type") = split_type_vec,
+    Rcpp::Named("levels") = level_partitioning_vec);
   
   return tree_structure;
 }

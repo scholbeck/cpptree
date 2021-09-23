@@ -32,7 +32,6 @@ void ObjectiveSSE::init(Data* data, int childnode) {
 double ObjectiveSSE::compute(Data* data, Model* mod) {
 	std::vector<double> target_obs = data->col(data->getTargetIndex());
 	int n = data->nrows();
-	double mean_target = mean(target_obs);
 	double cumsum = 0;
 	double target, pred;
 	std::vector<double> observation;

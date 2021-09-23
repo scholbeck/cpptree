@@ -5,6 +5,7 @@
 #include "class_arguments.h"
 #include "class_data.h"
 #include "class_objective.h"
+#include "class_split.h"
 #include "string"
 
 class Tree;
@@ -16,8 +17,7 @@ class Node {
     
     std::string id;
     Data* data;
-    int split_feature;
-    std::vector<double> split_values;
+    Split* split;
     std::string decision_rule; // rule that was used to to get from parent to this object
     Tree* tree;
     Model* mod;
@@ -29,8 +29,8 @@ class Node {
     double getObjValue();
     std::string getDecisionRule();
     std::string getId();
-    Model* getModel();
     Split* getSplitData();
+    Model* getModel();
     void setModel(Model* mod);
     void summary();
     Data* getData();

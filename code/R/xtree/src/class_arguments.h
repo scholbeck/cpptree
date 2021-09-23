@@ -15,13 +15,13 @@ class Arguments {
     int target;
     int max_children;
     int min_node_size;
-	int max_depth;
+	  int max_depth;
     std::string algorithm;
     std::string objective;
     std::string model;
     std::string task;
-	std::string print;
-	std::vector<std::string> coltypes;
+	  std::string print;
+	  std::vector<std::string> coltypes;
     char sep;
     
     std::string getFilename();

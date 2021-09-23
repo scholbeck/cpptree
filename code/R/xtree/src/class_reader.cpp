@@ -86,16 +86,16 @@ Data* Reader::read(std::string filename, Arguments args) {
   		} else if (types[j + 1] == "categ") {
     			std::set<std::string> levels = detectLevels(rows_strings, j);
     			std::map<std::string, int> m;
-  			int l = 0;
-  			for (auto it = levels.begin(); it != levels.end(); ++it) {
-  				m.insert(std::pair<std::string, int> (*it, l));
-  				l++;
-  			}
-  			// create mapping for each categ feature j and for all its feature levels to integer 0, 1, 2, etc.
-  			data->addCategEncoding(j + 1, m);
-  			// add mapping to data object
-  			new_row.push_back(m.at(rows_strings[i][j]));
-  			// add mapped integer to data
+    			int l = 0;
+    			for (auto it = levels.begin(); it != levels.end(); ++it) {
+    				m.insert(std::pair<std::string, int> (*it, l));
+    				l++;
+    			}
+    			// create mapping for each categ feature j and for all its feature levels to integer 0, 1, 2, etc.
+    			data->addCategEncoding(j + 1, m);
+    			// add mapping to data object
+    			new_row.push_back(m.at(rows_strings[i][j]));
+    			// add mapped integer to data
   		}
 	  }
 	data->addRow(new_row);
