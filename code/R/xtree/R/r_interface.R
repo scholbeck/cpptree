@@ -97,10 +97,9 @@ convertToParty = function(tree, data) {
           split_ix = unlist(strsplit(strct[strct$ID == parent_id, "levels"], split = "|", fixed = TRUE))
           split_ix = gsub("[{}]", "", split_ix)
           split_ix = strsplit(split_ix, split = ",")
-          n_levels_per_subset = unlist(lapply(split_ix, FUN = function(x) length(x)))
           split_ix = lapply(1:length(split_ix), FUN = function(s) {
             x = unlist(split_ix[s])
-            x = rep(n_levels_per_subset[s], length(x))
+            x = rep(s, length(x))
             return(x)
           })
           split_ix = unlist(split_ix)
