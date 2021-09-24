@@ -3,21 +3,20 @@ library(Rcpp)
 library(devtools)
 
 load_all()
-df = read.csv("../../../data/bh.data", header = FALSE)
-df$V4 = as.factor(df$V4)
-df$V9 = as.factor(df$V9)
+df = read.csv("../../../data/seoulbike.csv", header = FALSE)
 # df = iris
 # df$iris = iris$Species
 
 tree = xtree(df,
-             n_children = 3,
+             n_children = 2,
              objective_type = "sse",
              model_type = "mean",
-             search_algo_type = "random",
-             min_node_size = 10,
-             max_depth = 3,
-             target = 14)
+             search_algo_type = "exhaustive",
+             min_node_size = 20,
+             max_depth = 30,
+             target = 1)
 
+library(microbenchmark)
 tree$grow()
 tree$print()
 tree$getTreeStructure()

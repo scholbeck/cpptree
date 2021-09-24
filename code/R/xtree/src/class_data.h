@@ -17,6 +17,7 @@ class Data {
 		int target_index;
 		std::vector<std::string> coltypes;
 		std::map<int, std::map<std::string, int>> categ_encodings;
+		std::map<int, std::vector<std::pair<double, int>>> sorted_features;
 		
 		void load(std::string filename); // read data from disc
 		
@@ -52,8 +53,12 @@ class Data {
 		std::vector<std::vector<std::vector<int>>> computeCategPermuts(int col_index, int n_subsets);
 		std::vector<std::vector<int>> splitBinaryObs(double split_value, int col_index);
 		int getNLevels(int col);
-
-		/*
+		void sortFeatures();
+		std::vector<double> getSortedFeatureValues(int col);
+		std::map<int, std::vector<std::pair<double, int>>> updateSortedValues(std::vector<int> rows);
+		  
+		 
+		 /*
 		std::vector<Data*>  splitCateg(int col_index);
 		std::vector<Data*>  splitBinary(double split_value, int col_index);
 		std::vector<Data*>  split(Split* split);

@@ -88,8 +88,10 @@ std::vector<Split*> SplitGeneratorBinExh::generate() {
 		if (col == this->data->getTargetIndex()) {
 			continue;
 		}
-		col_values = data->col(col);
-		std::sort(col_values.begin(), col_values.end());
+		col_values = data->getSortedFeatureValues(col);
+		
+		// col_values = data->col(col);
+		// std::sort(col_values.begin(), col_values.end());
 		// col_values.erase(std::unique(col_values.begin(), col_values.end()), col_values.end());
 		//int n_unique_values = col_values.size();
 		for (int i = (n_min - 1); i < (n_rows - n_min); i++) {

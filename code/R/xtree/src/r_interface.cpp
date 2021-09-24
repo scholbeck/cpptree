@@ -131,6 +131,7 @@ Data* convertData(Rcpp::DataFrame r_data, int target_index, Rcpp::StringVector c
       
     }
   }
+  data->sortFeatures();
   return data;
 }
 
@@ -178,7 +179,6 @@ RInterface::RInterface(Rcpp::DataFrame r_data, Rcpp::StringVector coltypes,
                        Rcpp::List params) {
   
   Data* data = convertData(r_data, params["target"], coltypes);
-  
   Arguments args;
   args.setTargetIndex(params["target"]);
   args.setMinNodeSize(params["min_node_size"]);
