@@ -2,7 +2,7 @@ setwd("xtree")
 library(Rcpp)
 library(devtools)
 
-load_all()
+devtools::load_all()
 df = read.csv("../../../data/seoulbike.csv", header = FALSE)
 # df = iris
 # df$iris = iris$Species
@@ -12,14 +12,15 @@ tree = xtree(df,
              objective_type = "sse",
              model_type = "mean",
              search_algo_type = "exhaustive",
-             min_node_size = 20,
-             max_depth = 30,
+             min_node_size = 1,
+             max_depth = 5,
              target = 1)
-
 library(microbenchmark)
-tree$grow()
+microbenchmark(tree$grow(), times = 1)
 tree$print()
-tree$getTreeStructure()
+strct = tree$getTreeStructure()
+
+
 partyobj = convertToParty(tree, df)
 
 library(ggparty)
@@ -30,5 +31,4 @@ ggparty(partyobj, add_vars = list(ID = "$node$info$ID")) +
                   ids = "inner") +
   geom_node_label(aes(label = ID),
                   ids = "terminal")
-  
   
