@@ -8,7 +8,7 @@ creditmult3:
 	./tree --filename ../data/credit.csv --coltypes cnccncccccccncccccccc --target 20 --sep , --task classif --algorithm random --objective gini --minsize 10 --children 3 --maxdepth 10
 
 boston:
-	./tree --filename ../data/bh.data --target 13 --sep , --task regr --algorithm exhaustive --objective sse --model mean --minsize 10 --children 2 --maxdepth 10
+	./tree --filename ../../../../data/bh.data --target 13 --sep , --task regr --algorithm exhaustive --objective sse --model mean --minsize 10 --children 2 --maxdepth 10
 
 bostonlinear:
 	./tree --filename ../data/bh.data --target 13 --sep , --task regr --algorithm exhaustive --objective sse --model linear --minsize 10 --children 2 --maxdepth 10
