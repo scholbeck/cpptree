@@ -17,7 +17,7 @@ class Data {
 		int target_index;
 		std::vector<std::string> coltypes;
 		std::map<int, std::map<std::string, int>> categ_encodings;
-		std::map<int, std::vector<std::pair<double, int>>> sorted_features;
+		std::map<int, std::vector<double>> sorted_features;
 		
 		void load(std::string filename); // read data from disc
 		
@@ -55,7 +55,7 @@ class Data {
 		int getNLevels(int col);
 		void sortFeatures();
 		std::vector<double> getSortedFeatureValues(int col);
-		std::map<int, std::vector<std::pair<double, int>>> updateSortedValues(std::vector<int> rows);
+		std::map<int, std::vector<double>> subsetSortedFeatureValues(std::vector<int> rows);
 		  
 		 
 		 /*

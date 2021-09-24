@@ -191,6 +191,7 @@ RInterface::RInterface(Rcpp::DataFrame r_data, Rcpp::StringVector coltypes,
   this->tree = new Tree(data, args);
 }
 
+
 void RInterface::grow() {
   this->tree->grow();
   this->depth = this->tree->depth;

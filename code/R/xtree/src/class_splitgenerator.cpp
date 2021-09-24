@@ -11,6 +11,7 @@
 #include <stdlib.h>
 #include <random>
 
+
 SplitGenerator::SplitGenerator(Data* data, Arguments args) {
 	this->data = data;
 	this->args = args;

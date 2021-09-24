@@ -241,7 +241,7 @@ Data* Data::subset(std::vector<int> rows, std::vector<int> cols) {
 	subset->setCategEncodings(this->categ_encodings);
 	subset->setTargetIndex(this->target_index);
 	subset->setColTypes(this->coltypes);
-	subset->sorted_features = this->updateSortedValues(rows);
+	subset->sorted_features = this->subsetSortedFeatureValues(rows);
 	for (int i = 0; i < n_rows_subset; ++i) {
 		for (int j = 0; j < n_cols_subset; j++) {
 			(subset->rows[i])[j] = this->elem(rows[i], cols[j]);
@@ -510,22 +510,18 @@ int Data::getNLevels(int col) {
 
 void Data::sortFeatures() {
   int n_cols = this->ncols();
-  int n_rows = this->nrows();
   for (int j = 1; j < n_cols; j++) {
     if (j == this->getTargetIndex()) {
       continue;
     }
-    std::vector<std::pair<double, int>> single_feature;
-    for (int i = 0; i < n_rows; i++) {
-      single_feature.push_back(std::make_pair(this->elem(i, j), this->elem(i, 0)));
-    }
+    std::vector<double> single_feature = this->col(j);
     std::sort(single_feature.begin(), single_feature.end());
-    this->sorted_features.insert(std::pair<int, std::vector<std::pair<double, int>>>(j, single_feature));
+    this->sorted_features.insert(std::pair<int, std::vector<double>>(j, single_feature));
   }
 }
 
-std::map<int, std::vector<std::pair<double, int>>> Data::updateSortedValues(std::vector<int> rows) {
-  std::map<int, std::vector<std::pair<double, int>>> sorted_features_update;
+std::map<int, std::vector<double>> Data::subsetSortedFeatureValues(std::vector<int> rows) {
+  std::map<int, std::vector<double>> sorted_features_update;
   int n_cols = this->ncols();
   int n_rows_subset = rows.size();
   for (int j = 1; j < n_cols; j++) {
@@ -533,24 +529,18 @@ std::map<int, std::vector<std::pair<double, int>>> Data::updateSortedValues(std:
       continue;
     }
     int r;
-    std::vector<std::pair<double, int>> single_feature_update;
+    std::vector<double> single_feature_update;
     for (int i = 0; i < n_rows_subset; i++) {
       r = rows[i];
       single_feature_update.push_back(this->sorted_features.at(j)[r]);
     }
     // sorted_features_update.insert(j, single_feature);
-    sorted_features_update.insert(std::pair<int, std::vector<std::pair<double, int>>>(j, single_feature_update));
+    sorted_features_update.insert(std::pair<int, std::vector<double>>(j, single_feature_update));
   }
   return sorted_features_update;
 }
 
 
 std::vector<double> Data::getSortedFeatureValues(int col) {
-  std::vector<double> values;
-  std::vector<std::pair<double, int>> pairs = this->sorted_features.at(col);
-  values.reserve(pairs.size());
-  for (size_t it = 0; it < pairs.size(); ++it) {
-    values.push_back(pairs[it].first);
-  }
-  return values;
+  return this->sorted_features.at(col);
 }
