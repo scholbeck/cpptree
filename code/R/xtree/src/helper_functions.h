@@ -19,5 +19,6 @@ bool checkObsSize(std::vector<std::vector<int>> split_obs, int min_node_size);
 double quantileSortedVec(double quantile, std::vector<double> vec);
 long long int factorial(int n);
 std::vector<std::vector<int>> permuteIndices(int n, int k);
+std::vector<int> convertDoubleToIntVector(std::vector<double> vec);
 
 #endif 

@@ -12,20 +12,17 @@
 #include <random>
 
 
-SplitGenerator::SplitGenerator(Data* data, Arguments args) {
-	this->data = data;
-	this->args = args;
+SplitGenerator::SplitGenerator() {
 }
 
-bool SplitGenerator::checkMinNodeSize(Split* split) {
-	
+bool SplitGenerator::checkMinNodeSize(Split* split, int min_node_size) {
 	bool geq_min_node_size = true;
-	if (split->splitted_obs.empty()) {
+	if (split->split_obs.empty()) {
 		geq_min_node_size = false;
 	} else {
-		for (int i = 0; i < this->args.getMaxChildren(); i++) {
-			if ((split->splitted_obs[i].empty()) ||
-				((int) split->splitted_obs[i].size() < this->args.getMinNodeSize())) {
+		for (int i = 0; i < split->split_obs.size(); i++) {
+			if ((split->split_obs[i].empty()) ||
+				((int) split->split_obs[i].size() < min_node_size)) {
 					geq_min_node_size = false;
 			}
 		}
@@ -33,15 +30,15 @@ bool SplitGenerator::checkMinNodeSize(Split* split) {
 	return geq_min_node_size;
 }
 
-SplitGeneratorBinExh::SplitGeneratorBinExh(Data* data, Arguments args) : SplitGenerator(data, args) {
+SplitGeneratorBinExh::SplitGeneratorBinExh() : SplitGenerator() {
 	//
 }
 
-std::vector<Split*> SplitGeneratorBinExh::generate() {
+std::vector<Split*> SplitGeneratorBinExh::generate(Data* data, std::vector<int> observations, Arguments args) {
 	
+	int n_rows = observations.size();
 	int n_min = args.getMinNodeSize();
 	std::vector<Split*> splits;
-	int n_rows = data->nrows();
 	int n_cols = data->ncols();
 	splits.reserve(n_rows * n_cols);
 	std::vector<int> col_ix_num, col_ix_categ, categ;
@@ -49,9 +46,9 @@ std::vector<Split*> SplitGeneratorBinExh::generate() {
 	col_ix_categ.reserve(n_cols);
 	for (int j = 1; j < n_cols; j++) {
 		// exclude first column with ID
-		if (this->data->getColTypes()[j] == "num") {
+		if (data->getColTypes()[j] == "num") {
 			col_ix_num.push_back(j);
-		} else if (this->data->getColTypes()[j] == "categ") {
+		} else if (data->getColTypes()[j] == "categ") {
 			col_ix_categ.push_back(j);
 		}	
 	}
@@ -61,22 +58,22 @@ std::vector<Split*> SplitGeneratorBinExh::generate() {
 	//categorical features
 	for (int j = 0; j < n_cols_categ; j++) {
 		col = col_ix_categ[j];
-		if (col == this->data->getTargetIndex()) {
+		if (col == data->getTargetIndex()) {
 			continue;
 		}
-		if (this->data->getNLevels(col) == 1) {
+		if (data->getNLevels(col) == 1) {
 			continue;
 		}
-		std::vector<std::vector<std::vector<int>>> level_permuts = this->data->computeCategPermuts(col, this->args.getMaxChildren());
+		std::vector<std::vector<std::vector<int>>> level_permuts = data->computeCategPermuts(col, args.getMaxChildren());
 		int n_permuts = level_permuts.size();
 		for (int i = 0; i < n_permuts; i++) {
-			std::map<std::string, int> levels = this->data->getCategEncodings().at(col);
+			std::map<std::string, int> levels = data->getCategEncodings().at(col);
 			for (int p = 0; p < n_permuts; p++) {
-				SplitCateg* current_split = new SplitCateg(this->args.getMaxChildren()-1, levels);
+				SplitCateg* current_split = new SplitCateg(args.getMaxChildren() - 1, levels);
 				current_split->setFeatureIndex(col);
 				current_split->setLevelPartitionings(level_permuts[p]);
-				current_split->computePartitionings(this->data);
-				if (this->checkMinNodeSize(current_split)) {
+				current_split->computePartitionings(data, observations);
+				if (this->checkMinNodeSize(current_split, args.getMinNodeSize())) {
 					splits.push_back(current_split);	
 				}
 			}
@@ -84,26 +81,22 @@ std::vector<Split*> SplitGeneratorBinExh::generate() {
 	}
 	// numeric features
 	std::vector<double> col_values;
-	for (int j = 0; j < n_cols_num; j++) {
-		col = col_ix_num[j];
-		if (col == this->data->getTargetIndex()) {
+	for (auto it = col_ix_num.begin(); it != col_ix_num.end(); ++it) {
+		if (*it == data->getTargetIndex()) {
 			continue;
 		}
-		col_values = data->getSortedFeatureValues(col);
-		
-		// col_values = data->col(col);
-		// std::sort(col_values.begin(), col_values.end());
-		// col_values.erase(std::unique(col_values.begin(), col_values.end()), col_values.end());
-		//int n_unique_values = col_values.size();
+		col_values = data->columnSubset(observations, *it);
+		std::sort(col_values.begin(), col_values.end());
+
 		for (int i = (n_min - 1); i < (n_rows - n_min); i++) {
 			if (col_values[i] == col_values[i-1]) {
 				continue;
 			}
-			SplitNum* current_split = new SplitNum(1);
+			SplitNum* current_split = new SplitNum(args.getMaxChildren() - 1);
 			current_split->addSplitValue(col_values[i]);
-			current_split->setFeatureIndex(col);
-			current_split->computePartitionings(this->data);
-			if (this->checkMinNodeSize(current_split)) {
+			current_split->setFeatureIndex(*it);
+			current_split->computePartitionings(data, observations);
+			if (this->checkMinNodeSize(current_split, args.getMinNodeSize())) {
 				splits.push_back(current_split);
 			}
 		}
@@ -113,11 +106,11 @@ std::vector<Split*> SplitGeneratorBinExh::generate() {
 }
 
 
-SplitGeneratorMultRand::SplitGeneratorMultRand(Data* data, Arguments args) : SplitGenerator(data, args) {
+SplitGeneratorMultRand::SplitGeneratorMultRand() : SplitGenerator() {
 	//
 }
 
-std::vector<Split*> SplitGeneratorMultRand::generate() {
+std::vector<Split*> SplitGeneratorMultRand::generate(Data* data, std::vector<int> observations, Arguments args) {
 
 	std::vector<Split*> splits;
 	int n_rows = data->nrows();
@@ -129,7 +122,7 @@ std::vector<Split*> SplitGeneratorMultRand::generate() {
 
 	for (int j = 1; j < n_cols; j++) {
 		// exclude first column with ID
-		if (this->data->getColTypes()[j] == "num") {
+		if (data->getColTypes()[j] == "num") {
 			col_ix_num.push_back(j);
 		} else {
 			col_ix_categ.push_back(j);
@@ -141,22 +134,22 @@ std::vector<Split*> SplitGeneratorMultRand::generate() {
 
 	for (int j = 0; j < n_cols_categ; j++) {
 		col = col_ix_categ[j];
-		if (col == this->data->getTargetIndex()) {
+		if (col == data->getTargetIndex()) {
 			continue;
 		}
-		if (this->data->getNLevels(col) < this->args.getMaxChildren()) {
+		if (data->getNLevels(col) < args.getMaxChildren()) {
 			continue;
 		}
-		std::vector<std::vector<std::vector<int>>> level_permuts = this->data->computeCategPermuts(col, this->args.getMaxChildren());
+		std::vector<std::vector<std::vector<int>>> level_permuts = data->computeCategPermuts(col, args.getMaxChildren());
 		int n_permuts = level_permuts.size();
 		for (int i = 0; i < n_permuts; i++) {
-			std::map<std::string, int> levels = this->data->getCategEncodings().at(col);
+			std::map<std::string, int> levels = data->getCategEncodings().at(col);
 			for (int p = 0; p < n_permuts; p++) {
-				SplitCateg* current_split = new SplitCateg(this->args.getMaxChildren()-1, levels);
+				SplitCateg* current_split = new SplitCateg(args.getMaxChildren()-1, levels);
 				current_split->setFeatureIndex(col);
 				current_split->setLevelPartitionings(level_permuts[p]);
-				current_split->computePartitionings(this->data);
-				if (this->checkMinNodeSize(current_split)) {
+				current_split->computePartitionings(data, observations);
+				if (this->checkMinNodeSize(current_split, args.getMinNodeSize())) {
 					splits.push_back(current_split);	
 				}
 			}
@@ -169,7 +162,7 @@ std::vector<Split*> SplitGeneratorMultRand::generate() {
 	std::vector<double> col_values;
 	for (int j = 0; j < n_cols_num; j++) {
 		std::random_device rd; // obtain a random number from hardware
-    std::mt19937 gen(rd()); // seed the generator
+    	std::mt19937 gen(rd()); // seed the generator
 		int col = col_ix_num[j];
 		col_values = data->col(col);
 		std::sort(col_values.begin(), col_values.end());
@@ -191,8 +184,8 @@ std::vector<Split*> SplitGeneratorMultRand::generate() {
 					current_split->addSplitValue(rnd_obs_vec[i]);
 				}
 			}
-			current_split->computePartitionings(this->data);
-			if (this->checkMinNodeSize(current_split)) {
+			current_split->computePartitionings(data, observations);
+			if (this->checkMinNodeSize(current_split, args.getMinNodeSize())) {
 				splits.push_back(current_split);
 			}
 		}

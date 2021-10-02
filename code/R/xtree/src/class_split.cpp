@@ -13,16 +13,12 @@
 Split::Split(int max_splits) {
 	this->feature_index = -1;
 	this->max_splits = max_splits;
-	this->split_values.reserve(max_splits);
-	for (int i = 0; i <= max_splits; ++i) {
-		std::vector<int> v(0, 1);
-		this->splitted_obs.push_back(v);
+	for (int l = 0; l <= max_splits; l++) {
+		std::vector<int> subset_obs;
+		this->split_obs.push_back(subset_obs);
 	}
 }
 
-int Split::nsplits() {
-	return this->max_splits;
-}
 void Split::sortSplitValues() {
 	std::sort(this->split_values.begin(), this->split_values.end());
 	this->split_values.erase(unique(this->split_values.begin(), this->split_values.end()), this->split_values.end()); // remove duplicate split values
@@ -31,15 +27,6 @@ void Split::sortSplitValues() {
 void Split::addSplitValue(double value) {
 	(this->split_values).push_back(value);
 	std::sort(this->split_values.begin(), this->split_values.end());
-}
-
-
-void Split::addChildNodeModel(Model* mod) {
-	this->child_node_models.push_back(mod);
-}
-
-std::vector<Model*> Split::getChildNodeModels() {
-	return this->child_node_models;
 }
 
 void Split::setFeatureIndex(int feature_index) {
@@ -53,13 +40,12 @@ int Split::getSplitFeatureIndex() {
 void Split::clear() {
 	this->feature_index = -1;
 	this->split_values.clear();
-	this->split_values.reserve(this->max_splits);
+	this->subset_level_sets.clear();
 }
 
 std::vector<double> Split::getSplitValues() {
   return this->split_values;
 }
-
 
 std::vector<std::vector<int>> Split::getLevelPartitionings() {
   return this->subset_level_sets;
@@ -69,25 +55,8 @@ void Split::setLevelPartitionings(std::vector<std::vector<int>> level_sets) {
   this->subset_level_sets = level_sets;
 }
 
-/*
-void Split::summary() {
-	std::cout << "SPLIT SUMMARY\n";
-	std::cout << "\tsplit feature : " << this->getSplitFeatureIndex() << "\n";
-	std::cout << "\tsplit type " << split_type << "\n";
-	if (this->split_type == "num") {
-		std::cout << "\tsplit values : ";
-		int n_splits = this->split_values.size();
-		std::cout << "\t";
-		for (int i = 0; i < n_splits; ++i) {
-			std::cout << this->split_values[i] << " ";
-		}
-	}
-	std::cout << "\n";
-}
-*/
-
 SplitNum::SplitNum(int max_splits) : Split(max_splits) {
-
+	this->split_values.reserve(max_splits);
 }
 
 std::string SplitNum::getSplitType() {
@@ -120,52 +89,31 @@ std::string SplitNum::createDecisionRule(int child_ix) {
 	return rule;
 }
 
-void SplitNum::computePartitionings(Data* data) {
-	int n_obs = data->nrows();
-	int feature = this->getSplitFeatureIndex();
-	std::vector<double> split_values = this->getSplitValues();
-	int n_splits = split_values.size();
-	std::vector<std::vector<int>> split_multiway;
-	for (int l = 0; l <= n_splits; l++) {
-		std::vector<int> subset_obs;
-		split_multiway.push_back(subset_obs);
-	}
+void SplitNum::computePartitionings(Data* data, std::vector<int> observations) {
+	int n_splits = this->getSplitValues().size();
+	int n_obs = observations.size();
+	int row;
+	
 	// split values need to be sorted asc.
 	bool rightmost_node = true;
-	for (int i = 0; i < n_obs; i++) {
+	for (auto it = observations.begin(); it != observations.end(); ++it) {
 		for (int j = 0; j < n_splits; j++) {
-			if (data->elem(i, feature) <= split_values[j]) {
-				split_multiway[j].push_back(i);
+			if (data->elem(*it, this->getSplitFeatureIndex()) <= this->getSplitValues()[j]) {
+				this->split_obs[j].push_back(*it);
 				rightmost_node = false;
 				break;
 			}
 		}
 		if (rightmost_node == true) {
-			split_multiway[n_splits].push_back(i);
+			this->split_obs[n_splits].push_back(*it);
 		}
 		rightmost_node = true;
-		
 	}
-	this->splitted_obs = split_multiway;
 }
-
-void SplitNum::summary() {
-	/*
-	std::cout << "SPLIT SUMMARY\n";
-	std::cout << "\tsplit feature : " << this->getSplitFeatureIndex() << "\n";
-	std::cout << "\tsplit values : ";
-	int n_splits = this->split_values.size();
-	std::cout << "\t";
-	for (int i = 0; i < n_splits; ++i) {
-		std::cout << this->split_values[i] << " ";
-	}
-	std::cout << "\n";
-	*/
-}
-
 
 SplitCateg::SplitCateg(int max_splits, std::map<std::string, int> levels) : Split(max_splits) {
 	this->levels = levels;
+	this->subset_level_sets.reserve(max_splits);
 }
 
 std::string SplitCateg::getSplitType() {
@@ -185,20 +133,20 @@ std::string SplitCateg::createDecisionRule(int child_ix) {
 	return rule;
 }
 
-void SplitCateg::computePartitionings(Data* data) {
-	int n_obs = data->nrows();
+void SplitCateg::computePartitionings(Data* data, std::vector<int> observations) {
+	int n_obs = observations.size();
 	int n_subsets = this->subset_level_sets.size();
 	int n_levels_per_subset;
+	int row;
 	for (int s = 0; s < n_subsets; s++) {
 		n_levels_per_subset = subset_level_sets[s].size();
 		for (int l = 0; l < n_levels_per_subset; l++) {
 			for (int i = 0; i < n_obs; i++) {
-				if (data->elem(i, this->getSplitFeatureIndex()) == this->subset_level_sets[s][l]) {
-					this->splitted_obs[s].push_back(i);
+				row = observations[i];
+				if (data->elem(row, this->getSplitFeatureIndex()) == this->subset_level_sets[s][l]) {
+					this->split_obs[s].push_back(row);
 				}
 			}
-		}	
-	}	
+		}
+	}
 }
-
-void SplitCateg::summary() {}

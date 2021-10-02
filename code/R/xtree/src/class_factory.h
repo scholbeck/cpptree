@@ -20,7 +20,7 @@ class Factory {
 
     Objective* createObjective();
 	  Model* createModel();    
-    SplitGenerator* createSplitGenerator(Data* data, Arguments args);
+    SplitGenerator* createSplitGenerator();
 
 };
 

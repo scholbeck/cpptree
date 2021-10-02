@@ -80,6 +80,14 @@ void Data::addCols(std::vector<std::vector<double>> col_vec) {
 	}
 }
 
+std::vector<double> Data::columnSubset(std::vector<int> rows, int col) {
+	std::vector<double> col_subset(rows.size());
+	for (int i = 0; i < rows.size(); ++i) {
+		col_subset[i] = this->elem(rows[i], col);
+	}
+	return col_subset;
+}
+
 double Data::elem(int row_index, int col_index) {
 	return this->rows[row_index][col_index];
 }
@@ -241,7 +249,6 @@ Data* Data::subset(std::vector<int> rows, std::vector<int> cols) {
 	subset->setCategEncodings(this->categ_encodings);
 	subset->setTargetIndex(this->target_index);
 	subset->setColTypes(this->coltypes);
-	subset->sorted_features = this->subsetSortedFeatureValues(rows);
 	for (int i = 0; i < n_rows_subset; ++i) {
 		for (int j = 0; j < n_cols_subset; j++) {
 			(subset->rows[i])[j] = this->elem(rows[i], cols[j]);

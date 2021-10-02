@@ -131,7 +131,6 @@ Data* convertData(Rcpp::DataFrame r_data, int target_index, Rcpp::StringVector c
       
     }
   }
-  data->sortFeatures();
   return data;
 }
 
@@ -189,15 +188,19 @@ RInterface::RInterface(Rcpp::DataFrame r_data, Rcpp::StringVector coltypes,
   args.setObjective(params["objective_type"]);
   
   this->tree = new Tree(data, args);
-}
-
-
-void RInterface::grow() {
   this->tree->grow();
   this->depth = this->tree->depth;
   this->node_cnt = this->tree->node_cnt;
   this->leafnode_cnt = this->tree->leafnode_cnt;
 }
+
+// 
+// void RInterface::grow() {
+//   this->tree->grow();
+//   this->depth = this->tree->depth;
+//   this->node_cnt = this->tree->node_cnt;
+//   this->leafnode_cnt = this->tree->leafnode_cnt;
+// }
 
 void RInterface::print() {
   printTreeStructureToR(this->tree);
@@ -285,7 +288,6 @@ RCPP_MODULE(xtree) {
   .field("depth", &RInterface::depth)
   .field("node_cnt", &RInterface::node_cnt)
   .field("leafnode_cnt", &RInterface::leafnode_cnt)
-  .method("grow", &RInterface::grow)
   .method("print", &RInterface::print)
   .method("getTreeStructure", &RInterface::getTreeStructure)
   ;

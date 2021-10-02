@@ -74,11 +74,11 @@ Data* Reader::read(std::string filename, Arguments args) {
 		types = args.getColTypes();
 	}
 	int n_rows = rows_strings.size();
-  int n_cols = rows_strings[0].size();
+  	int n_cols = rows_strings[0].size();
 	Data* data = new Data();
 	data->setColTypes(types);
-  std::vector<double> new_row;
-  for (int i = 0; i < n_rows; i++) {
+  	std::vector<double> new_row;
+	for (int i = 0; i < n_rows; i++) {
   	new_row.push_back(i);
   	for (int j = 0; j < n_cols; j++) {
   		if (types[j + 1] == "num") {

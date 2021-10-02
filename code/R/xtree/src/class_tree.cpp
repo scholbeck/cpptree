@@ -8,14 +8,16 @@
 #include "class_node.h"
 #include "class_arguments.h"
 #include "class_factory.h"
+#include "helper_functions.h"
 #include <iomanip>
 
 Tree::Tree(Data* data, Arguments args) : factory(args) {
 	this->node_cnt = 0;
+	this->data = data;
 	this->leafnode_cnt = 0;
 	this->args = args;
 	this->factory = Factory(args);
-	this->root = new Node("0", data, this, "root");
+	this->root = new Node("0", this, convertDoubleToIntVector(data->col(0)), -1, "root");
 	this->root->split = nullptr;
 }
 
@@ -46,22 +48,29 @@ Arguments Tree::getArgs() {
 }
 
 int Tree::grow() {
+	Objective* obj = this->factory.createObjective();
+	Model* root_model = this->factory.createModel();
+	if (root_model != nullptr) {
+		root_model->update(this->data, this->root->observations, '+');
+	}
+	this->root->obj_val = obj->compute(this->data, root_model, root->observations);
+
 	int ret = this->root->recursiveSplit();
 	this->gatherTreeInformation();
+	
 	return ret;
 }
 
 void Tree::freeNodeMemory() {
 	while (this->nodes.empty() == false) {
 		//delete(this->nodes.back()->getModel());
-		free(this->nodes.back()->getData());
 		free(this->nodes.back());
 		this->nodes.pop_back();
 	}
 }
 
 void Tree::summary() {
-	this->root->getData()->summary();
+	//this->root->getData()->summary();
 	std::cout << "------------------------------------------------------\n";
 	std::cout << "TREE SUMMARY\n";
 	std::cout << "\tnodes : " << this->node_cnt << "\n";

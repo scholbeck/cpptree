@@ -7,27 +7,24 @@
 
 class SplitGenerator {
   public:
-    Data* data;
-    Arguments args;
-    
-    SplitGenerator(Data* data, Arguments args);
+    SplitGenerator();
     virtual ~SplitGenerator() {}
     
-    virtual std::vector<Split*> generate() = 0;
-    bool checkMinNodeSize(Split* split);
+    virtual std::vector<Split*> generate(Data* data, std::vector<int> observations, Arguments args) = 0;
+    bool checkMinNodeSize(Split* split, int min_node_size);
 };
 
 class SplitGeneratorBinExh: public SplitGenerator {
 	public:
-		SplitGeneratorBinExh(Data* data, Arguments args);
-		std::vector<Split*> generate();
+		SplitGeneratorBinExh();
+		std::vector<Split*> generate(Data* data, std::vector<int> observations, Arguments args);
 };
 
 
 class SplitGeneratorMultRand: public SplitGenerator {
 	public:
-		SplitGeneratorMultRand(Data* data, Arguments args);
-		std::vector<Split*> generate();
+		SplitGeneratorMultRand();
+		std::vector<Split*> generate(Data* data, std::vector<int> observations, Arguments args);
 };
 
 

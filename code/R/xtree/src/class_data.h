@@ -44,6 +44,7 @@ class Data {
 		std::vector<double> row(int i);
 		std::vector<double> col(int j);
 		std::vector<double> selectObs(int id);
+		std::vector<double> columnSubset(std::vector<int> rows, int col);
 		void init(int n_rows, int n_cols);
 		void initRandom(int n_rows, int n_cols);
 		void sizeSummary();

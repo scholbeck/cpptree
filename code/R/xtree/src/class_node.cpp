@@ -8,14 +8,14 @@
 #include "class_data.h"
 #include "class_aggregation.h"
 #include "class_splitgenerator.h"
-#include <Rcpp.h>
 #include "helper_functions.h"
 #include <iomanip>
 
-Node::Node(std::string id, Data* data, Tree* tree, std::string decision_rule) {
+Node::Node(std::string id, Tree* tree, std::vector<int> observations, double obj_val, std::string decision_rule) {
 	this->tree = tree;
-	this->data = data;
+	this->observations = observations;
 	this->id = id;
+	this->obj_val = obj_val;
 	this->decision_rule = decision_rule;
 	this->child_cnt = 0;
 	this->child_nodes.reserve(tree->getArgs().getMaxChildren());
@@ -31,9 +31,7 @@ double Node::getObjValue() {
 std::string Node::getId() {
 	return id;
 }
-Data* Node::getData() {
-	return this->data;
-}
+
 
 Model* Node::getModel() {
 	return this->mod;
@@ -82,51 +80,56 @@ Split* Node::getSplitData() {
 }
   
 std::vector<Node*> Node::splitNode() {
-    
-	SplitGenerator* split_generator = this->tree->getFactory().createSplitGenerator(this->data, this->tree->getArgs()); 
-	std::vector<Split*> splits = split_generator->generate();
+
+	SplitGenerator* split_generator = this->tree->getFactory().createSplitGenerator();
+	std::vector<Split*> splits = split_generator->generate(this->tree->data, this->observations, this->tree->getArgs());
 	delete(split_generator);
-	int n_splits = splits.size();
-	std::array<std::vector<int>, 2> diff;
+	
 	AggregationAdditive aggreg;
-	int n_children = this->tree->getArgs().getMaxChildren();
 	Objective* obj = this->tree->getFactory().createObjective();
+
 	double child_obj_val, opt_obj_val;
-	int optsplit_ix = -1;
-	Model* parent_mod = this->tree->getFactory().createModel();
-	if (parent_mod != nullptr) {
-		parent_mod->setTrainingData(this->data);
-		parent_mod->train();
-	}
-	this->obj_val = obj->compute(this->data, parent_mod);
 	opt_obj_val = this->obj_val;
-	Data* subset;
+
+	std::vector<Model*> models;
+	std::vector<double> obj_values, opt_obj_values;
+
+	std::array<std::vector<int>, 2> diff;
+	int n_splits = splits.size();
+	int n_children = this->tree->getArgs().getMaxChildren();
+	int optsplit_ix = -1;
+	
 	if (!splits.empty()) {
 		for (int i = 0; i < n_splits; ++i) {
 			// loop over every split
 			if (i == 0) {
-				// for the first split, the objective cannot be updated
 				for (int j = 0; j < n_children; j++) {
-					subset = this->data->subsetRows(splits[i]->splitted_obs[j]);
-					obj->init(subset, j);
-					// objective is initialized with all initial observations
+					diff[0] = splits[0]->split_obs[j];
+					Model* m = this->tree->getFactory().createModel();
+					m->update(this->tree->data, diff[0], '+');
+					models.push_back(m);
+					obj_values.push_back(obj->compute(this->tree->data, m, diff[0]));
+					// obj_values contains objective value for each child node
 				}
 			} else {
 				// check node size for all subsets created by splitting
 				for (int j = 0; j < n_children; j++) {
 					//std::cout << j << std::flush;
 					// for each subset, do:
-					diff = diffSet(splits[i]->splitted_obs[j], splits[i-1]->splitted_obs[j]);
+					diff = diffSet(splits[i]->split_obs[j], splits[i-1]->split_obs[j]);
 					// diff[0] contains additional observations in the subset versus the previous split
 					// diff[1] contains removed observations in the subset versus the previous split 
-					obj->update(this->data, j, diff);
+					models[j]->update(this->tree->data, diff[0], '+');
+					models[j]->update(this->tree->data, diff[1], '-');
+					obj_values[j] = obj->compute(this->tree->data, models[j], splits[i]->split_obs[j]);
 					// update objective for subset (child node)
 				}
 			}
-			child_obj_val = aggreg.compute(obj->values);
+			child_obj_val = aggreg.compute(obj_values);
 			// aggregate objective of all child nodes
 			if (child_obj_val < opt_obj_val) {
 				opt_obj_val = child_obj_val;
+				opt_obj_values = obj_values;
 				optsplit_ix = i;
 			}
 			// if aggregate objective better than parent objective, record best split 
@@ -134,17 +137,15 @@ std::vector<Node*> Node::splitNode() {
 	}
 	std::vector<Node*> child_nodes;
 	child_nodes.reserve(n_children);
-
 	if (optsplit_ix != -1) {
 	  // if a split has been found, do:
 	  this->split = splits[optsplit_ix];
 		for (int i = 0; i < n_children; ++i) {
-			Data* s = this->data->subsetRows(this->split->splitted_obs[i]);
-			s->setTargetIndex(this->data->getTargetIndex());
 			Node* child = new Node(
 				this->id + std::to_string(i),
-				s,
 				this->tree,
+				this->split->split_obs[i],
+				opt_obj_values[i],
 				this->createDecisionRule(this->split, i));
 			child_nodes.push_back(child);
 		}
@@ -170,12 +171,12 @@ int Node::recursiveSplit() {
 	if (!child_nodes.empty()) {
 		n_child_nodes = child_nodes.size();
 		for (int i = 0; i < n_child_nodes; ++i) {
-			//child_nodes[i]->summary();
 			ret += child_nodes[i]->recursiveSplit();	
 		}
 	} else {
 		this->is_leaf = true;
 	}
+	//delete(this->data);
 	return ret;
 }
 

@@ -27,17 +27,17 @@ Model* Factory::createModel() {
 	if ((this->args.getModel() == "mean") && (this->args.getObjective() == "sse")) {
 		m = new ModelAverage();
 	} else if ((this->args.getModel() == "linear") && (this->args.getObjective() == "sse")) {
-		m = new ModelLinearRegression();
+		//m = new ModelLinearRegression();
 	} else if ((this->args.getModel() == "") && (this->args.getObjective() == "gini")) {}
 	return m;
 }
 
-SplitGenerator* Factory::createSplitGenerator(Data* data, Arguments args) {
+SplitGenerator* Factory::createSplitGenerator() {
 	SplitGenerator* g;
 	if ((this->args.getAlgorithm() == "exhaustive") && (this->args.getMaxChildren() == 2)) {
-		g = new SplitGeneratorBinExh(data, args);
+		g = new SplitGeneratorBinExh();
 	} else if ((this->args.getAlgorithm() == "random") && (this->args.getMaxChildren() > 2)) {
-		g = new SplitGeneratorMultRand(data, args);
+		g = new SplitGeneratorMultRand();
 	}
 	return g;
 }

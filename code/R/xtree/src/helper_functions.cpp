@@ -200,3 +200,10 @@ std::vector<std::vector<int>> permuteIndices(int n, int k) {
     return split_ix;
 }
 
+std::vector<int> convertDoubleToIntVector(std::vector<double> double_vec) {
+	std::vector<int> int_vec(double_vec.size());
+	for (int i = 0; i < double_vec.size(); ++i) {
+		int_vec[i] = (int) double_vec[i];
+	}
+	return int_vec;
+}
