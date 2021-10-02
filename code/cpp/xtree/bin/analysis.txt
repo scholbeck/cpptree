@@ -1,0 +1,648 @@
+Flat profile:
+
+Each sample counts as 0.01 seconds.
+  %   cumulative   self              self     total           
+ time   seconds   seconds    calls   s/call   s/call  name    
+ 34.49      0.40     0.40    32822     0.00     0.00  SplitNum::computePartitionings(Data*, std::vector<int, std::allocator<int> >)
+ 25.00      0.69     0.29   130592     0.00     0.00  std::insert_iterator<std::vector<int, std::allocator<int> > > std::__set_difference<__gnu_cxx::__normal_iterator<int*, std::vector<int, std::allocator<int> > >, __gnu_cxx::__normal_iterator<int*, std::vector<int, std::allocator<int> > >, std::insert_iterator<std::vector<int, std::allocator<int> > >, __gnu_cxx::__ops::_Iter_less_iter>(__gnu_cxx::__normal_iterator<int*, std::vector<int, std::allocator<int> > >, __gnu_cxx::__normal_iterator<int*, std::vector<int, std::allocator<int> > >, __gnu_cxx::__normal_iterator<int*, std::vector<int, std::allocator<int> > >, __gnu_cxx::__normal_iterator<int*, std::vector<int, std::allocator<int> > >, std::insert_iterator<std::vector<int, std::allocator<int> > >, __gnu_cxx::__ops::_Iter_less_iter)
+ 17.24      0.89     0.20 155111875     0.00     0.00  Data::elem(int, int)
+  7.76      0.98     0.09 78245808     0.00     0.00  Data::getTargetIndex()
+  7.76      1.07     0.09    65357     0.00     0.00  ObjectiveSSE::compute(Data*, Model*, std::vector<int, std::allocator<int> >)
+  3.45      1.11     0.04 77452101     0.00     0.00  ModelAverage::predictSingle(Data*, int)
+  1.72      1.13     0.02                             Data::selfCheck()
+  0.86      1.14     0.01   875092     0.00     0.00  void std::vector<int, std::allocator<int> >::_M_realloc_insert<int const&>(__gnu_cxx::__normal_iterator<int*, std::vector<int, std::allocator<int> > >, int const&)
+  0.86      1.15     0.01    33070     0.00     0.00  void std::__introsort_loop<__gnu_cxx::__normal_iterator<double*, std::vector<double, std::allocator<double> > >, long, __gnu_cxx::__ops::_Iter_less_iter>(__gnu_cxx::__normal_iterator<double*, std::vector<double, std::allocator<double> > >, __gnu_cxx::__normal_iterator<double*, std::vector<double, std::allocator<double> > >, long, __gnu_cxx::__ops::_Iter_less_iter)
+  0.86      1.16     0.01      248     0.00     0.00  Data::columnSubset(std::vector<int, std::allocator<int> >, int)
+  0.00      1.16     0.00   793428     0.00     0.00  Data::row(int)
+  0.00      1.16     0.00   131288     0.00     0.00  void std::vector<std::vector<int, std::allocator<int> >, std::allocator<std::vector<int, std::allocator<int> > > >::_M_realloc_insert<std::vector<int, std::allocator<int> > const&>(__gnu_cxx::__normal_iterator<std::vector<int, std::allocator<int> >*, std::vector<std::vector<int, std::allocator<int> >, std::allocator<std::vector<int, std::allocator<int> > > > >, std::vector<int, std::allocator<int> > const&)
+  0.00      1.16     0.00   130653     0.00     0.00  ModelAverage::update(Data*, std::vector<int, std::allocator<int> >, char)
+  0.00      1.16     0.00    65765     0.00     0.00  std::vector<int, std::allocator<int> >::operator=(std::vector<int, std::allocator<int> > const&)
+  0.00      1.16     0.00    65296     0.00     0.00  diffSet(std::vector<int, std::allocator<int> >, std::vector<int, std::allocator<int> >)
+  0.00      1.16     0.00    40000     0.00     0.00  void std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >::_M_realloc_insert<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&>(__gnu_cxx::__normal_iterator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >*, std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > > >, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)
+  0.00      1.16     0.00    32853     0.00     0.00  Arguments::getMinNodeSize()
+  0.00      1.16     0.00    32822     0.00     0.00  Split::addSplitValue(double)
+  0.00      1.16     0.00    32822     0.00     0.00  Split::setFeatureIndex(int)
+  0.00      1.16     0.00    32822     0.00     0.00  Split::Split(int)
+  0.00      1.16     0.00    32822     0.00     0.00  SplitNum::SplitNum(int)
+  0.00      1.16     0.00    32822     0.00     0.00  std::vector<std::vector<int, std::allocator<int> >, std::allocator<std::vector<int, std::allocator<int> > > >::operator=(std::vector<std::vector<int, std::allocator<int> >, std::allocator<std::vector<int, std::allocator<int> > > > const&)
+  0.00      1.16     0.00    32678     0.00     0.00  AggregationAdditive::compute(std::vector<double, std::allocator<double> >)
+  0.00      1.16     0.00    32648     0.00     0.00  SplitNum::~SplitNum()
+  0.00      1.16     0.00     8000     0.00     0.00  parseLine(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, char)
+  0.00      1.16     0.00     8000     0.00     0.00  Data::addRow(std::vector<double, std::allocator<double> >)
+  0.00      1.16     0.00      308     0.00     0.00  Arguments::Arguments(Arguments const&)
+  0.00      1.16     0.00      279     0.00     0.00  Data::getColTypes[abi:cxx11]()
+  0.00      1.16     0.00      184     0.00     0.00  Tree::getArgs()
+  0.00      1.16     0.00      183     0.00     0.00  Node::getId[abi:cxx11]()
+  0.00      1.16     0.00      123     0.00     0.00  Arguments::getMaxChildren()
+  0.00      1.16     0.00      122     0.00     0.00  Tree::getFactory()
+  0.00      1.16     0.00      121     0.00     0.00  Node::isLeaf()
+  0.00      1.16     0.00       93     0.00     0.00  Arguments::getObjective[abi:cxx11]()
+  0.00      1.16     0.00       92     0.00     0.00  std::vector<Node*, std::allocator<Node*> >::reserve(unsigned long)
+  0.00      1.16     0.00       65     0.00     0.00  void std::vector<double, std::allocator<double> >::_M_realloc_insert<double>(__gnu_cxx::__normal_iterator<double*, std::vector<double, std::allocator<double> > >, double&&)
+  0.00      1.16     0.00       62     0.00     0.00  std::vector<int, std::allocator<int> >::reserve(unsigned long)
+  0.00      1.16     0.00       61     0.00     0.00  ModelAverage::ModelAverage()
+  0.00      1.16     0.00       61     0.00     0.00  Node::getChildNodes()
+  0.00      1.16     0.00       61     0.00     0.00  Node::Node(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, Tree*, std::vector<int, std::allocator<int> >, double, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >)
+  0.00      1.16     0.00       61     0.00     0.00  Tree::addNode(Node*)
+  0.00      1.16     0.00       61     0.00     0.00  Factory::createModel()
+  0.00      1.16     0.00       61     0.00     0.00  Arguments::getMaxDepth()
+  0.00      1.16     0.00       61     0.00     0.00  Arguments::getModel[abi:cxx11]()
+  0.00      1.16     0.00       60     0.00     0.00  SplitCateg::summary()
+  0.00      1.16     0.00       60     0.00     0.00  ObjectiveGini::~ObjectiveGini()
+  0.00      1.16     0.00       60     0.00     0.00  Node::getDecisionRule[abi:cxx11]()
+  0.00      1.16     0.00       60     0.00     0.00  SplitNum::createDecisionRule[abi:cxx11](int)
+  0.00      1.16     0.00       60     0.00     0.00  void std::vector<Model*, std::allocator<Model*> >::_M_realloc_insert<Model* const&>(__gnu_cxx::__normal_iterator<Model**, std::vector<Model*, std::allocator<Model*> > >, Model* const&)
+  0.00      1.16     0.00       37     0.00     0.00  std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >::operator=(std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > > const&)
+  0.00      1.16     0.00       35     0.00     0.00  Arguments::Arguments()
+  0.00      1.16     0.00       32     0.00     0.00  ObjectiveSSE::ObjectiveSSE(Arguments)
+  0.00      1.16     0.00       32     0.00     0.00  Factory::createObjective()
+  0.00      1.16     0.00       32     0.00     0.00  Objective::Objective(Arguments)
+  0.00      1.16     0.00       31     0.00     0.00  ObjectiveSSE::~ObjectiveSSE()
+  0.00      1.16     0.00       31     0.00     0.00  AggregationAdditive::AggregationAdditive()
+  0.00      1.16     0.00       31     0.00     0.02  SplitGeneratorBinExh::generate(Data*, std::vector<int, std::allocator<int> >, Arguments)
+  0.00      1.16     0.00       31     0.00     0.00  SplitGeneratorBinExh::SplitGeneratorBinExh()
+  0.00      1.16     0.00       31     0.00     0.00  SplitGeneratorBinExh::~SplitGeneratorBinExh()
+  0.00      1.16     0.00       31     0.00     0.00  Data::ncols()
+  0.00      1.16     0.00       31     0.00     0.04  Node::splitNode()
+  0.00      1.16     0.00       31     0.00     0.00  Factory::createSplitGenerator()
+  0.00      1.16     0.00       31     0.00     0.00  Arguments::getAlgorithm[abi:cxx11]()
+  0.00      1.16     0.00       31     0.00     0.00  std::vector<Split*, std::allocator<Split*> >::reserve(unsigned long)
+  0.00      1.16     0.00       14     0.00     0.00  void std::vector<std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >, std::allocator<std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > > > >::_M_realloc_insert<std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > > >(__gnu_cxx::__normal_iterator<std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >*, std::vector<std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >, std::allocator<std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > > > > >, std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >&&)
+  0.00      1.16     0.00       14     0.00     0.00  void std::vector<std::vector<double, std::allocator<double> >, std::allocator<std::vector<double, std::allocator<double> > > >::_M_realloc_insert<std::vector<double, std::allocator<double> > const&>(__gnu_cxx::__normal_iterator<std::vector<double, std::allocator<double> >*, std::vector<std::vector<double, std::allocator<double> >, std::allocator<std::vector<double, std::allocator<double> > > > >, std::vector<double, std::allocator<double> > const&)
+  0.00      1.16     0.00        7     0.00     0.00  void std::vector<Node*, std::allocator<Node*> >::_M_realloc_insert<Node* const&>(__gnu_cxx::__normal_iterator<Node**, std::vector<Node*, std::allocator<Node*> > >, Node* const&)
+  0.00      1.16     0.00        2     0.00     0.00  Factory::Factory(Arguments)
+  0.00      1.16     0.00        2     0.00     0.00  Arguments::getColTypes[abi:cxx11]()
+  0.00      1.16     0.00        1     0.00     0.00  _GLOBAL__sub_I__Z16initVectorLLUIntii
+  0.00      1.16     0.00        1     0.00     0.00  _GLOBAL__sub_I__ZN14SplitGeneratorC2Ev
+  0.00      1.16     0.00        1     0.00     0.00  _GLOBAL__sub_I__ZN4DataC2Ev
+  0.00      1.16     0.00        1     0.00     0.00  _GLOBAL__sub_I__ZN4NodeC2ENSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEEP4TreeSt6vectorIiSaIiEEdS5_
+  0.00      1.16     0.00        1     0.00     0.00  _GLOBAL__sub_I__ZN4TreeC2EP4Data9Arguments
+  0.00      1.16     0.00        1     0.00     0.00  _GLOBAL__sub_I__ZN5ModelC2Ev
+  0.00      1.16     0.00        1     0.00     0.00  _GLOBAL__sub_I__ZN5SplitC2Ei
+  0.00      1.16     0.00        1     0.00     0.00  _GLOBAL__sub_I__ZN6ReaderC2Ev
+  0.00      1.16     0.00        1     0.00     0.00  _GLOBAL__sub_I__ZN7FactoryC2E9Arguments
+  0.00      1.16     0.00        1     0.00     0.00  _GLOBAL__sub_I__ZN9ArgumentsC2Ev
+  0.00      1.16     0.00        1     0.00     0.00  _GLOBAL__sub_I__ZN9ObjectiveC2E9Arguments
+  0.00      1.16     0.00        1     0.00     0.00  _GLOBAL__sub_I_main
+  0.00      1.16     0.00        1     0.00     0.00  convertDoubleToIntVector(std::vector<double, std::allocator<double> >)
+  0.00      1.16     0.00        1     0.00     0.00  Data::setColTypes(std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >)
+  0.00      1.16     0.00        1     0.00     0.00  Data::col(int)
+  0.00      1.16     0.00        1     0.00     0.00  Data::Data()
+  0.00      1.16     0.00        1     0.00     1.14  Node::recursiveSplit()
+  0.00      1.16     0.00        1     0.00     0.00  Tree::printSubTree(Node*)
+  0.00      1.16     0.00        1     0.00     0.00  Arguments::setColTypes(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >)
+  0.00      1.16     0.00        1     0.00     0.00  Arguments::getSep()
+
+ %         the percentage of the total running time of the
+time       program used by this function.
+
+cumulative a running sum of the number of seconds accounted
+ seconds   for by this function and those listed above it.
+
+ self      the number of seconds accounted for by this
+seconds    function alone.  This is the major sort for this
+           listing.
+
+calls      the number of times this function was invoked, if
+           this function is profiled, else blank.
+
+ self      the average number of milliseconds spent in this
+ms/call    function per call, if this function is profiled,
+	   else blank.
+
+ total     the average number of milliseconds spent in this
+ms/call    function and its descendents per call, if this
+	   function is profiled, else blank.
+
+name       the name of the function.  This is the minor sort
+           for this listing. The index shows the location of
+	   the function in the gprof listing. If the index is
+	   in parenthesis it shows where it would appear in
+	   the gprof listing if it were to be printed.
+
+Copyright (C) 2012-2020 Free Software Foundation, Inc.
+
+Copying and distribution of this file, with or without modification,
+are permitted in any medium without royalty provided the copyright
+notice and this notice are preserved.
+
+		     Call graph (explanation follows)
+
+
+granularity: each sample hit covers 2 byte(s) for 0.86% of 1.16 seconds
+
+index % time    self  children    called     name
+                                                 <spontaneous>
+[1]     98.3    0.00    1.14                 Tree::grow() [1]
+                0.00    1.14       1/1           Node::recursiveSplit() [3]
+                0.00    0.00       1/65357       ObjectiveSSE::compute(Data*, Model*, std::vector<int, std::allocator<int> >) [6]
+                0.00    0.00       1/130653      ModelAverage::update(Data*, std::vector<int, std::allocator<int> >, char) [17]
+                0.00    0.00      61/121         Node::isLeaf() [44]
+                0.00    0.00      61/183         Node::getId[abi:cxx11]() [41]
+                0.00    0.00       1/32          Factory::createObjective() [64]
+                0.00    0.00       1/61          Factory::createModel() [53]
+-----------------------------------------------
+                0.00    1.14      31/31          Node::recursiveSplit() [3]
+[2]     98.3    0.00    1.14      31         Node::splitNode() [2]
+                0.00    0.53      31/31          SplitGeneratorBinExh::generate(Data*, std::vector<int, std::allocator<int> >, Arguments) [4]
+                0.09    0.23   65356/65357       ObjectiveSSE::compute(Data*, Model*, std::vector<int, std::allocator<int> >) [6]
+                0.00    0.29   65296/65296       diffSet(std::vector<int, std::allocator<int> >, std::vector<int, std::allocator<int> >) [8]
+                0.00    0.00  130652/130653      ModelAverage::update(Data*, std::vector<int, std::allocator<int> >, char) [17]
+                0.00    0.00   32678/32678       AggregationAdditive::compute(std::vector<double, std::allocator<double> >) [34]
+                0.00    0.00   32648/32648       SplitNum::~SplitNum() [35]
+                0.00    0.00     122/122         Tree::getFactory() [43]
+                0.00    0.00      62/184         Tree::getArgs() [40]
+                0.00    0.00      60/65765       std::vector<int, std::allocator<int> >::operator=(std::vector<int, std::allocator<int> > const&) [27]
+                0.00    0.00      60/61          Factory::createModel() [53]
+                0.00    0.00      60/60          void std::vector<Model*, std::allocator<Model*> >::_M_realloc_insert<Model* const&>(__gnu_cxx::__normal_iterator<Model**, std::vector<Model*, std::allocator<Model*> > >, Model* const&) [60]
+                0.00    0.00      60/65          void std::vector<double, std::allocator<double> >::_M_realloc_insert<double>(__gnu_cxx::__normal_iterator<double*, std::vector<double, std::allocator<double> > >, double&&) [47]
+                0.00    0.00      60/60          SplitNum::createDecisionRule[abi:cxx11](int) [59]
+                0.00    0.00      60/61          Node::Node(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, Tree*, std::vector<int, std::allocator<int> >, double, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >) [51]
+                0.00    0.00      60/60          ObjectiveGini::~ObjectiveGini() [57]
+                0.00    0.00      31/31          Factory::createSplitGenerator() [71]
+                0.00    0.00      31/31          SplitGeneratorBinExh::~SplitGeneratorBinExh() [69]
+                0.00    0.00      31/31          AggregationAdditive::AggregationAdditive() [67]
+                0.00    0.00      31/32          Factory::createObjective() [64]
+                0.00    0.00      31/123         Arguments::getMaxChildren() [42]
+                0.00    0.00      31/92          std::vector<Node*, std::allocator<Node*> >::reserve(unsigned long) [46]
+                0.00    0.00      31/31          ObjectiveSSE::~ObjectiveSSE() [66]
+-----------------------------------------------
+                                  60             Node::recursiveSplit() [3]
+                0.00    1.14       1/1           Tree::grow() [1]
+[3]     98.3    0.00    1.14       1+60      Node::recursiveSplit() [3]
+                0.00    1.14      31/31          Node::splitNode() [2]
+                0.00    0.00      61/184         Tree::getArgs() [40]
+                0.00    0.00      61/61          Arguments::getMaxDepth() [54]
+                                  60             Node::recursiveSplit() [3]
+-----------------------------------------------
+                0.00    0.53      31/31          Node::splitNode() [2]
+[4]     45.5    0.00    0.53      31         SplitGeneratorBinExh::generate(Data*, std::vector<int, std::allocator<int> >, Arguments) [4]
+                0.40    0.11   32822/32822       SplitNum::computePartitionings(Data*, std::vector<int, std::allocator<int> >) [5]
+                0.01    0.00     248/248         Data::columnSubset(std::vector<int, std::allocator<int> >, int) [15]
+                0.00    0.01   32822/32822       Split::addSplitValue(double) [16]
+                0.00    0.00     248/33070       void std::__introsort_loop<__gnu_cxx::__normal_iterator<double*, std::vector<double, std::allocator<double> > >, long, __gnu_cxx::__ops::_Iter_less_iter>(__gnu_cxx::__normal_iterator<double*, std::vector<double, std::allocator<double> > >, __gnu_cxx::__normal_iterator<double*, std::vector<double, std::allocator<double> > >, long, __gnu_cxx::__ops::_Iter_less_iter) [14]
+                0.00    0.00     279/78245808     Data::getTargetIndex() [10]
+                0.00    0.00   32853/32853       Arguments::getMinNodeSize() [29]
+                0.00    0.00   32822/32822       SplitNum::SplitNum(int) [32]
+                0.00    0.00   32822/32822       Split::setFeatureIndex(int) [30]
+                0.00    0.00     279/279         Data::getColTypes[abi:cxx11]() [39]
+                0.00    0.00      62/62          std::vector<int, std::allocator<int> >::reserve(unsigned long) [48]
+                0.00    0.00      31/31          Data::ncols() [70]
+                0.00    0.00      31/31          std::vector<Split*, std::allocator<Split*> >::reserve(unsigned long) [73]
+-----------------------------------------------
+                0.40    0.11   32822/32822       SplitGeneratorBinExh::generate(Data*, std::vector<int, std::allocator<int> >, Arguments) [4]
+[5]     43.8    0.40    0.11   32822         SplitNum::computePartitionings(Data*, std::vector<int, std::allocator<int> >) [5]
+                0.10    0.00 77659774/155111875     Data::elem(int, int) [9]
+                0.01    0.00  694136/875092      void std::vector<int, std::allocator<int> >::_M_realloc_insert<int const&>(__gnu_cxx::__normal_iterator<int*, std::vector<int, std::allocator<int> > >, int const&) [13]
+                0.00    0.00   65644/131288      void std::vector<std::vector<int, std::allocator<int> >, std::allocator<std::vector<int, std::allocator<int> > > >::_M_realloc_insert<std::vector<int, std::allocator<int> > const&>(__gnu_cxx::__normal_iterator<std::vector<int, std::allocator<int> >*, std::vector<std::vector<int, std::allocator<int> >, std::allocator<std::vector<int, std::allocator<int> > > > >, std::vector<int, std::allocator<int> > const&) [26]
+                0.00    0.00   32822/32822       std::vector<std::vector<int, std::allocator<int> >, std::allocator<std::vector<int, std::allocator<int> > > >::operator=(std::vector<std::vector<int, std::allocator<int> >, std::allocator<std::vector<int, std::allocator<int> > > > const&) [33]
+-----------------------------------------------
+                0.00    0.00       1/65357       Tree::grow() [1]
+                0.09    0.23   65356/65357       Node::splitNode() [2]
+[6]     27.5    0.09    0.23   65357         ObjectiveSSE::compute(Data*, Model*, std::vector<int, std::allocator<int> >) [6]
+                0.10    0.00 77452101/155111875     Data::elem(int, int) [9]
+                0.09    0.00 77452101/78245808     Data::getTargetIndex() [10]
+                0.04    0.00 77452101/77452101     ModelAverage::predictSingle(Data*, int) [11]
+-----------------------------------------------
+                0.29    0.00  130592/130592      diffSet(std::vector<int, std::allocator<int> >, std::vector<int, std::allocator<int> >) [8]
+[7]     25.2    0.29    0.00  130592         std::insert_iterator<std::vector<int, std::allocator<int> > > std::__set_difference<__gnu_cxx::__normal_iterator<int*, std::vector<int, std::allocator<int> > >, __gnu_cxx::__normal_iterator<int*, std::vector<int, std::allocator<int> > >, std::insert_iterator<std::vector<int, std::allocator<int> > >, __gnu_cxx::__ops::_Iter_less_iter>(__gnu_cxx::__normal_iterator<int*, std::vector<int, std::allocator<int> > >, __gnu_cxx::__normal_iterator<int*, std::vector<int, std::allocator<int> > >, __gnu_cxx::__normal_iterator<int*, std::vector<int, std::allocator<int> > >, __gnu_cxx::__normal_iterator<int*, std::vector<int, std::allocator<int> > >, std::insert_iterator<std::vector<int, std::allocator<int> > >, __gnu_cxx::__ops::_Iter_less_iter) [7]
+                0.00    0.00  180956/875092      void std::vector<int, std::allocator<int> >::_M_realloc_insert<int const&>(__gnu_cxx::__normal_iterator<int*, std::vector<int, std::allocator<int> > >, int const&) [13]
+-----------------------------------------------
+                0.00    0.29   65296/65296       Node::splitNode() [2]
+[8]     25.2    0.00    0.29   65296         diffSet(std::vector<int, std::allocator<int> >, std::vector<int, std::allocator<int> >) [8]
+                0.29    0.00  130592/130592      std::insert_iterator<std::vector<int, std::allocator<int> > > std::__set_difference<__gnu_cxx::__normal_iterator<int*, std::vector<int, std::allocator<int> > >, __gnu_cxx::__normal_iterator<int*, std::vector<int, std::allocator<int> > >, std::insert_iterator<std::vector<int, std::allocator<int> > >, __gnu_cxx::__ops::_Iter_less_iter>(__gnu_cxx::__normal_iterator<int*, std::vector<int, std::allocator<int> > >, __gnu_cxx::__normal_iterator<int*, std::vector<int, std::allocator<int> > >, __gnu_cxx::__normal_iterator<int*, std::vector<int, std::allocator<int> > >, __gnu_cxx::__normal_iterator<int*, std::vector<int, std::allocator<int> > >, std::insert_iterator<std::vector<int, std::allocator<int> > >, __gnu_cxx::__ops::_Iter_less_iter) [7]
+-----------------------------------------------
+                0.10    0.00 77452101/155111875     ObjectiveSSE::compute(Data*, Model*, std::vector<int, std::allocator<int> >) [6]
+                0.10    0.00 77659774/155111875     SplitNum::computePartitionings(Data*, std::vector<int, std::allocator<int> >) [5]
+[9]     17.2    0.20    0.00 155111875         Data::elem(int, int) [9]
+-----------------------------------------------
+                0.00    0.00     279/78245808     SplitGeneratorBinExh::generate(Data*, std::vector<int, std::allocator<int> >, Arguments) [4]
+                0.00    0.00  793428/78245808     ModelAverage::update(Data*, std::vector<int, std::allocator<int> >, char) [17]
+                0.09    0.00 77452101/78245808     ObjectiveSSE::compute(Data*, Model*, std::vector<int, std::allocator<int> >) [6]
+[10]     7.8    0.09    0.00 78245808         Data::getTargetIndex() [10]
+-----------------------------------------------
+                0.04    0.00 77452101/77452101     ObjectiveSSE::compute(Data*, Model*, std::vector<int, std::allocator<int> >) [6]
+[11]     3.4    0.04    0.00 77452101         ModelAverage::predictSingle(Data*, int) [11]
+-----------------------------------------------
+                                                 <spontaneous>
+[12]     1.7    0.02    0.00                 Data::selfCheck() [12]
+-----------------------------------------------
+                0.00    0.00  180956/875092      std::insert_iterator<std::vector<int, std::allocator<int> > > std::__set_difference<__gnu_cxx::__normal_iterator<int*, std::vector<int, std::allocator<int> > >, __gnu_cxx::__normal_iterator<int*, std::vector<int, std::allocator<int> > >, std::insert_iterator<std::vector<int, std::allocator<int> > >, __gnu_cxx::__ops::_Iter_less_iter>(__gnu_cxx::__normal_iterator<int*, std::vector<int, std::allocator<int> > >, __gnu_cxx::__normal_iterator<int*, std::vector<int, std::allocator<int> > >, __gnu_cxx::__normal_iterator<int*, std::vector<int, std::allocator<int> > >, __gnu_cxx::__normal_iterator<int*, std::vector<int, std::allocator<int> > >, std::insert_iterator<std::vector<int, std::allocator<int> > >, __gnu_cxx::__ops::_Iter_less_iter) [7]
+                0.01    0.00  694136/875092      SplitNum::computePartitionings(Data*, std::vector<int, std::allocator<int> >) [5]
+[13]     0.9    0.01    0.00  875092         void std::vector<int, std::allocator<int> >::_M_realloc_insert<int const&>(__gnu_cxx::__normal_iterator<int*, std::vector<int, std::allocator<int> > >, int const&) [13]
+-----------------------------------------------
+                               29503             void std::__introsort_loop<__gnu_cxx::__normal_iterator<double*, std::vector<double, std::allocator<double> > >, long, __gnu_cxx::__ops::_Iter_less_iter>(__gnu_cxx::__normal_iterator<double*, std::vector<double, std::allocator<double> > >, __gnu_cxx::__normal_iterator<double*, std::vector<double, std::allocator<double> > >, long, __gnu_cxx::__ops::_Iter_less_iter) [14]
+                0.00    0.00     248/33070       SplitGeneratorBinExh::generate(Data*, std::vector<int, std::allocator<int> >, Arguments) [4]
+                0.01    0.00   32822/33070       Split::addSplitValue(double) [16]
+[14]     0.9    0.01    0.00   33070+29503   void std::__introsort_loop<__gnu_cxx::__normal_iterator<double*, std::vector<double, std::allocator<double> > >, long, __gnu_cxx::__ops::_Iter_less_iter>(__gnu_cxx::__normal_iterator<double*, std::vector<double, std::allocator<double> > >, __gnu_cxx::__normal_iterator<double*, std::vector<double, std::allocator<double> > >, long, __gnu_cxx::__ops::_Iter_less_iter) [14]
+                               29503             void std::__introsort_loop<__gnu_cxx::__normal_iterator<double*, std::vector<double, std::allocator<double> > >, long, __gnu_cxx::__ops::_Iter_less_iter>(__gnu_cxx::__normal_iterator<double*, std::vector<double, std::allocator<double> > >, __gnu_cxx::__normal_iterator<double*, std::vector<double, std::allocator<double> > >, long, __gnu_cxx::__ops::_Iter_less_iter) [14]
+-----------------------------------------------
+                0.01    0.00     248/248         SplitGeneratorBinExh::generate(Data*, std::vector<int, std::allocator<int> >, Arguments) [4]
+[15]     0.9    0.01    0.00     248         Data::columnSubset(std::vector<int, std::allocator<int> >, int) [15]
+-----------------------------------------------
+                0.00    0.01   32822/32822       SplitGeneratorBinExh::generate(Data*, std::vector<int, std::allocator<int> >, Arguments) [4]
+[16]     0.9    0.00    0.01   32822         Split::addSplitValue(double) [16]
+                0.01    0.00   32822/33070       void std::__introsort_loop<__gnu_cxx::__normal_iterator<double*, std::vector<double, std::allocator<double> > >, long, __gnu_cxx::__ops::_Iter_less_iter>(__gnu_cxx::__normal_iterator<double*, std::vector<double, std::allocator<double> > >, __gnu_cxx::__normal_iterator<double*, std::vector<double, std::allocator<double> > >, long, __gnu_cxx::__ops::_Iter_less_iter) [14]
+-----------------------------------------------
+                0.00    0.00       1/130653      Tree::grow() [1]
+                0.00    0.00  130652/130653      Node::splitNode() [2]
+[17]     0.1    0.00    0.00  130653         ModelAverage::update(Data*, std::vector<int, std::allocator<int> >, char) [17]
+                0.00    0.00  793428/78245808     Data::getTargetIndex() [10]
+                0.00    0.00  793428/793428      Data::row(int) [25]
+-----------------------------------------------
+                0.00    0.00  793428/793428      ModelAverage::update(Data*, std::vector<int, std::allocator<int> >, char) [17]
+[25]     0.0    0.00    0.00  793428         Data::row(int) [25]
+-----------------------------------------------
+                0.00    0.00   65644/131288      Split::Split(int) [31]
+                0.00    0.00   65644/131288      SplitNum::computePartitionings(Data*, std::vector<int, std::allocator<int> >) [5]
+[26]     0.0    0.00    0.00  131288         void std::vector<std::vector<int, std::allocator<int> >, std::allocator<std::vector<int, std::allocator<int> > > >::_M_realloc_insert<std::vector<int, std::allocator<int> > const&>(__gnu_cxx::__normal_iterator<std::vector<int, std::allocator<int> >*, std::vector<std::vector<int, std::allocator<int> >, std::allocator<std::vector<int, std::allocator<int> > > > >, std::vector<int, std::allocator<int> > const&) [26]
+-----------------------------------------------
+                0.00    0.00      60/65765       Node::splitNode() [2]
+                0.00    0.00      61/65765       Node::Node(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, Tree*, std::vector<int, std::allocator<int> >, double, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >) [51]
+                0.00    0.00   65644/65765       std::vector<std::vector<int, std::allocator<int> >, std::allocator<std::vector<int, std::allocator<int> > > >::operator=(std::vector<std::vector<int, std::allocator<int> >, std::allocator<std::vector<int, std::allocator<int> > > > const&) [33]
+[27]     0.0    0.00    0.00   65765         std::vector<int, std::allocator<int> >::operator=(std::vector<int, std::allocator<int> > const&) [27]
+-----------------------------------------------
+                0.00    0.00   40000/40000       parseLine(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, char) [36]
+[28]     0.0    0.00    0.00   40000         void std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >::_M_realloc_insert<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&>(__gnu_cxx::__normal_iterator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >*, std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > > >, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) [28]
+-----------------------------------------------
+                0.00    0.00   32853/32853       SplitGeneratorBinExh::generate(Data*, std::vector<int, std::allocator<int> >, Arguments) [4]
+[29]     0.0    0.00    0.00   32853         Arguments::getMinNodeSize() [29]
+-----------------------------------------------
+                0.00    0.00   32822/32822       SplitGeneratorBinExh::generate(Data*, std::vector<int, std::allocator<int> >, Arguments) [4]
+[30]     0.0    0.00    0.00   32822         Split::setFeatureIndex(int) [30]
+-----------------------------------------------
+                0.00    0.00   32822/32822       SplitNum::SplitNum(int) [32]
+[31]     0.0    0.00    0.00   32822         Split::Split(int) [31]
+                0.00    0.00   65644/131288      void std::vector<std::vector<int, std::allocator<int> >, std::allocator<std::vector<int, std::allocator<int> > > >::_M_realloc_insert<std::vector<int, std::allocator<int> > const&>(__gnu_cxx::__normal_iterator<std::vector<int, std::allocator<int> >*, std::vector<std::vector<int, std::allocator<int> >, std::allocator<std::vector<int, std::allocator<int> > > > >, std::vector<int, std::allocator<int> > const&) [26]
+-----------------------------------------------
+                0.00    0.00   32822/32822       SplitGeneratorBinExh::generate(Data*, std::vector<int, std::allocator<int> >, Arguments) [4]
+[32]     0.0    0.00    0.00   32822         SplitNum::SplitNum(int) [32]
+                0.00    0.00   32822/32822       Split::Split(int) [31]
+-----------------------------------------------
+                0.00    0.00   32822/32822       SplitNum::computePartitionings(Data*, std::vector<int, std::allocator<int> >) [5]
+[33]     0.0    0.00    0.00   32822         std::vector<std::vector<int, std::allocator<int> >, std::allocator<std::vector<int, std::allocator<int> > > >::operator=(std::vector<std::vector<int, std::allocator<int> >, std::allocator<std::vector<int, std::allocator<int> > > > const&) [33]
+                0.00    0.00   65644/65765       std::vector<int, std::allocator<int> >::operator=(std::vector<int, std::allocator<int> > const&) [27]
+-----------------------------------------------
+                0.00    0.00   32678/32678       Node::splitNode() [2]
+[34]     0.0    0.00    0.00   32678         AggregationAdditive::compute(std::vector<double, std::allocator<double> >) [34]
+-----------------------------------------------
+                0.00    0.00   32648/32648       Node::splitNode() [2]
+[35]     0.0    0.00    0.00   32648         SplitNum::~SplitNum() [35]
+-----------------------------------------------
+                0.00    0.00    8000/8000        Reader::read(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, Arguments) [187]
+[36]     0.0    0.00    0.00    8000         parseLine(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, char) [36]
+                0.00    0.00   40000/40000       void std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >::_M_realloc_insert<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&>(__gnu_cxx::__normal_iterator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >*, std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > > >, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) [28]
+-----------------------------------------------
+                0.00    0.00    8000/8000        Reader::read(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, Arguments) [187]
+[37]     0.0    0.00    0.00    8000         Data::addRow(std::vector<double, std::allocator<double> >) [37]
+-----------------------------------------------
+                0.00    0.00       2/308         Tree::Tree(Data*, Arguments) [172]
+                0.00    0.00     122/308         Tree::getFactory() [43]
+                0.00    0.00     184/308         Tree::getArgs() [40]
+[38]     0.0    0.00    0.00     308         Arguments::Arguments(Arguments const&) [38]
+-----------------------------------------------
+                0.00    0.00     279/279         SplitGeneratorBinExh::generate(Data*, std::vector<int, std::allocator<int> >, Arguments) [4]
+[39]     0.0    0.00    0.00     279         Data::getColTypes[abi:cxx11]() [39]
+-----------------------------------------------
+                0.00    0.00      61/184         Node::Node(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, Tree*, std::vector<int, std::allocator<int> >, double, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >) [51]
+                0.00    0.00      61/184         Node::recursiveSplit() [3]
+                0.00    0.00      62/184         Node::splitNode() [2]
+[40]     0.0    0.00    0.00     184         Tree::getArgs() [40]
+                0.00    0.00     184/308         Arguments::Arguments(Arguments const&) [38]
+-----------------------------------------------
+                0.00    0.00      61/183         Tree::grow() [1]
+                0.00    0.00     122/183         Tree::printSubTree(Node*) [95]
+[41]     0.0    0.00    0.00     183         Node::getId[abi:cxx11]() [41]
+-----------------------------------------------
+                0.00    0.00      31/123         Factory::createSplitGenerator() [71]
+                0.00    0.00      31/123         Node::splitNode() [2]
+                0.00    0.00      61/123         Node::Node(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, Tree*, std::vector<int, std::allocator<int> >, double, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >) [51]
+[42]     0.0    0.00    0.00     123         Arguments::getMaxChildren() [42]
+-----------------------------------------------
+                0.00    0.00     122/122         Node::splitNode() [2]
+[43]     0.0    0.00    0.00     122         Tree::getFactory() [43]
+                0.00    0.00     122/308         Arguments::Arguments(Arguments const&) [38]
+-----------------------------------------------
+                0.00    0.00      60/121         Tree::printSubTree(Node*) [95]
+                0.00    0.00      61/121         Tree::grow() [1]
+[44]     0.0    0.00    0.00     121         Node::isLeaf() [44]
+-----------------------------------------------
+                0.00    0.00      32/93          Factory::createObjective() [64]
+                0.00    0.00      61/93          Factory::createModel() [53]
+[45]     0.0    0.00    0.00      93         Arguments::getObjective[abi:cxx11]() [45]
+-----------------------------------------------
+                0.00    0.00      31/92          Node::splitNode() [2]
+                0.00    0.00      61/92          Node::Node(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, Tree*, std::vector<int, std::allocator<int> >, double, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >) [51]
+[46]     0.0    0.00    0.00      92         std::vector<Node*, std::allocator<Node*> >::reserve(unsigned long) [46]
+-----------------------------------------------
+                0.00    0.00       5/65          Reader::read(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, Arguments) [187]
+                0.00    0.00      60/65          Node::splitNode() [2]
+[47]     0.0    0.00    0.00      65         void std::vector<double, std::allocator<double> >::_M_realloc_insert<double>(__gnu_cxx::__normal_iterator<double*, std::vector<double, std::allocator<double> > >, double&&) [47]
+-----------------------------------------------
+                0.00    0.00      62/62          SplitGeneratorBinExh::generate(Data*, std::vector<int, std::allocator<int> >, Arguments) [4]
+[48]     0.0    0.00    0.00      62         std::vector<int, std::allocator<int> >::reserve(unsigned long) [48]
+-----------------------------------------------
+                0.00    0.00      61/61          Factory::createModel() [53]
+[49]     0.0    0.00    0.00      61         ModelAverage::ModelAverage() [49]
+-----------------------------------------------
+                0.00    0.00      61/61          Tree::printSubTree(Node*) [95]
+[50]     0.0    0.00    0.00      61         Node::getChildNodes() [50]
+-----------------------------------------------
+                0.00    0.00       1/61          Tree::Tree(Data*, Arguments) [172]
+                0.00    0.00      60/61          Node::splitNode() [2]
+[51]     0.0    0.00    0.00      61         Node::Node(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, Tree*, std::vector<int, std::allocator<int> >, double, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >) [51]
+                0.00    0.00      61/65765       std::vector<int, std::allocator<int> >::operator=(std::vector<int, std::allocator<int> > const&) [27]
+                0.00    0.00      61/123         Arguments::getMaxChildren() [42]
+                0.00    0.00      61/184         Tree::getArgs() [40]
+                0.00    0.00      61/92          std::vector<Node*, std::allocator<Node*> >::reserve(unsigned long) [46]
+                0.00    0.00      61/61          Tree::addNode(Node*) [52]
+-----------------------------------------------
+                0.00    0.00      61/61          Node::Node(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, Tree*, std::vector<int, std::allocator<int> >, double, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >) [51]
+[52]     0.0    0.00    0.00      61         Tree::addNode(Node*) [52]
+                0.00    0.00       7/7           void std::vector<Node*, std::allocator<Node*> >::_M_realloc_insert<Node* const&>(__gnu_cxx::__normal_iterator<Node**, std::vector<Node*, std::allocator<Node*> > >, Node* const&) [76]
+-----------------------------------------------
+                0.00    0.00       1/61          Tree::grow() [1]
+                0.00    0.00      60/61          Node::splitNode() [2]
+[53]     0.0    0.00    0.00      61         Factory::createModel() [53]
+                0.00    0.00      61/61          Arguments::getModel[abi:cxx11]() [55]
+                0.00    0.00      61/93          Arguments::getObjective[abi:cxx11]() [45]
+                0.00    0.00      61/61          ModelAverage::ModelAverage() [49]
+-----------------------------------------------
+                0.00    0.00      61/61          Node::recursiveSplit() [3]
+[54]     0.0    0.00    0.00      61         Arguments::getMaxDepth() [54]
+-----------------------------------------------
+                0.00    0.00      61/61          Factory::createModel() [53]
+[55]     0.0    0.00    0.00      61         Arguments::getModel[abi:cxx11]() [55]
+-----------------------------------------------
+                0.00    0.00      60/60          SplitNum::createDecisionRule[abi:cxx11](int) [59]
+[56]     0.0    0.00    0.00      60         SplitCateg::summary() [56]
+-----------------------------------------------
+                0.00    0.00      60/60          Node::splitNode() [2]
+[57]     0.0    0.00    0.00      60         ObjectiveGini::~ObjectiveGini() [57]
+-----------------------------------------------
+                0.00    0.00      60/60          Tree::printSubTree(Node*) [95]
+[58]     0.0    0.00    0.00      60         Node::getDecisionRule[abi:cxx11]() [58]
+-----------------------------------------------
+                0.00    0.00      60/60          Node::splitNode() [2]
+[59]     0.0    0.00    0.00      60         SplitNum::createDecisionRule[abi:cxx11](int) [59]
+                0.00    0.00      60/60          SplitCateg::summary() [56]
+-----------------------------------------------
+                0.00    0.00      60/60          Node::splitNode() [2]
+[60]     0.0    0.00    0.00      60         void std::vector<Model*, std::allocator<Model*> >::_M_realloc_insert<Model* const&>(__gnu_cxx::__normal_iterator<Model**, std::vector<Model*, std::allocator<Model*> > >, Model* const&) [60]
+-----------------------------------------------
+                0.00    0.00       1/37          Arguments::setColTypes(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >) [96]
+                0.00    0.00       1/37          Reader::read(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, Arguments) [187]
+                0.00    0.00       1/37          Tree::Tree(Data*, Arguments) [172]
+                0.00    0.00       2/37          Factory::Factory(Arguments) [77]
+                0.00    0.00      32/37          Objective::Objective(Arguments) [65]
+[61]     0.0    0.00    0.00      37         std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >::operator=(std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > > const&) [61]
+-----------------------------------------------
+                0.00    0.00       1/35          Tree::Tree(Data*, Arguments) [172]
+                0.00    0.00       2/35          Factory::Factory(Arguments) [77]
+                0.00    0.00      32/35          Objective::Objective(Arguments) [65]
+[62]     0.0    0.00    0.00      35         Arguments::Arguments() [62]
+-----------------------------------------------
+                0.00    0.00      32/32          Factory::createObjective() [64]
+[63]     0.0    0.00    0.00      32         ObjectiveSSE::ObjectiveSSE(Arguments) [63]
+                0.00    0.00      32/32          Objective::Objective(Arguments) [65]
+-----------------------------------------------
+                0.00    0.00       1/32          Tree::grow() [1]
+                0.00    0.00      31/32          Node::splitNode() [2]
+[64]     0.0    0.00    0.00      32         Factory::createObjective() [64]
+                0.00    0.00      32/93          Arguments::getObjective[abi:cxx11]() [45]
+                0.00    0.00      32/32          ObjectiveSSE::ObjectiveSSE(Arguments) [63]
+-----------------------------------------------
+                0.00    0.00      32/32          ObjectiveSSE::ObjectiveSSE(Arguments) [63]
+[65]     0.0    0.00    0.00      32         Objective::Objective(Arguments) [65]
+                0.00    0.00      32/35          Arguments::Arguments() [62]
+                0.00    0.00      32/37          std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >::operator=(std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > > const&) [61]
+-----------------------------------------------
+                0.00    0.00      31/31          Node::splitNode() [2]
+[66]     0.0    0.00    0.00      31         ObjectiveSSE::~ObjectiveSSE() [66]
+-----------------------------------------------
+                0.00    0.00      31/31          Node::splitNode() [2]
+[67]     0.0    0.00    0.00      31         AggregationAdditive::AggregationAdditive() [67]
+-----------------------------------------------
+                0.00    0.00      31/31          Factory::createSplitGenerator() [71]
+[68]     0.0    0.00    0.00      31         SplitGeneratorBinExh::SplitGeneratorBinExh() [68]
+-----------------------------------------------
+                0.00    0.00      31/31          Node::splitNode() [2]
+[69]     0.0    0.00    0.00      31         SplitGeneratorBinExh::~SplitGeneratorBinExh() [69]
+-----------------------------------------------
+                0.00    0.00      31/31          SplitGeneratorBinExh::generate(Data*, std::vector<int, std::allocator<int> >, Arguments) [4]
+[70]     0.0    0.00    0.00      31         Data::ncols() [70]
+-----------------------------------------------
+                0.00    0.00      31/31          Node::splitNode() [2]
+[71]     0.0    0.00    0.00      31         Factory::createSplitGenerator() [71]
+                0.00    0.00      31/31          Arguments::getAlgorithm[abi:cxx11]() [72]
+                0.00    0.00      31/123         Arguments::getMaxChildren() [42]
+                0.00    0.00      31/31          SplitGeneratorBinExh::SplitGeneratorBinExh() [68]
+-----------------------------------------------
+                0.00    0.00      31/31          Factory::createSplitGenerator() [71]
+[72]     0.0    0.00    0.00      31         Arguments::getAlgorithm[abi:cxx11]() [72]
+-----------------------------------------------
+                0.00    0.00      31/31          SplitGeneratorBinExh::generate(Data*, std::vector<int, std::allocator<int> >, Arguments) [4]
+[73]     0.0    0.00    0.00      31         std::vector<Split*, std::allocator<Split*> >::reserve(unsigned long) [73]
+-----------------------------------------------
+                0.00    0.00      14/14          Reader::read(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, Arguments) [187]
+[74]     0.0    0.00    0.00      14         void std::vector<std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >, std::allocator<std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > > > >::_M_realloc_insert<std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > > >(__gnu_cxx::__normal_iterator<std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >*, std::vector<std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >, std::allocator<std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > > > > >, std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >&&) [74]
+-----------------------------------------------
+                0.00    0.00      14/14          Reader::read(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, Arguments) [187]
+[75]     0.0    0.00    0.00      14         void std::vector<std::vector<double, std::allocator<double> >, std::allocator<std::vector<double, std::allocator<double> > > >::_M_realloc_insert<std::vector<double, std::allocator<double> > const&>(__gnu_cxx::__normal_iterator<std::vector<double, std::allocator<double> >*, std::vector<std::vector<double, std::allocator<double> >, std::allocator<std::vector<double, std::allocator<double> > > > >, std::vector<double, std::allocator<double> > const&) [75]
+-----------------------------------------------
+                0.00    0.00       7/7           Tree::addNode(Node*) [52]
+[76]     0.0    0.00    0.00       7         void std::vector<Node*, std::allocator<Node*> >::_M_realloc_insert<Node* const&>(__gnu_cxx::__normal_iterator<Node**, std::vector<Node*, std::allocator<Node*> > >, Node* const&) [76]
+-----------------------------------------------
+                0.00    0.00       2/2           Tree::Tree(Data*, Arguments) [172]
+[77]     0.0    0.00    0.00       2         Factory::Factory(Arguments) [77]
+                0.00    0.00       2/35          Arguments::Arguments() [62]
+                0.00    0.00       2/37          std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >::operator=(std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > > const&) [61]
+-----------------------------------------------
+                0.00    0.00       2/2           Reader::read(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, Arguments) [187]
+[78]     0.0    0.00    0.00       2         Arguments::getColTypes[abi:cxx11]() [78]
+-----------------------------------------------
+                0.00    0.00       1/1           __libc_csu_init [244]
+[79]     0.0    0.00    0.00       1         _GLOBAL__sub_I__Z16initVectorLLUIntii [79]
+-----------------------------------------------
+                0.00    0.00       1/1           __libc_csu_init [244]
+[80]     0.0    0.00    0.00       1         _GLOBAL__sub_I__ZN14SplitGeneratorC2Ev [80]
+-----------------------------------------------
+                0.00    0.00       1/1           __libc_csu_init [244]
+[81]     0.0    0.00    0.00       1         _GLOBAL__sub_I__ZN4DataC2Ev [81]
+-----------------------------------------------
+                0.00    0.00       1/1           __libc_csu_init [244]
+[82]     0.0    0.00    0.00       1         _GLOBAL__sub_I__ZN4NodeC2ENSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEEP4TreeSt6vectorIiSaIiEEdS5_ [82]
+-----------------------------------------------
+                0.00    0.00       1/1           __libc_csu_init [244]
+[83]     0.0    0.00    0.00       1         _GLOBAL__sub_I__ZN4TreeC2EP4Data9Arguments [83]
+-----------------------------------------------
+                0.00    0.00       1/1           __libc_csu_init [244]
+[84]     0.0    0.00    0.00       1         _GLOBAL__sub_I__ZN5ModelC2Ev [84]
+-----------------------------------------------
+                0.00    0.00       1/1           __libc_csu_init [244]
+[85]     0.0    0.00    0.00       1         _GLOBAL__sub_I__ZN5SplitC2Ei [85]
+-----------------------------------------------
+                0.00    0.00       1/1           __libc_csu_init [244]
+[86]     0.0    0.00    0.00       1         _GLOBAL__sub_I__ZN6ReaderC2Ev [86]
+-----------------------------------------------
+                0.00    0.00       1/1           __libc_csu_init [244]
+[87]     0.0    0.00    0.00       1         _GLOBAL__sub_I__ZN7FactoryC2E9Arguments [87]
+-----------------------------------------------
+                0.00    0.00       1/1           __libc_csu_init [244]
+[88]     0.0    0.00    0.00       1         _GLOBAL__sub_I__ZN9ArgumentsC2Ev [88]
+-----------------------------------------------
+                0.00    0.00       1/1           __libc_csu_init [244]
+[89]     0.0    0.00    0.00       1         _GLOBAL__sub_I__ZN9ObjectiveC2E9Arguments [89]
+-----------------------------------------------
+                0.00    0.00       1/1           __libc_csu_init [244]
+[90]     0.0    0.00    0.00       1         _GLOBAL__sub_I_main [90]
+-----------------------------------------------
+                0.00    0.00       1/1           Tree::Tree(Data*, Arguments) [172]
+[91]     0.0    0.00    0.00       1         convertDoubleToIntVector(std::vector<double, std::allocator<double> >) [91]
+-----------------------------------------------
+                0.00    0.00       1/1           Reader::read(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, Arguments) [187]
+[92]     0.0    0.00    0.00       1         Data::setColTypes(std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >) [92]
+-----------------------------------------------
+                0.00    0.00       1/1           Tree::Tree(Data*, Arguments) [172]
+[93]     0.0    0.00    0.00       1         Data::col(int) [93]
+-----------------------------------------------
+                0.00    0.00       1/1           Reader::read(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, Arguments) [187]
+[94]     0.0    0.00    0.00       1         Data::Data() [94]
+-----------------------------------------------
+                                  60             Tree::printSubTree(Node*) [95]
+                0.00    0.00       1/1           Tree::summary() [171]
+[95]     0.0    0.00    0.00       1+60      Tree::printSubTree(Node*) [95]
+                0.00    0.00     122/183         Node::getId[abi:cxx11]() [41]
+                0.00    0.00      61/61          Node::getChildNodes() [50]
+                0.00    0.00      60/121         Node::isLeaf() [44]
+                0.00    0.00      60/60          Node::getDecisionRule[abi:cxx11]() [58]
+                                  60             Tree::printSubTree(Node*) [95]
+-----------------------------------------------
+                0.00    0.00       1/1           Arguments::processArguments(int, char**) [200]
+[96]     0.0    0.00    0.00       1         Arguments::setColTypes(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >) [96]
+                0.00    0.00       1/37          std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >::operator=(std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > > const&) [61]
+-----------------------------------------------
+                0.00    0.00       1/1           Reader::read(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, Arguments) [187]
+[97]     0.0    0.00    0.00       1         Arguments::getSep() [97]
+-----------------------------------------------
+
+ This table describes the call tree of the program, and was sorted by
+ the total amount of time spent in each function and its children.
+
+ Each entry in this table consists of several lines.  The line with the
+ index number at the left hand margin lists the current function.
+ The lines above it list the functions that called this function,
+ and the lines below it list the functions this one called.
+ This line lists:
+     index	A unique number given to each element of the table.
+		Index numbers are sorted numerically.
+		The index number is printed next to every function name so
+		it is easier to look up where the function is in the table.
+
+     % time	This is the percentage of the `total' time that was spent
+		in this function and its children.  Note that due to
+		different viewpoints, functions excluded by options, etc,
+		these numbers will NOT add up to 100%.
+
+     self	This is the total amount of time spent in this function.
+
+     children	This is the total amount of time propagated into this
+		function by its children.
+
+     called	This is the number of times the function was called.
+		If the function called itself recursively, the number
+		only includes non-recursive calls, and is followed by
+		a `+' and the number of recursive calls.
+
+     name	The name of the current function.  The index number is
+		printed after it.  If the function is a member of a
+		cycle, the cycle number is printed between the
+		function's name and the index number.
+
+
+ For the function's parents, the fields have the following meanings:
+
+     self	This is the amount of time that was propagated directly
+		from the function into this parent.
+
+     children	This is the amount of time that was propagated from
+		the function's children into this parent.
+
+     called	This is the number of times this parent called the
+		function `/' the total number of times the function
+		was called.  Recursive calls to the function are not
+		included in the number after the `/'.
+
+     name	This is the name of the parent.  The parent's index
+		number is printed after it.  If the parent is a
+		member of a cycle, the cycle number is printed between
+		the name and the index number.
+
+ If the parents of the function cannot be determined, the word
+ `<spontaneous>' is printed in the `name' field, and all the other
+ fields are blank.
+
+ For the function's children, the fields have the following meanings:
+
+     self	This is the amount of time that was propagated directly
+		from the child into the function.
+
+     children	This is the amount of time that was propagated from the
+		child's children to the function.
+
+     called	This is the number of times the function called
+		this child `/' the total number of times the child
+		was called.  Recursive calls by the child are not
+		listed in the number after the `/'.
+
+     name	This is the name of the child.  The child's index
+		number is printed after it.  If the child is a
+		member of a cycle, the cycle number is printed
+		between the name and the index number.
+
+ If there are any cycles (circles) in the call graph, there is an
+ entry for the cycle-as-a-whole.  This entry shows who called the
+ cycle (as parents) and the members of the cycle (as children.)
+ The `+' recursive calls entry shows the number of function calls that
+ were internal to the cycle, and the calls entry for each member shows,
+ for that member, how many times it was called from other members of
+ the cycle.
+
+Copyright (C) 2012-2020 Free Software Foundation, Inc.
+
+Copying and distribution of this file, with or without modification,
+are permitted in any medium without royalty provided the copyright
+notice and this notice are preserved.
+
+Index by function name
+
+  [79] _GLOBAL__sub_I__Z16initVectorLLUIntii [15] Data::columnSubset(std::vector<int, std::allocator<int> >, int) [35] SplitNum::~SplitNum()
+  [80] _GLOBAL__sub_I__ZN14SplitGeneratorC2Ev [10] Data::getTargetIndex() [78] Arguments::getColTypes[abi:cxx11]()
+  [81] _GLOBAL__sub_I__ZN4DataC2Ev [93] Data::col(int)    [54] Arguments::getMaxDepth()
+  [82] _GLOBAL__sub_I__ZN4NodeC2ENSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEEP4TreeSt6vectorIiSaIiEEdS5_ [25] Data::row(int) [96] Arguments::setColTypes(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >)
+  [83] _GLOBAL__sub_I__ZN4TreeC2EP4Data9Arguments [9] Data::elem(int, int) [72] Arguments::getAlgorithm[abi:cxx11]()
+  [84] _GLOBAL__sub_I__ZN5ModelC2Ev [70] Data::ncols()    [45] Arguments::getObjective[abi:cxx11]()
+  [85] _GLOBAL__sub_I__ZN5SplitC2Ei [37] Data::addRow(std::vector<double, std::allocator<double> >) [42] Arguments::getMaxChildren()
+  [86] _GLOBAL__sub_I__ZN6ReaderC2Ev [12] Data::selfCheck() [29] Arguments::getMinNodeSize()
+  [87] _GLOBAL__sub_I__ZN7FactoryC2E9Arguments [94] Data::Data() [97] Arguments::getSep()
+  [88] _GLOBAL__sub_I__ZN9ArgumentsC2Ev [50] Node::getChildNodes() [55] Arguments::getModel[abi:cxx11]()
+  [89] _GLOBAL__sub_I__ZN9ObjectiveC2E9Arguments [3] Node::recursiveSplit() [38] Arguments::Arguments(Arguments const&)
+  [90] _GLOBAL__sub_I_main    [58] Node::getDecisionRule[abi:cxx11]() [62] Arguments::Arguments()
+  [91] convertDoubleToIntVector(std::vector<double, std::allocator<double> >) [41] Node::getId[abi:cxx11]() [65] Objective::Objective(Arguments)
+   [8] diffSet(std::vector<int, std::allocator<int> >, std::vector<int, std::allocator<int> >) [44] Node::isLeaf() [28] void std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >::_M_realloc_insert<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&>(__gnu_cxx::__normal_iterator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >*, std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > > >, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&)
+  [36] parseLine(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, char) [2] Node::splitNode() [61] std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >::operator=(std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > > const&)
+  [56] SplitCateg::summary()  [51] Node::Node(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, Tree*, std::vector<int, std::allocator<int> >, double, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >) [76] void std::vector<Node*, std::allocator<Node*> >::_M_realloc_insert<Node* const&>(__gnu_cxx::__normal_iterator<Node**, std::vector<Node*, std::allocator<Node*> > >, Node* const&)
+  [11] ModelAverage::predictSingle(Data*, int) [43] Tree::getFactory() [46] std::vector<Node*, std::allocator<Node*> >::reserve(unsigned long)
+  [17] ModelAverage::update(Data*, std::vector<int, std::allocator<int> >, char) [95] Tree::printSubTree(Node*) [60] void std::vector<Model*, std::allocator<Model*> >::_M_realloc_insert<Model* const&>(__gnu_cxx::__normal_iterator<Model**, std::vector<Model*, std::allocator<Model*> > >, Model* const&)
+  [49] ModelAverage::ModelAverage() [52] Tree::addNode(Node*) [73] std::vector<Split*, std::allocator<Split*> >::reserve(unsigned long)
+   [6] ObjectiveSSE::compute(Data*, Model*, std::vector<int, std::allocator<int> >) [40] Tree::getArgs() [74] void std::vector<std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >, std::allocator<std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > > > >::_M_realloc_insert<std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > > >(__gnu_cxx::__normal_iterator<std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >*, std::vector<std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >, std::allocator<std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > > > > >, std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >&&)
+  [63] ObjectiveSSE::ObjectiveSSE(Arguments) [16] Split::addSplitValue(double) [75] void std::vector<std::vector<double, std::allocator<double> >, std::allocator<std::vector<double, std::allocator<double> > > >::_M_realloc_insert<std::vector<double, std::allocator<double> > const&>(__gnu_cxx::__normal_iterator<std::vector<double, std::allocator<double> >*, std::vector<std::vector<double, std::allocator<double> >, std::allocator<std::vector<double, std::allocator<double> > > > >, std::vector<double, std::allocator<double> > const&)
+  [66] ObjectiveSSE::~ObjectiveSSE() [30] Split::setFeatureIndex(int) [26] void std::vector<std::vector<int, std::allocator<int> >, std::allocator<std::vector<int, std::allocator<int> > > >::_M_realloc_insert<std::vector<int, std::allocator<int> > const&>(__gnu_cxx::__normal_iterator<std::vector<int, std::allocator<int> >*, std::vector<std::vector<int, std::allocator<int> >, std::allocator<std::vector<int, std::allocator<int> > > > >, std::vector<int, std::allocator<int> > const&)
+  [57] ObjectiveGini::~ObjectiveGini() [31] Split::Split(int) [33] std::vector<std::vector<int, std::allocator<int> >, std::allocator<std::vector<int, std::allocator<int> > > >::operator=(std::vector<std::vector<int, std::allocator<int> >, std::allocator<std::vector<int, std::allocator<int> > > > const&)
+  [34] AggregationAdditive::compute(std::vector<double, std::allocator<double> >) [53] Factory::createModel() [47] void std::vector<double, std::allocator<double> >::_M_realloc_insert<double>(__gnu_cxx::__normal_iterator<double*, std::vector<double, std::allocator<double> > >, double&&)
+  [67] AggregationAdditive::AggregationAdditive() [64] Factory::createObjective() [13] void std::vector<int, std::allocator<int> >::_M_realloc_insert<int const&>(__gnu_cxx::__normal_iterator<int*, std::vector<int, std::allocator<int> > >, int const&)
+   [4] SplitGeneratorBinExh::generate(Data*, std::vector<int, std::allocator<int> >, Arguments) [71] Factory::createSplitGenerator() [48] std::vector<int, std::allocator<int> >::reserve(unsigned long)
+  [68] SplitGeneratorBinExh::SplitGeneratorBinExh() [77] Factory::Factory(Arguments) [27] std::vector<int, std::allocator<int> >::operator=(std::vector<int, std::allocator<int> > const&)
+  [69] SplitGeneratorBinExh::~SplitGeneratorBinExh() [59] SplitNum::createDecisionRule[abi:cxx11](int) [14] void std::__introsort_loop<__gnu_cxx::__normal_iterator<double*, std::vector<double, std::allocator<double> > >, long, __gnu_cxx::__ops::_Iter_less_iter>(__gnu_cxx::__normal_iterator<double*, std::vector<double, std::allocator<double> > >, __gnu_cxx::__normal_iterator<double*, std::vector<double, std::allocator<double> > >, long, __gnu_cxx::__ops::_Iter_less_iter)
+  [39] Data::getColTypes[abi:cxx11]() [5] SplitNum::computePartitionings(Data*, std::vector<int, std::allocator<int> >) [7] std::insert_iterator<std::vector<int, std::allocator<int> > > std::__set_difference<__gnu_cxx::__normal_iterator<int*, std::vector<int, std::allocator<int> > >, __gnu_cxx::__normal_iterator<int*, std::vector<int, std::allocator<int> > >, std::insert_iterator<std::vector<int, std::allocator<int> > >, __gnu_cxx::__ops::_Iter_less_iter>(__gnu_cxx::__normal_iterator<int*, std::vector<int, std::allocator<int> > >, __gnu_cxx::__normal_iterator<int*, std::vector<int, std::allocator<int> > >, __gnu_cxx::__normal_iterator<int*, std::vector<int, std::allocator<int> > >, __gnu_cxx::__normal_iterator<int*, std::vector<int, std::allocator<int> > >, std::insert_iterator<std::vector<int, std::allocator<int> > >, __gnu_cxx::__ops::_Iter_less_iter)
+  [92] Data::setColTypes(std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >, std::allocator<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > > >) [32] SplitNum::SplitNum(int)

@@ -1,5 +1,5 @@
 bike:
-	./tree --filename ../../../../data/seoulbike_8000.csv --coltypes nnnnnnnnn --target 0 --sep , --task regr --algorithm exhaustive --model mean --objective sse --minsize 10 --children 2 --maxdepth 10
+	./tree --filename ../../../../data/seoulbike_8000.csv --coltypes nnnnnnnnn --target 0 --sep , --task regr --algorithm exhaustive --model mean --objective sse --minsize 20 --children 2 --maxdepth 5
 
 credit:
 	./tree --filename ../data/credit.csv --coltypes cnccncccccccncccccccc --target 20 --sep , --task classif --algorithm exhaustive --objective gini --minsize 10 --children 2 --maxdepth 10
@@ -23,7 +23,7 @@ bostonmult5:
 	./tree --filename ../data/bh.data --target 13 --sep , --task regr --algorithm random --objective sse --model mean --minsize 10 --children 5 --maxdepth 10
 
 iris:
-	./tree --filename ../data/iris.data --coltypes nnnnc --target 4 --sep , --task classif --algorithm exhaustive --objective gini --minsize 10 --children 2 --maxdepth 10
+	./tree --filename ../../../../data/iris.data --coltypes nnnnc --target 4 --sep , --task classif --algorithm exhaustive --objective gini --minsize 10 --children 2 --maxdepth 10
 
 irismult:
 	./tree --filename ../data/iris.data --target 4 --sep , --task classif --algorithm random --objective gini --minsize 1 --children 3 --maxdepth 10
@@ -32,7 +32,7 @@ iris3way:
 	./tree --filename ../data/iris_10.data --target 4 --sep , --task classif --algorithm exhaustive --objective gini --model majorvote --minsize 1 --children 3
 
 mushroom:
-	./tree --filename ../data/mushroom.data --target 22 --sep , --task classif --algorithm exhaustive --objective gini --minsize 10 --children 2
+	./tree --filename ../../../../data/mushroom.data --target 22 --sep , --task classif --algorithm exhaustive --objective gini --minsize 10 --children 2
 
 mushroommult3:
 	./tree --filename ../data/mushroom.data --target 22 --sep , --task classif --algorithm random --objective gini --minsize 1 --children 3
