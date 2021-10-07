@@ -17,7 +17,7 @@ LDLIBS   :=
 all: $(EXE)
 
 $(EXE): $(LIB)
-	$(CXX) $(LDFLAGS) $^ $(LDLIBS) -o $@
+	$(CXX) $(LDFLAGS) $^ $(LDLIBS) -o $@ 
 
 .PHONY: treelib
 treelib: $(LIB)
@@ -26,7 +26,7 @@ $(LIB): $(OBJ) | $(BIN_DIR)
 	ar rvs $@ $^
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp | $(OBJ_DIR)
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $< -o $@
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $< -o $@ 
 
 $(BIN_DIR) $(OBJ_DIR):
 	mkdir -p $@

@@ -5,8 +5,10 @@
 #include <stdlib.h>
 #include <vector>
 #include <map>
+#include <array>
 #include "class_split.h"
 
+class SortedData;
 
 class Data {
   
@@ -18,7 +20,8 @@ class Data {
 		std::vector<std::string> coltypes;
 		std::map<int, std::map<std::string, int>> categ_encodings;
 		std::map<int, std::vector<double>> sorted_features;
-		
+		SortedData* sorted_data;
+
 		void load(std::string filename); // read data from disc
 		
 		void setTargetIndex(int target);
@@ -27,6 +30,7 @@ class Data {
 		void setCategEncodings(std::map<int, std::map<std::string, int>> categ_encodings);
 		void setColTypes(std::vector<std::string> types);
 		std::vector<std::string> getColTypes();
+		std::array<std::vector<int>, 2> getColTypesNumCateg();
 		void addRow(std::vector<double> row);
 		void addRows(std::vector<std::vector<double>> row_vec);
 		void replaceRow(int row_ix, std::vector<double> values);
@@ -57,7 +61,7 @@ class Data {
 		void sortFeatures();
 		std::vector<double> getSortedFeatureValues(int col);
 		std::map<int, std::vector<double>> subsetSortedFeatureValues(std::vector<int> rows);
-		  
+		void createSortedData();
 		 
 		 /*
 		std::vector<Data*>  splitCateg(int col_index);
@@ -72,5 +76,41 @@ class Data {
 		
 };
 
+
+
+class SortedFeatureSubset {
+
+  public:
+    SortedFeatureSubset(size_t size);
+    std::string ID;
+    std::vector<std::pair<double, int>> sorted_values;
+    // first pair element: sorted asc feature values
+    // second pair element: corresponding row IDs
+};
+
+class SortedFeature {
+
+  public:
+    SortedFeature();
+    int index;
+    std::map<std::string, SortedFeatureSubset*> subsets;
+	// maps node ID, e.g., "0010101", to SortedFeatureSubset
+
+	void splitSubset(std::string ID, std::vector<std::vector<int>> subset_obs);
+	SortedFeatureSubset* getSubset(std::string ID);
+};
+
+class SortedData {
+  
+	public:
+	SortedData();
+	
+	std::map<int, SortedFeature*> sorted_features;
+	// maps feature index to SortedFeature objects
+
+	void sort(Data* data);
+	void split(std::string ID, std::vector<std::vector<int>> subset_obs);
+	SortedFeatureSubset* getSortedFeatureSubset(std::string ID, int feature);
+};
 
 #endif 

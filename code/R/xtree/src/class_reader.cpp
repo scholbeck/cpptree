@@ -101,7 +101,7 @@ Data* Reader::read(std::string filename, Arguments args) {
 	data->addRow(new_row);
 	new_row.clear();
 	}
-	
+	data->createSortedData();
 	return data;
 }
 

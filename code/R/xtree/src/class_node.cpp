@@ -82,7 +82,7 @@ Split* Node::getSplitData() {
 std::vector<Node*> Node::splitNode() {
 
 	SplitGenerator* split_generator = this->tree->getFactory().createSplitGenerator();
-	std::vector<Split*> splits = split_generator->generate(this->tree->data, this->observations, this->tree->getArgs());
+	std::vector<Split*> splits = split_generator->generate(this->tree->data, this->observations, this->id, this->tree->getArgs());
 	delete(split_generator);
 	
 	AggregationAdditive aggreg;
@@ -138,8 +138,9 @@ std::vector<Node*> Node::splitNode() {
 	std::vector<Node*> child_nodes;
 	child_nodes.reserve(n_children);
 	if (optsplit_ix != -1) {
-	  // if a split has been found, do:
-	  this->split = splits[optsplit_ix];
+	  	// if a split has been found, do:
+	  	this->split = splits[optsplit_ix];
+		this->tree->data->sorted_data->split(this->id, this->split->split_obs);
 		for (int i = 0; i < n_children; ++i) {
 			Node* child = new Node(
 				this->id + std::to_string(i),
