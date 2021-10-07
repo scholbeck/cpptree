@@ -1,5 +1,5 @@
 bike:
-	./tree --filename ../../../../data/seoulbike_8000.csv --coltypes nnnnnnnnn --target 0 --sep , --task regr --algorithm exhaustive --model mean --objective sse --minsize 20 --children 2 --maxdepth 5
+	./tree --filename ../../../../data/seoulbike_8000.csv --coltypes nnnnnnnnn --target 0 --sep , --task regr --algorithm exhaustive --model mean --formula 3 --objective sse --minsize 20 --children 2 --maxdepth 5
 
 credit:
 	./tree --filename ../data/credit.csv --coltypes cnccncccccccncccccccc --target 20 --sep , --task classif --algorithm exhaustive --objective gini --minsize 10 --children 2 --maxdepth 10
