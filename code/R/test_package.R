@@ -16,8 +16,8 @@ tree = xtree(df,
              objective_type = "sse",
              model_type = "mean",
              search_algo_type = "exhaustive",
-             min_node_size = 20,
-             max_depth = 5,
+             min_node_size = 1,
+             max_depth = 100,
              target = 1)
 
 tree$print()

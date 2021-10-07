@@ -131,6 +131,7 @@ Data* convertData(Rcpp::DataFrame r_data, int target_index, Rcpp::StringVector c
       
     }
   }
+  data->createSortedData();
   return data;
 }
 
