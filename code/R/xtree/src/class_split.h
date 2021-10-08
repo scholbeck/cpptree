@@ -37,6 +37,7 @@ class Split {
 		void sortSplitValues();
 };
 
+
 class SplitNum : public Split {
 
 	public:
@@ -61,6 +62,19 @@ class SplitCateg : public Split {
 		void computePartitionings(Data* data, std::vector<int> observations);
 		
 };
+
+
+class SplitDifference {
+		
+	public:
+		SplitDifference();
+		
+		std::vector<std::vector<int>> additional_obs;
+		std::vector<std::vector<int>> removed_obs;
+		
+		void computeSplitDifference(Split* split_upd, Split* split_prev);
+};
+
 
 
 #endif 

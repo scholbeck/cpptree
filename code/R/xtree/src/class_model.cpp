@@ -13,7 +13,20 @@ ModelAverage::ModelAverage() : Model() {
 	this->mean_target = 0;
 }
 
-void ModelAverage::update(Data* data, std::vector<int> rows, char setdiff) {
+void ModelAverage::update(Data* data, int row, char setdiff) {
+	if (setdiff == '+') {
+		this->cumsum_target += data->row(row)[data->getTargetIndex()];
+		this->n += 1;
+		this->mean_target = cumsum_target / this->n;
+	} else {
+		this->cumsum_target -= data->row(row)[data->getTargetIndex()];
+		this->n -= 1;
+		this->mean_target = cumsum_target / this->n;
+	}
+}
+
+
+void ModelAverage::updateSet(Data* data, std::vector<int> rows, char setdiff) {
 	for (int i = 0; i < rows.size(); ++i) {
 		if (setdiff == '+') {
 			this->cumsum_target += data->row(rows[i])[data->getTargetIndex()];

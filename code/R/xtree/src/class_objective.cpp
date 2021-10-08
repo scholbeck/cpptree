@@ -5,15 +5,21 @@
 #include "class_objective.h"
 #include "class_model.h"
 #include "class_arguments.h"
+#include "class_factory.h"
 #include "helper_functions.h"
 #include <cmath>
 #include <algorithm>
 
-Objective::Objective(Arguments args) {	
+Objective::Objective(Arguments* args) : factory(new Factory(args)) {	
 	this->args = args;
+	this->n_nodes = args->getMaxChildren();
+	for (int i = 0; i < n_nodes; ++i) {
+		this->node_obj_values.push_back(0);
+		this->models.push_back(this->factory->createModel());
+	}
 }
 
-ObjectiveSSE::ObjectiveSSE(Arguments args) : Objective(args) {
+ObjectiveSSE::ObjectiveSSE(Arguments* args) : Objective(args) {
 }
 
 double ObjectiveSSE::compute(Data* data, Model* mod, std::vector<int> observations) {
@@ -25,23 +31,37 @@ double ObjectiveSSE::compute(Data* data, Model* mod, std::vector<int> observatio
 	return cumsum;
 }
 
-double ObjectiveSSE::update(double prev_value, Data* data, Model* mod, std::array<std::vector<int>, 2> diff) {
-	double upd_value = prev_value;
-	if (!(diff[0].empty() && diff[1].empty())) {
-		for (int i = 0; i < diff[0].size(); ++i) {
-			upd_value += pow((data->elem(diff[0][i], data->getTargetIndex())) - (mod->predictSingle(data, diff[0][i])), 2);
+void ObjectiveSSE::update(Data* data, Split* split_upd, Split* split_prev) {
+
+	SplitDifference split_diff;
+	split_diff.computeSplitDifference(split_upd, split_prev);
+	int n_nodes = split_upd->split_obs.size();
+	
+	for (int j = 0; j < n_nodes; j++) {
+		if (!split_diff.additional_obs[j].empty()) {
+			for (int i = 0; i < split_diff.additional_obs[j].size(); ++i) {
+				this->models[j]->update(data, split_diff.additional_obs[j][i], '+');
+				this->node_obj_values[j] += pow(
+					(data->elem(
+						split_diff.additional_obs[j][i], data->getTargetIndex())) - (this->models[j]->predictSingle(data, split_diff.additional_obs[j][i])), 2);
+			}
 		}
-		for (int i = 0; i < diff[1].size(); ++i) {
-			upd_value -= pow((data->elem(diff[0][i], data->getTargetIndex())) - (mod->predictSingle(data, diff[1][i])), 2);
+		if (!split_diff.removed_obs[j].empty()) {
+			for (int i = 0; i < split_diff.removed_obs[j].size(); ++i) {
+				this->models[j]->update(data, split_diff.removed_obs[j][i], '-');
+				this->node_obj_values[j] -= pow(
+					(data->elem(
+						split_diff.removed_obs[j][i], data->getTargetIndex())) - (this->models[j]->predictSingle(data, split_diff.removed_obs[j][i])), 2);
+			}
 		}
 	}
-	return upd_value;
+	
 }
 
 
 // ObjectiveGini
 
-ObjectiveGini::ObjectiveGini(Arguments args) : Objective(args) {
+ObjectiveGini::ObjectiveGini(Arguments* args) : Objective(args) {
 }
 
 double ObjectiveGini::compute(Data* data, Model* mod, std::vector<int> observations) {
@@ -59,7 +79,8 @@ double ObjectiveGini::compute(Data* data, Model* mod, std::vector<int> observati
 	return gini;
 }
 
-double ObjectiveGini::update(double prev_value, Data* data, Model* mod, std::array<std::vector<int>, 2> diff) {
+void ObjectiveGini::update(Data* data, Split* split_upd, Split* split_prev) {
+	/*
 	std::map<std::string, int> levels = data->getCategEncodings().at(data->getTargetIndex());
 	std::vector<double> observation;
 	int n_setplus = diff[0].size();
@@ -98,4 +119,5 @@ double ObjectiveGini::update(double prev_value, Data* data, Model* mod, std::arr
 	}
 	upd_value = 1 - (pow((1 / (double) this->n), 2) * upd_value);
 	return upd_value;
+	*/
 }

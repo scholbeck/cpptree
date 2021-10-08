@@ -16,16 +16,16 @@
 
 int main(int argc, char *argv[]) {
 	
-	Arguments args;
+	Arguments* args = new Arguments();
 	Reader reader;
 	
 	int arg_status = 0;
-	if ((arg_status = args.processArguments(argc, argv)) == -1) {
+	if ((arg_status = args->processArguments(argc, argv)) == -1) {
 		return EXIT_FAILURE;
 	}
-    args.checkArgs();
-	Data* data = reader.read(args.getFilename(), args);
-	data->setTargetIndex(args.getTargetIndex() + 1);
+    args->checkArgs();
+	Data* data = reader.read(args->getFilename(), args);
+	data->setTargetIndex(args->getTargetIndex() + 1);
     if (data->selfCheck() == false) {
         std::cout << "Specified wrong target index. Aborting..\n";
         return EXIT_FAILURE;
@@ -36,7 +36,7 @@ int main(int argc, char *argv[]) {
     start = std::clock();
     int ret = tree.grow();
 	duration = (std::clock() - start) / (double) CLOCKS_PER_SEC;
-    if (args.getPrint() == "true") {
+    if (args->getPrint() == "true") {
 		tree.summary();
 		std::cout << "Training complete. Duration: " << duration << "sec\n";
 	}

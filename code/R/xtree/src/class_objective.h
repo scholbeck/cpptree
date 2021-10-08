@@ -3,24 +3,32 @@
 
 #include "class_arguments.h"
 #include "class_model.h"
+#include "class_factory.h"
 #include <vector>
+
+class Factory;
 
 class Objective {
 	// virtual class
 	public:
-    Objective(Arguments args);
-	  virtual ~Objective() {}
+    	Objective(Arguments* args);
+		virtual ~Objective() {}
 
-		Arguments args;
+		Arguments* args;
+		Factory* factory;
+		std::vector<Model*> models;
+		std::vector<double> node_obj_values;
+		int n_nodes;
+		std::array<std::vector<int>, 2> computeSplitDifference(Split* split_upd, Split* split_prev);
 		virtual double compute(Data* data, Model* mod, std::vector<int> observations) = 0;
-		virtual double update(double prev_value, Data* data, Model* mod, std::array<std::vector<int>, 2> diff) = 0;
+		virtual void update(Data* data, Split* split_upd, Split* split_prev) = 0;
 };
 
 class ObjectiveSSE: public Objective {
 	public:
-		ObjectiveSSE(Arguments args);
+		ObjectiveSSE(Arguments* args);
 		double compute(Data* data, Model* mod, std::vector<int> observations);
-		double update(double prev_value, Data* data, Model* mod, std::array<std::vector<int>, 2> diff);
+		void update(Data* data, Split* split_upd, Split* split_prev);
 };
 
 class ObjectiveGini: public Objective {
@@ -28,9 +36,11 @@ class ObjectiveGini: public Objective {
 		std::map<int, int> class_counts;
 		int n;
 
-		ObjectiveGini(Arguments args);
+		ObjectiveGini(Arguments* args);
 		double compute(Data* data, Model* mod, std::vector<int> observations);
-		double update(double prev_value, Data* data, Model* mod, std::array<std::vector<int>, 2> diff);
+		void update(Data* data, Split* split_upd, Split* split_prev);
 };
+
+
 
 #endif 

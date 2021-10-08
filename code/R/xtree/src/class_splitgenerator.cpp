@@ -34,35 +34,34 @@ SplitGeneratorBinExh::SplitGeneratorBinExh() : SplitGenerator() {
 	//
 }
 
-std::vector<Split*> SplitGeneratorBinExh::generate(Data* data, std::vector<int> observations, std::string ID, Arguments args) {
+std::vector<Split*> SplitGeneratorBinExh::generate(Data* data, std::vector<int> observations, std::string ID, Arguments* args) {
 	
 	int n_rows = observations.size();
-	int n_min = args.getMinNodeSize();
+	int n_min = args->getMinNodeSize();
 	std::vector<Split*> splits;
 	int n_cols = data->ncols();
 	splits.reserve(n_rows);
 	std::array<std::vector<int>, 2> coltypes = data->getColTypesNumCateg();
 	int col;
 	// numeric features
-	std::vector<double> col_values;
 	for (auto it_col = coltypes[0].begin(); it_col != coltypes[0].end(); ++it_col) {
 		if (*it_col == data->getTargetIndex()) {
 			continue;
 		}
 		SortedFeatureSubset* sorted_subset = data->sorted_data->getSortedFeatureSubset(ID, *it_col);
-		for (int i = (n_min - 1); i < (n_rows - n_min); i++) {
+		for (int i = (n_min - 1); i < (n_rows - n_min); ++i) {
 				if (sorted_subset->sorted_values[i].first == sorted_subset->sorted_values[i-1].first) {
 					continue;
 				}
-				SplitNum* current_split = new SplitNum(args.getMaxChildren() - 1);
+				SplitNum* current_split = new SplitNum(args->getMaxChildren() - 1);
 				current_split->addSplitValue(sorted_subset->sorted_values[i].first);
 				current_split->setFeatureIndex(*it_col);
 				current_split->computePartitionings(data, observations);
-				if (this->checkMinNodeSize(current_split, args.getMinNodeSize())) {
+				if (this->checkMinNodeSize(current_split, args->getMinNodeSize())) {
 					splits.push_back(current_split);
 				}
+				
 		}
-		col_values.clear();
 	}
 	// categorical features
 	for (auto it_col = coltypes[1].begin(); it_col != coltypes[1].end(); ++it_col) {
@@ -72,16 +71,16 @@ std::vector<Split*> SplitGeneratorBinExh::generate(Data* data, std::vector<int> 
 		if (data->getNLevels(*it_col) == 1) {
 			continue;
 		}
-		std::vector<std::vector<std::vector<int>>> level_permuts = data->computeCategPermuts(*it_col, args.getMaxChildren());
+		std::vector<std::vector<std::vector<int>>> level_permuts = data->computeCategPermuts(*it_col, args->getMaxChildren());
 		int n_permuts = level_permuts.size();
 		for (int i = 0; i < n_permuts; i++) {
 			std::map<std::string, int> levels = data->getCategEncodings().at(*it_col);
 			for (int p = 0; p < n_permuts; p++) {
-				SplitCateg* current_split = new SplitCateg(args.getMaxChildren() - 1, levels);
+				SplitCateg* current_split = new SplitCateg(args->getMaxChildren() - 1, levels);
 				current_split->setFeatureIndex(*it_col);
 				current_split->setLevelPartitionings(level_permuts[p]);
 				current_split->computePartitionings(data, observations);
-				if (this->checkMinNodeSize(current_split, args.getMinNodeSize())) {
+				if (this->checkMinNodeSize(current_split, args->getMinNodeSize())) {
 					splits.push_back(current_split);	
 				}
 			}
@@ -95,7 +94,7 @@ SplitGeneratorMultRand::SplitGeneratorMultRand() : SplitGenerator() {
 	//
 }
 
-std::vector<Split*> SplitGeneratorMultRand::generate(Data* data, std::vector<int> observations, std::string ID, Arguments args) {
+std::vector<Split*> SplitGeneratorMultRand::generate(Data* data, std::vector<int> observations, std::string ID, Arguments* args) {
 
 	std::vector<Split*> splits;
 	int n_rows = data->nrows();
@@ -122,19 +121,19 @@ std::vector<Split*> SplitGeneratorMultRand::generate(Data* data, std::vector<int
 		if (col == data->getTargetIndex()) {
 			continue;
 		}
-		if (data->getNLevels(col) < args.getMaxChildren()) {
+		if (data->getNLevels(col) < args->getMaxChildren()) {
 			continue;
 		}
-		std::vector<std::vector<std::vector<int>>> level_permuts = data->computeCategPermuts(col, args.getMaxChildren());
+		std::vector<std::vector<std::vector<int>>> level_permuts = data->computeCategPermuts(col, args->getMaxChildren());
 		int n_permuts = level_permuts.size();
 		for (int i = 0; i < n_permuts; i++) {
 			std::map<std::string, int> levels = data->getCategEncodings().at(col);
 			for (int p = 0; p < n_permuts; p++) {
-				SplitCateg* current_split = new SplitCateg(args.getMaxChildren()-1, levels);
+				SplitCateg* current_split = new SplitCateg(args->getMaxChildren()-1, levels);
 				current_split->setFeatureIndex(col);
 				current_split->setLevelPartitionings(level_permuts[p]);
 				current_split->computePartitionings(data, observations);
-				if (this->checkMinNodeSize(current_split, args.getMinNodeSize())) {
+				if (this->checkMinNodeSize(current_split, args->getMinNodeSize())) {
 					splits.push_back(current_split);	
 				}
 			}
@@ -156,21 +155,21 @@ std::vector<Split*> SplitGeneratorMultRand::generate(Data* data, std::vector<int
 		std::uniform_int_distribution<> distr_row(0, n_unique_values - 1); // define the range
 		int R = 100;
 		for (int r = 0; r < R; r++) {
-			SplitNum* current_split = new SplitNum(args.getMaxChildren() - 1);
+			SplitNum* current_split = new SplitNum(args->getMaxChildren() - 1);
 			current_split->setFeatureIndex(col);
 			std::vector<int> rnd_obs_vec;
-			for (int i = 0; i < args.getMaxChildren() - 1; i++) {
+			for (int i = 0; i < args->getMaxChildren() - 1; i++) {
 				rnd_obs_vec.push_back(distr_row(gen));
 				std::sort(rnd_obs_vec.begin(), rnd_obs_vec.end());
 				rnd_obs_vec.erase(std::unique(rnd_obs_vec.begin(), rnd_obs_vec.end()), rnd_obs_vec.end());
 			}
-			if ((int) rnd_obs_vec.size() == args.getMaxChildren() - 1) {
-				for (int i = 0; i < args.getMaxChildren() - 1; i++) {
+			if ((int) rnd_obs_vec.size() == args->getMaxChildren() - 1) {
+				for (int i = 0; i < args->getMaxChildren() - 1; i++) {
 					current_split->addSplitValue(rnd_obs_vec[i]);
 				}
 			}
 			current_split->computePartitionings(data, observations);
-			if (this->checkMinNodeSize(current_split, args.getMinNodeSize())) {
+			if (this->checkMinNodeSize(current_split, args->getMinNodeSize())) {
 				splits.push_back(current_split);
 			}
 		}

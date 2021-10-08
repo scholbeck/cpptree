@@ -3,6 +3,7 @@
 #include <getopt.h>
 #include <iostream>
 #include "class_arguments.h"
+#include "class_formula.h"
 #include <vector>
 
 Arguments::Arguments() {
@@ -133,7 +134,8 @@ int Arguments::processArguments(int argc, char** argv)
             {"maxdepth", required_argument, nullptr, 1900},
             {"print", required_argument, nullptr, 2000},
             {"coltypes", required_argument, nullptr, 2100},
-            {"help", no_argument, nullptr, 2200}
+            {"formula", required_argument, nullptr, 2200},
+            {"help", no_argument, nullptr, 2300}
     };
 	
     while (true)
@@ -186,6 +188,11 @@ int Arguments::processArguments(int argc, char** argv)
             this->setColTypes(std::string(optarg));
             break;
         case 2200:
+            this->formula = Formula();
+            this->formula.setString(std::string(optarg));
+            this->formula.processString();
+            break;
+         case 2300:
             printHelp();
             break;
         case '?':

@@ -56,9 +56,9 @@ std::vector<std::string> parseLine(std::string line, char sep) {
 	return word_vec;
 }
 
-Data* Reader::read(std::string filename, Arguments args) {
+Data* Reader::read(std::string filename, Arguments* args) {
 	
-	char sep = args.getSep();
+	char sep = args->getSep();
 	std::vector<std::vector<std::string>> rows_strings;
 	std::string line;
 	std::ifstream file;
@@ -68,10 +68,10 @@ Data* Reader::read(std::string filename, Arguments args) {
         rows_strings.push_back(parseLine(line, sep)); // read and parse remaining lines
     }
 	std::vector<std::string> types;
-	if (args.getColTypes().empty()) {
+	if (args->getColTypes().empty()) {
     	types = detectColTypes(rows_strings[0]);
 	} else {
-		types = args.getColTypes();
+		types = args->getColTypes();
 	}
 	int n_rows = rows_strings.size();
   	int n_cols = rows_strings[0].size();

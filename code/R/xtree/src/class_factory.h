@@ -10,13 +10,14 @@
 #include "class_model.h"
 #include "class_splitgenerator.h"
 
+class Objective;
 
 class Factory {
   
   public:
-    Factory(Arguments args);
+    Factory(Arguments* args);
     
-    Arguments args;
+    Arguments* args;
 
     Objective* createObjective();
 	  Model* createModel();    

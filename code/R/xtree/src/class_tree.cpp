@@ -11,12 +11,11 @@
 #include "helper_functions.h"
 #include <iomanip>
 
-Tree::Tree(Data* data, Arguments args) : factory(args) {
+Tree::Tree(Data* data, Arguments* args) : factory(new Factory(args))  {
 	this->node_cnt = 0;
 	this->data = data;
 	this->leafnode_cnt = 0;
 	this->args = args;
-	this->factory = Factory(args);
 	this->root = new Node("0", this, convertDoubleToIntVector(data->col(0)), -1, "root");
 	this->root->split = nullptr;
 }
@@ -43,15 +42,15 @@ void Tree::gatherTreeInformation() {
 	this->depth = max_length;
 }
 
-Arguments Tree::getArgs() {
+Arguments* Tree::getArgs() {
 	return this->args;
 }
 
 int Tree::grow() {
-	Objective* obj = this->factory.createObjective();
-	Model* root_model = this->factory.createModel();
+	Objective* obj = this->factory->createObjective();
+	Model* root_model = this->factory->createModel();
 	if (root_model != nullptr) {
-		root_model->update(this->data, this->root->observations, '+');
+		root_model->updateSet(this->data, this->root->observations, '+');
 	}
 	this->root->obj_val = obj->compute(this->data, root_model, root->observations);
 
@@ -81,7 +80,7 @@ void Tree::summary() {
 }
 
 
-Factory Tree::getFactory() {
+Factory* Tree::getFactory() {
 	return this->factory;
 }
 

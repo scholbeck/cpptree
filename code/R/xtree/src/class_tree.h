@@ -10,10 +10,10 @@ class Node;
 class Tree {
   
   public:
-    Tree(Data* data, Arguments args);
+    Tree(Data* data, Arguments* args);
     
-    Arguments args;
-    Factory factory;
+    Arguments* args;
+    Factory* factory;
     Data* data;
     Node* root;
     std::vector<Node*> nodes;
@@ -22,8 +22,8 @@ class Tree {
     int depth;
     
     void addNode(Node* node);
-    Factory getFactory();
-    Arguments getArgs();
+    Factory* getFactory();
+    Arguments* getArgs();
     int grow();
     void summary();
     void freeNodeMemory();
