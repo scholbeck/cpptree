@@ -179,14 +179,14 @@ RInterface::RInterface(Rcpp::DataFrame r_data, Rcpp::StringVector coltypes,
                        Rcpp::List params) {
   
   Data* data = convertData(r_data, params["target"], coltypes);
-  Arguments args;
-  args.setTargetIndex(params["target"]);
-  args.setMinNodeSize(params["min_node_size"]);
-  args.setAlgorithm(params["search_algo_type"]);
-  args.setMaxChildren(params["n_children"]);
-  args.setMaxDepth(params["max_depth"]);
-  args.setModel(params["model_type"]);
-  args.setObjective(params["objective_type"]);
+  Arguments* args = new Arguments();
+  args->setTargetIndex(params["target"]);
+  args->setMinNodeSize(params["min_node_size"]);
+  args->setAlgorithm(params["search_algo_type"]);
+  args->setMaxChildren(params["n_children"]);
+  args->setMaxDepth(params["max_depth"]);
+  args->setModel(params["model_type"]);
+  args->setObjective(params["objective_type"]);
   
   this->tree = new Tree(data, args);
   this->tree->grow();

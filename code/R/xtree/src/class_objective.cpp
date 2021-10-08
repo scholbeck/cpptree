@@ -36,26 +36,35 @@ void ObjectiveSSE::update(Data* data, Split* split_upd, Split* split_prev) {
 	SplitDifference split_diff;
 	split_diff.computeSplitDifference(split_upd, split_prev);
 	int n_nodes = split_upd->split_obs.size();
-	
+
 	for (int j = 0; j < n_nodes; j++) {
 		if (!split_diff.additional_obs[j].empty()) {
+			double value = 0;
 			for (int i = 0; i < split_diff.additional_obs[j].size(); ++i) {
 				this->models[j]->update(data, split_diff.additional_obs[j][i], '+');
-				this->node_obj_values[j] += pow(
-					(data->elem(
-						split_diff.additional_obs[j][i], data->getTargetIndex())) - (this->models[j]->predictSingle(data, split_diff.additional_obs[j][i])), 2);
+				value = pow(
+					((data->elem(
+						split_diff.additional_obs[j][i], data->getTargetIndex())) - (this->models[j]->predictSingle(data, split_diff.additional_obs[j][i]))), 2);
+				if (std::isnan(value)) {
+					value = 0;
+				}
+				this->node_obj_values[j] += value;
 			}
 		}
 		if (!split_diff.removed_obs[j].empty()) {
+			double value = 0;
 			for (int i = 0; i < split_diff.removed_obs[j].size(); ++i) {
 				this->models[j]->update(data, split_diff.removed_obs[j][i], '-');
-				this->node_obj_values[j] -= pow(
-					(data->elem(
-						split_diff.removed_obs[j][i], data->getTargetIndex())) - (this->models[j]->predictSingle(data, split_diff.removed_obs[j][i])), 2);
+				value = pow(
+					((data->elem(
+						split_diff.removed_obs[j][i], data->getTargetIndex())) - (this->models[j]->predictSingle(data, split_diff.removed_obs[j][i]))), 2);
+				if (std::isnan(value)) {
+					value = 0;
+				}
+				this->node_obj_values[j] -= value;
 			}
 		}
 	}
-	
 }
 
 

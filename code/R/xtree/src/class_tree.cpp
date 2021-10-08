@@ -53,7 +53,6 @@ int Tree::grow() {
 		root_model->updateSet(this->data, this->root->observations, '+');
 	}
 	this->root->obj_val = obj->compute(this->data, root_model, root->observations);
-
 	int ret = this->root->recursiveSplit();
 	this->gatherTreeInformation();
 	

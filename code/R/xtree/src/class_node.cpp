@@ -105,12 +105,12 @@ std::vector<Node*> Node::splitNode() {
 				obj->update(this->tree->data, splits[i], splits[i-1]);
 			}
 			child_obj_val = aggreg.compute(obj->node_obj_values);
+			//std::cout << "child objective value " << child_obj_val << std::endl;
 			if (child_obj_val < opt_obj_val) {
 				opt_obj_val = child_obj_val;
 				opt_obj_values = obj->node_obj_values;
 				optsplit_ix = i;
 			}
-			// if aggregate objective better than parent objective, record best split 
 		}
 	}
 	std::vector<Node*> child_nodes;

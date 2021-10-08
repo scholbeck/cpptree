@@ -10,10 +10,12 @@ class Model {
 	public:
 		
 		Model();
+		
 		virtual void update(Data* data, int row, char setdiff) = 0;
-		virtual void updateSet(Data* data, std::vector<int> rows, char setdiff) = 0;
 		virtual double predictSingle(Data* data, int row) = 0;
-		virtual std::vector<double> predictMult(Data* data, std::vector<int> rows) = 0;
+	
+		void updateSet(Data* data, std::vector<int> rows, char setdiff);
+		std::vector<double> predictMult(Data* data, std::vector<int> rows);
 };
 
 
@@ -25,9 +27,22 @@ class ModelAverage: public Model {
 
 		ModelAverage();
 		void update(Data* data, int row, char setdiff);
-		void updateSet(Data* data, std::vector<int> rows, char setdiff);
 		double predictSingle(Data* data, int row);
-		std::vector<double> predictMult(Data* data, std::vector<int> rows);
+};
+
+
+class ModelSingleFeatureLinReg: public Model {
+	public:
+		ModelSingleFeatureLinReg(int feature);
+
+		double cumsum_feature, cumsum_target, cumsum_product, cumsum_squared_feature;
+		int n;
+		int feature;
+		double alpha, beta;
+
+		void update(Data* data, int row, char setdiff);
+		double predictSingle(Data* data, int row);
+		void computeCoefficients();
 };
 
 
