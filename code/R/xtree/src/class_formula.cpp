@@ -1,7 +1,8 @@
 #include "class_formula.h"
 #include <string>
-
-
+#include <algorithm>
+#include <iostream>
+#include <sstream>
 
 Formula::Formula() {
 }
@@ -11,10 +12,19 @@ void Formula::setString(std::string str) {
 }
 
 void Formula::processString() {
-
-    for (int i = 0; i < this->formula_string.length(); i++) {
-        this->features.push_back((int) this->formula_string[i]);
+    std::vector<std::string> tokens;
+    std::istringstream isstream{this->formula_string};
+    std::string buffer;
+    while (getline(isstream, buffer, '+')) {
+        tokens.push_back(buffer);
+    }
+    for (int i = 0; i < tokens.size(); ++i) {
+        tokens[i].erase(std::remove(tokens[i].begin(), tokens[i].end(), 'x'), tokens[i].end());
+        std::cout << tokens[i];
+        this->features.push_back(std::stoi(tokens[i]));
     }
 }
 
-
+std::vector<int> Formula::getFeatures() {
+    return this->features;
+}

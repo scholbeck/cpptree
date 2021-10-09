@@ -1,5 +1,5 @@
 bike:
-	./tree --filename ../../../../data/seoulbike_8000.csv --coltypes nnnnnnnnn --target 2 --sep , --task regr --algorithm exhaustive --model linear --formula 6 --objective sse --minsize 20 --children 2 --maxdepth 5
+	./tree --filename ../../../../data/seoulbike_8000.csv --coltypes nnnnnnnnn --target 2 --sep , --task regr --algorithm exhaustive --model linear --formula x6 --objective sse --minsize 20 --children 2 --maxdepth 5
 
 credit:
 	./tree --filename ../data/credit.csv --coltypes cnccncccccccncccccccc --target 20 --sep , --task classif --algorithm exhaustive --objective gini --minsize 10 --children 2 --maxdepth 10
@@ -8,7 +8,7 @@ creditmult3:
 	./tree --filename ../data/credit.csv --coltypes cnccncccccccncccccccc --target 20 --sep , --task classif --algorithm random --objective gini --minsize 10 --children 3 --maxdepth 10
 
 boston:
-	./tree --filename ../../../../data/bh.data --target 13 --sep , --task regr --algorithm exhaustive --objective sse --model linear --minsize 10 --children 2 --maxdepth 10
+	./tree --filename ../../../../data/bh.data --target 13 --sep , --task regr --algorithm exhaustive --objective sse --model linear --formula x3 --minsize 10 --children 2 --maxdepth 10
 
 bostonlinear:
 	./tree --filename ../data/bh.data --target 13 --sep , --task regr --algorithm exhaustive --objective sse --model linear --minsize 10 --children 2 --maxdepth 10

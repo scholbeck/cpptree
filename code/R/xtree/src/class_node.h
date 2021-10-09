@@ -19,12 +19,14 @@ class Node {
     std::vector<int> observations;
     Split* split;
     std::string decision_rule; // rule that was used to to get from parent to this object
+    std::string model_info; // info on model that resides in this node
     Tree* tree;
     Model* mod;
     double obj_val;
     int child_cnt;
     std::vector<Node*> child_nodes;
     bool is_leaf;
+  
     
     double getObjValue();
     std::string getDecisionRule();
@@ -40,8 +42,8 @@ class Node {
     void addChild(Node* child);
 	  void setSplit(Split* s);
 	  std::string createDecisionRule(Split* s, int child_ix);
-    void buildModel();
-
+    std::string getModelInfo();
+    void setModelInfo(std::string);
     
 };
 #endif 

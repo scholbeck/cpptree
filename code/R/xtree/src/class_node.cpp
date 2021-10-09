@@ -79,6 +79,14 @@ Split* Node::getSplitData() {
   return this->split;
 }
   
+std::string Node::getModelInfo() {
+	return this->model_info;
+}
+void Node::setModelInfo(std::string model_info) {
+	this->model_info = model_info;
+}
+
+
 std::vector<Node*> Node::splitNode() {
 
 	SplitGenerator* split_generator = this->tree->getFactory()->createSplitGenerator();
@@ -92,6 +100,7 @@ std::vector<Node*> Node::splitNode() {
 	opt_obj_val = this->obj_val;
 
 	std::vector<double> opt_obj_values;
+	std::vector<std::string> opt_model_info;
 
 	int n_splits = splits.size();
 	int n_children = this->tree->getArgs()->getMaxChildren();
@@ -110,6 +119,7 @@ std::vector<Node*> Node::splitNode() {
 				opt_obj_val = child_obj_val;
 				opt_obj_values = obj->node_obj_values;
 				optsplit_ix = i;
+				opt_model_info = obj->generateAggregateModelInfo();
 			}
 		}
 	}
@@ -119,6 +129,7 @@ std::vector<Node*> Node::splitNode() {
 	  	// if a split has been found, do:
 	  	this->split = splits[optsplit_ix];
 		this->tree->data->sorted_data->split(this->id, this->split->split_obs);
+		// partition sorted features
 		for (int i = 0; i < n_children; ++i) {
 			Node* child = new Node(
 				this->id + std::to_string(i),
@@ -126,6 +137,7 @@ std::vector<Node*> Node::splitNode() {
 				this->split->split_obs[i],
 				opt_obj_values[i],
 				this->createDecisionRule(this->split, i));
+			child->setModelInfo(opt_model_info[i]);	
 			child_nodes.push_back(child);
 		}
 	}
@@ -135,6 +147,7 @@ std::vector<Node*> Node::splitNode() {
 	  }
 	}
 	delete(obj);
+	
 	return child_nodes;
 }
 
@@ -154,7 +167,6 @@ int Node::recursiveSplit() {
 	} else {
 		this->is_leaf = true;
 	}
-	//delete(this->data);
 	return ret;
 }
 

@@ -19,6 +19,16 @@ Objective::Objective(Arguments* args) : factory(new Factory(args)) {
 	}
 }
 
+std::vector<std::string> Objective::generateAggregateModelInfo() {
+	std::vector<std::string> aggr_model_info(this->n_nodes);
+	for (int i = 0; i < this->n_nodes; ++i) {
+		aggr_model_info[i] = this->models[i]->generateModelInfo();
+		// model info is only generated upon request (i.e., if a better split than the previous one is found)
+	}
+	return aggr_model_info;
+}
+
+// OBJECTIVE SSE
 ObjectiveSSE::ObjectiveSSE(Arguments* args) : Objective(args) {
 }
 
@@ -68,8 +78,7 @@ void ObjectiveSSE::update(Data* data, Split* split_upd, Split* split_prev) {
 }
 
 
-// ObjectiveGini
-
+// OBJECTIVE GINI
 ObjectiveGini::ObjectiveGini(Arguments* args) : Objective(args) {
 }
 

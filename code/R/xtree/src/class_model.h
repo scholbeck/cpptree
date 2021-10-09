@@ -11,9 +11,12 @@ class Model {
 		
 		Model();
 		
+		// methods to be overwritten by inheriting classes
 		virtual void update(Data* data, int row, char setdiff) = 0;
 		virtual double predictSingle(Data* data, int row) = 0;
-	
+		virtual std::string generateModelInfo() = 0;
+
+		// common methods for all models
 		void updateSet(Data* data, std::vector<int> rows, char setdiff);
 		std::vector<double> predictMult(Data* data, std::vector<int> rows);
 };
@@ -26,8 +29,11 @@ class ModelAverage: public Model {
 		int n;
 
 		ModelAverage();
+		// overwritten methods
 		void update(Data* data, int row, char setdiff);
 		double predictSingle(Data* data, int row);
+		std::string generateModelInfo();
+
 };
 
 
@@ -40,8 +46,11 @@ class ModelSingleFeatureLinReg: public Model {
 		int feature;
 		double alpha, beta;
 
+		// overwritten methods
 		void update(Data* data, int row, char setdiff);
 		double predictSingle(Data* data, int row);
+		std::string generateModelInfo();
+		// additional model-specific methods
 		void computeCoefficients();
 };
 

@@ -1,7 +1,6 @@
 setwd("xtree")
 library(Rcpp)
 library(devtools)
-library(simstudy)
 
 devtools::load_all()
 
@@ -14,10 +13,11 @@ df = read.csv("../../../data/seoulbike.csv", header = FALSE)
 tree = xtree(df,
              n_children = 2,
              objective_type = "sse",
-             model_type = "mean",
+             model_type = "linear",
+             formula = "x4",
              search_algo_type = "exhaustive",
              min_node_size = 20,
-             max_depth = 5,
+             max_depth = 3,
              target = 1)
 
 tree$print()
@@ -27,7 +27,7 @@ strct = tree$getTreeStructure()
 partyobj = convertToParty(tree, df)
 
 library(ggparty)
-ggparty(partyobj, add_vars = list(ID = "$node$info$ID")) +
+ggparty(partyobj, add_vars = list(ID = "$node$info$model")) +
   geom_edge() +
   geom_edge_label() +
   geom_node_label(aes(label = splitvar),

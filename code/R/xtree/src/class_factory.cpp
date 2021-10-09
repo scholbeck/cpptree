@@ -27,7 +27,7 @@ Model* Factory::createModel() {
 	if ((this->args->getModel() == "mean") && (this->args->getObjective() == "sse")) {
 		m = new ModelAverage();
 	} else if ((this->args->getModel() == "linear") && (this->args->getObjective() == "sse")) {
-		m = new ModelSingleFeatureLinReg(5);
+		m = new ModelSingleFeatureLinReg(this->args->getFormula()->getFeatures()[0]);
 	} else if ((this->args->getModel() == "") && (this->args->getObjective() == "gini")) {}
 	return m;
 }

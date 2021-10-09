@@ -9,7 +9,6 @@
 class Factory;
 
 class Objective {
-	// virtual class
 	public:
     	Objective(Arguments* args);
 		virtual ~Objective() {}
@@ -22,6 +21,8 @@ class Objective {
 		std::array<std::vector<int>, 2> computeSplitDifference(Split* split_upd, Split* split_prev);
 		virtual double compute(Data* data, Model* mod, std::vector<int> observations) = 0;
 		virtual void update(Data* data, Split* split_upd, Split* split_prev) = 0;
+
+		std::vector<std::string> generateAggregateModelInfo();
 };
 
 class ObjectiveSSE: public Objective {

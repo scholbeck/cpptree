@@ -48,6 +48,10 @@ double ModelAverage::predictSingle(Data* data, int row) {
 	return this->mean_target;
 }
 
+std::string ModelAverage::generateModelInfo() {
+	std::string str = std::string("mean y = ") + std::to_string(this->mean_target);
+	return str;
+}
 
 /*
 SINGLE FEATURE LINEAR REGRESSION MODEL
@@ -81,24 +85,19 @@ void ModelSingleFeatureLinReg::update(Data* data, int row, char setdiff) {
 
 		this->computeCoefficients();
 	}
-	//std::cout << "alpha: " << this->alpha << " beta: " << this->beta << std::endl << std::flush;
 }
 
 void ModelSingleFeatureLinReg::computeCoefficients() {
 	this->beta = ((this->n * this->cumsum_product) - cumsum_feature - cumsum_target) / ((this->n * this->cumsum_squared_feature) - pow(this->cumsum_feature, 2));
-	this->alpha = (this->cumsum_target / this->n) - (this->beta * (this->cumsum_feature / this->n));
-
-	if (std::isnan(this->beta)) {
-		this->beta = 0;
-	}
-	if (std::isnan(this->alpha)) {
-		this->alpha = 0;
-	}
-	
+	this->alpha = (this->cumsum_target / this->n) - (this->beta * (this->cumsum_feature / this->n));	
 }
 
 double ModelSingleFeatureLinReg::predictSingle(Data* data, int row) {
-	double prediction = this->alpha + (data->elem(row, this->feature) * this->beta);
-	//std::cout << prediction;
-	return prediction;
+	return this->alpha + (data->elem(row, this->feature) * this->beta);
+}
+
+std::string ModelSingleFeatureLinReg::generateModelInfo() {
+	std::string str = std::string("alpha = ") + std::to_string(this->alpha) + " | ";
+	str += std::string("beta = ") + std::to_string(this->beta);
+	return str;
 }

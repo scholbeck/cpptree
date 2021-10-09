@@ -533,47 +533,6 @@ int Data::getNLevels(int col) {
 	return levels.size();
 }
 
-
-/*
-void Data::sortFeatures() {
-  int n_cols = this->ncols();
-  for (int j = 1; j < n_cols; j++) {
-    if (j == this->getTargetIndex()) {
-      continue;
-    }
-    std::vector<double> single_feature = this->col(j);
-    std::sort(single_feature.begin(), single_feature.end());
-    this->sorted_features.insert(std::pair<int, std::vector<double>>(j, single_feature));
-  }
-}
-
-std::map<int, std::vector<double>> Data::subsetSortedFeatureValues(std::vector<int> rows) {
-  std::map<int, std::vector<double>> sorted_features_update;
-  int n_cols = this->ncols();
-  int n_rows_subset = rows.size();
-  for (int j = 1; j < n_cols; j++) {
-    if (j == this->getTargetIndex()) {
-      continue;
-    }
-    int r;
-    std::vector<double> single_feature_update;
-    for (int i = 0; i < n_rows_subset; i++) {
-      r = rows[i];
-      single_feature_update.push_back(this->sorted_features.at(j)[r]);
-    }
-    // sorted_features_update.insert(j, single_feature);
-    sorted_features_update.insert(std::pair<int, std::vector<double>>(j, single_feature_update));
-  }
-  return sorted_features_update;
-}
-
-
-std::vector<double> Data::getSortedFeatureValues(int col) {
-  return this->sorted_features.at(col);
-}
-
-*/
-
 SortedFeatureSubset::SortedFeatureSubset(size_t size) {
 	this->sorted_values.reserve(size);
 }

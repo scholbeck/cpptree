@@ -187,6 +187,10 @@ RInterface::RInterface(Rcpp::DataFrame r_data, Rcpp::StringVector coltypes,
   args->setMaxDepth(params["max_depth"]);
   args->setModel(params["model_type"]);
   args->setObjective(params["objective_type"]);
+  Formula* formula = new Formula();
+  formula->setString(params["formula"]);
+  formula->processString();
+  args->setFormula(formula);
   
   this->tree = new Tree(data, args);
   this->tree->grow();
@@ -195,20 +199,13 @@ RInterface::RInterface(Rcpp::DataFrame r_data, Rcpp::StringVector coltypes,
   this->leafnode_cnt = this->tree->leafnode_cnt;
 }
 
-// 
-// void RInterface::grow() {
-//   this->tree->grow();
-//   this->depth = this->tree->depth;
-//   this->node_cnt = this->tree->node_cnt;
-//   this->leafnode_cnt = this->tree->leafnode_cnt;
-// }
 
 void RInterface::print() {
   printTreeStructureToR(this->tree);
 }
 
 Rcpp::DataFrame RInterface::getTreeStructure() {
-  Rcpp::StringVector id_vec, parent_split_vec, split_value_vec, split_type_vec, level_partitioning_vec;
+  Rcpp::StringVector id_vec, parent_split_vec, split_value_vec, split_type_vec, level_partitioning_vec, model_info_vec;
   Rcpp::IntegerVector is_leaf_vec, split_feature_vec;
   Split* split;
   for (int i = 0; i < this->tree->node_cnt; i++) {
@@ -216,6 +213,7 @@ Rcpp::DataFrame RInterface::getTreeStructure() {
     parent_split_vec.push_back(this->tree->nodes[i]->getDecisionRule());
     is_leaf_vec.push_back(this->tree->nodes[i]->isLeaf());
     split = this->tree->nodes[i]->getSplitData();
+    model_info_vec.push_back(this->tree->nodes[i]->getModelInfo());
     
     if (split == nullptr) {
       split_feature_vec.push_back(-1);
@@ -225,7 +223,6 @@ Rcpp::DataFrame RInterface::getTreeStructure() {
       continue;
     }
     
-    // Rcpp::Rcout << "feature" << split->getSplitFeatureIndex();
     split_feature_vec.push_back(split->getSplitFeatureIndex());
     std::string split_type = split->getSplitType();
     split_type_vec.push_back(split_type);
@@ -275,7 +272,8 @@ Rcpp::DataFrame RInterface::getTreeStructure() {
     Rcpp::Named("feature") = split_feature_vec,
     Rcpp::Named("values") = split_value_vec,
     Rcpp::Named("type") = split_type_vec,
-    Rcpp::Named("levels") = level_partitioning_vec);
+    Rcpp::Named("levels") = level_partitioning_vec,
+    Rcpp::Named("model") = model_info_vec);
   
   return tree_structure;
 }

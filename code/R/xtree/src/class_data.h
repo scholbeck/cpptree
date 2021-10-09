@@ -16,14 +16,13 @@ class Data {
 		Data();
     
 		std::vector<std::vector<double>> rows; // each row is a vector containg all col values
+		std::vector<int> features;
 		int target_index;
 		std::vector<std::string> coltypes;
 		std::map<int, std::map<std::string, int>> categ_encodings;
-		std::map<int, std::vector<double>> sorted_features;
 		SortedData* sorted_data;
 
 		void load(std::string filename); // read data from disc
-		
 		void setTargetIndex(int target);
 		void addCategEncoding(int col, std::map<std::string, int>);
 		std::map<int, std::map<std::string, int>> getCategEncodings();
@@ -59,58 +58,44 @@ class Data {
 		std::vector<std::vector<int>> splitBinaryObs(double split_value, int col_index);
 		int getNLevels(int col);
 		void sortFeatures();
-		std::vector<double> getSortedFeatureValues(int col);
-		std::map<int, std::vector<double>> subsetSortedFeatureValues(std::vector<int> rows);
-		void createSortedData();
-		 
-		 /*
-		std::vector<Data*>  splitCateg(int col_index);
-		std::vector<Data*>  splitBinary(double split_value, int col_index);
-		std::vector<Data*>  split(Split* split);
-		std::vector<std::vector<int>> splitBinaryObs(double split_value, int col_index);
-		//std::vector<std::vector<int>> splitCategObs(int col_index);
-		std::vector<std::vector<int>> splitCategObs(int col_index, std::vector<std::vector<int>> level_permuts);
-		std::vector<std::vector<int>> splitObs(Split* split);
-		void orderFeatures();
-		*/
-		
+		void createSortedData();	
 };
 
 
 
 class SortedFeatureSubset {
 
-  public:
-    SortedFeatureSubset(size_t size);
-    std::string ID;
-    std::vector<std::pair<double, int>> sorted_values;
-    // first pair element: sorted asc feature values
-    // second pair element: corresponding row IDs
+	public:
+		SortedFeatureSubset(size_t size);
+		std::string ID;
+		std::vector<std::pair<double, int>> sorted_values;
+		// first pair element: sorted asc feature values
+		// second pair element: corresponding row IDs
 };
 
 class SortedFeature {
 
-  public:
-    SortedFeature();
-    int index;
-    std::map<std::string, SortedFeatureSubset*> subsets;
-	// maps node ID, e.g., "0010101", to SortedFeatureSubset
+	public:
+		SortedFeature();
+		int index;
+		std::map<std::string, SortedFeatureSubset*> subsets;
+		// maps node ID, e.g., "0010101", to SortedFeatureSubset
 
-	void splitSubset(std::string ID, std::vector<std::vector<int>> subset_obs);
-	SortedFeatureSubset* getSubset(std::string ID);
+		void splitSubset(std::string ID, std::vector<std::vector<int>> subset_obs);
+		SortedFeatureSubset* getSubset(std::string ID);
 };
 
 class SortedData {
   
 	public:
-	SortedData();
-	
-	std::map<int, SortedFeature*> sorted_features;
-	// maps feature index to SortedFeature objects
+		SortedData();
+		
+		std::map<int, SortedFeature*> sorted_features;
+		// maps feature index to SortedFeature objects
 
-	void sort(Data* data);
-	void split(std::string ID, std::vector<std::vector<int>> subset_obs);
-	SortedFeatureSubset* getSortedFeatureSubset(std::string ID, int feature);
+		void sort(Data* data);
+		void split(std::string ID, std::vector<std::vector<int>> subset_obs);
+		SortedFeatureSubset* getSortedFeatureSubset(std::string ID, int feature);
 };
 
 #endif 

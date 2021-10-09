@@ -108,6 +108,13 @@ void Arguments::setColTypes(std::string coltypes) {
   this->coltypes = type_vec;
 }
 
+Formula* Arguments::getFormula() {
+  return this->formula;
+}
+void Arguments::setFormula(Formula* formula) {
+  this->formula = formula;
+}
+
 void Arguments::checkArgs() {
 	if (this->max_depth == 0) {
 		this->max_depth = 30;
@@ -188,9 +195,9 @@ int Arguments::processArguments(int argc, char** argv)
             this->setColTypes(std::string(optarg));
             break;
         case 2200:
-            this->formula = Formula();
-            this->formula.setString(std::string(optarg));
-            this->formula.processString();
+            this->formula = new Formula();
+            this->formula->setString(std::string(optarg));
+            this->formula->processString();
             break;
          case 2300:
             printHelp();

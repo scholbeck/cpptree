@@ -27,9 +27,9 @@ convertCategEncodings = function(data) {
   return(encodings)
 }
 
-xtree = function(data, target, min_node_size, n_children, max_depth, objective_type, model_type = "", search_algo_type) {
+xtree = function(data, target, min_node_size, n_children, max_depth, objective_type, model_type = "", formula = "", search_algo_type) {
   coltypes = convertColTypes(data)
-  params = list("n_children" = n_children, "objective_type" = objective_type, "model_type" = model_type, "search_algo_type" = search_algo_type,
+  params = list("n_children" = n_children, "objective_type" = objective_type, "model_type" = model_type, "formula" = formula, "search_algo_type" = search_algo_type,
                 "min_node_size" = min_node_size, "max_depth" = max_depth, "target" = target)
   tree = ExtensibleTree$new(data, coltypes, params)
   return(tree)
@@ -54,7 +54,11 @@ convertToParty = function(tree, data) {
     if (nrow(leaf_nodes) > 0) {
       for (i in 1:nrow(leaf_nodes)) {
         party_id = leaf_nodes[i, "party_ID"]
-        n = partynode(id = party_id, info = list("ID" = leaf_nodes[i, "ID"]))
+        n = partynode(
+          id = party_id,
+          info = list(
+            "ID" = leaf_nodes[i, "ID"],
+            "model" = leaf_nodes[i, "model"]))
         leafnode_list = append(leafnode_list, list(n))
       }
       node_list = append(node_list, leafnode_list)
@@ -86,10 +90,17 @@ convertToParty = function(tree, data) {
         }
         split_feature = as.integer(strct[strct$ID == parent_id, "feature"])
         split_type = strct[strct$ID == parent_id, "type"]
+        model_info = strct[strct$ID == parent_id, "model"]
         if (split_type == "num") {
           split_values = as.numeric(unlist(strsplit(strct[strct$ID == parent_id, "values"], ",")))
           sp = partysplit(varid = split_feature, breaks = split_values)
-          n = partynode(id = party_id, split = sp, info = list("ID" = parent_id), kids = child_nodes_sorted)
+          n = partynode(
+            id = party_id,
+            split = sp,
+            info = list(
+              "ID" = parent_id,
+              "model" = model_info),
+            kids = child_nodes_sorted)
           parentnode_list = append(parentnode_list, list(n))
         } else if (split_type == "categ") {
           split_ix = unlist(strsplit(strct[strct$ID == parent_id, "levels"], split = "|", fixed = TRUE))
@@ -102,7 +113,13 @@ convertToParty = function(tree, data) {
           })
           split_ix = unlist(split_ix)
           sp = partysplit(varid = split_feature, index = split_ix)
-          n = partynode(id = party_id, split = sp, info = list("ID" = parent_id), kids = child_nodes_sorted)
+          n = partynode(
+            id = party_id,
+            split = sp,
+            info = list(
+              "ID" = parent_id,
+              "model" = model_info),
+            kids = child_nodes_sorted)
           parentnode_list = append(parentnode_list, list(n))
         }
       }

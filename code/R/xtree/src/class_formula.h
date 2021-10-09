@@ -14,5 +14,7 @@ class Formula {
 
     void setString(std::string);
     void processString();
+    std::vector<int> getFeatures();
+    
 };
 #endif 

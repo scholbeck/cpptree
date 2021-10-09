@@ -24,7 +24,7 @@ class Arguments {
 	std::string print;
 	std::vector<std::string> coltypes;
     char sep;
-    Formula formula;
+    Formula* formula;
 
     std::string getFilename();
     void setFilename(std::string);
@@ -61,6 +61,9 @@ class Arguments {
 
 	std::vector<std::string> getColTypes();
 	void setColTypes(std::string coltypes);
+
+	Formula* getFormula();
+	void setFormula(Formula* formula);
 
 	int processArguments(int argc, char** argv);
 	void checkArgs();
