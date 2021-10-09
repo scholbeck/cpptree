@@ -1,9 +1,11 @@
 #include "class_data.h"
 #include "class_model.h"
 #include "helper_functions.h"
-#include "iostream"
+#include <iostream>
+#include <sstream>
 #include <algorithm>
 #include <cmath>
+#include <iomanip>
 
 Model::Model() {
 }
@@ -49,8 +51,10 @@ double ModelAverage::predictSingle(Data* data, int row) {
 }
 
 std::string ModelAverage::generateModelInfo() {
-	std::string str = std::string("mean y = ") + std::to_string(this->mean_target);
-	return str;
+	std::ostringstream sstream;
+	sstream << std::setprecision(2) << std::fixed; // printout with 2 decimal places
+	sstream << "mean y = " << this->mean_target;
+	return sstream.str();
 }
 
 /*
@@ -97,7 +101,8 @@ double ModelSingleFeatureLinReg::predictSingle(Data* data, int row) {
 }
 
 std::string ModelSingleFeatureLinReg::generateModelInfo() {
-	std::string str = std::string("alpha = ") + std::to_string(this->alpha) + " | ";
-	str += std::string("beta = ") + std::to_string(this->beta);
-	return str;
+	std::ostringstream sstream;
+	sstream << std::setprecision(2) << std::fixed; // printout with 2 decimal places
+	sstream << "alpha = " << this->alpha << " | beta = " << this->beta;
+	return sstream.str();
 }

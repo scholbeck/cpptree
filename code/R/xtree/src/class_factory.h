@@ -15,8 +15,9 @@ class Objective;
 class Factory {
   
   public:
-    Factory(Arguments* args);
+    Factory(Data* data, Arguments* args);
     
+    Data* data;
     Arguments* args;
 
     Objective* createObjective();

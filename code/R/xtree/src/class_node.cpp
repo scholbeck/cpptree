@@ -109,12 +109,11 @@ std::vector<Node*> Node::splitNode() {
 	if (!splits.empty()) {
 		for (int i = 0; i < n_splits; ++i) {
 			if (i == 0) {
-				obj->update(this->tree->data, splits[0], nullptr);
+				obj->update(splits[0], nullptr);
 			} else {
-				obj->update(this->tree->data, splits[i], splits[i-1]);
+				obj->update(splits[i], splits[i-1]);
 			}
 			child_obj_val = aggreg.compute(obj->node_obj_values);
-			//std::cout << "child objective value " << child_obj_val << std::endl;
 			if (child_obj_val < opt_obj_val) {
 				opt_obj_val = child_obj_val;
 				opt_obj_values = obj->node_obj_values;
@@ -147,7 +146,7 @@ std::vector<Node*> Node::splitNode() {
 	  }
 	}
 	delete(obj);
-	
+
 	return child_nodes;
 }
 

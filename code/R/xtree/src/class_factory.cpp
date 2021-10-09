@@ -8,16 +8,17 @@
 #include "class_model.h"
 #include "class_splitgenerator.h"
 
-Factory::Factory(Arguments* args) {
+Factory::Factory(Data* data, Arguments* args) {
+	this->data = data;
 	this->args = args;
 }
 
 Objective* Factory::createObjective() {
 	Objective* obj;
 	if (this->args->getObjective() == "sse") {
-		obj = new ObjectiveSSE(this->args);
+		obj = new ObjectiveSSE(this->data, this->args);
 	} else if (this->args->getObjective() == "gini") {
-		obj = new ObjectiveGini(this->args);
+		obj = new ObjectiveGini(this->data, this->args);
 	}
 	return obj;
 }

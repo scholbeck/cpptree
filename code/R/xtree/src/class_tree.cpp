@@ -11,7 +11,7 @@
 #include "helper_functions.h"
 #include <iomanip>
 
-Tree::Tree(Data* data, Arguments* args) : factory(new Factory(args))  {
+Tree::Tree(Data* data, Arguments* args) : factory(new Factory(data, args))  {
 	this->node_cnt = 0;
 	this->data = data;
 	this->leafnode_cnt = 0;
@@ -52,7 +52,7 @@ int Tree::grow() {
 	if (root_model != nullptr) {
 		root_model->updateSet(this->data, this->root->observations, '+');
 	}
-	this->root->obj_val = obj->compute(this->data, root_model, root->observations);
+	this->root->obj_val = obj->compute(root_model, root->observations);
 	int ret = this->root->recursiveSplit();
 	this->gatherTreeInformation();
 	
@@ -99,7 +99,7 @@ void Tree::printSubTree(Node* node) {
 	} else {
 		if (node->isLeaf()) {
 			// std::cout << std::string((level * 4) , ' ') << "├──" << repeatString((((this->depth) - level) * 4) + depth * 2, "─") << "<" << node->getDecisionRule() << ">──[*" << node->getId() << "]\n" ;//<< "] (" << node->getModel()->getShortSummary() << " | obj = " << sstream.str() << ")\n";
-			std::cout << std::string((level * 4) , ' ') << "├──<" << node->getDecisionRule() << ">──[*" << node->getId() << "]\n" ;//<< "] (" << node->getModel()->getShortSummary() << " | obj = " << sstream.str() << ")\n";
+			std::cout << std::string((level * 4) , ' ') << "├──<" << node->getDecisionRule() << ">──[*" << node->getId() << "] (" << node->getModelInfo() << ")\n" ;//<< "] (" << node->getModel()->getShortSummary() << " | obj = " << sstream.str() << ")\n";
 		} else {
 			std::cout << std::string((level * 4) , ' ') << "├──<" << node->getDecisionRule() << ">──[" << node->getId() << "]\n" ;//<< "] (" << node->getModel()->getShortSummary() << " | obj = " << sstream.str() << ")\n";
 		}

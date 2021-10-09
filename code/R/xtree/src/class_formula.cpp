@@ -20,7 +20,6 @@ void Formula::processString() {
     }
     for (int i = 0; i < tokens.size(); ++i) {
         tokens[i].erase(std::remove(tokens[i].begin(), tokens[i].end(), 'x'), tokens[i].end());
-        std::cout << tokens[i];
         this->features.push_back(std::stoi(tokens[i]));
     }
 }

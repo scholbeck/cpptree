@@ -1,0 +1,20 @@
+./tree --filename ../../../../data/seoulbike_8000.csv --coltypes nnnnnnnnn --target 2 --sep , --task regr --algorithm exhaustive --model linear --formula x6 --objective sse --minsize 20 --children 2 --maxdepth 5
+6------------------------------------------------------
+TREE SUMMARY
+	nodes : 11
+	leaf nodes : 6
+	depth : 5
+
+└──[0]
+    ├──<x9 <= 3.50>──[00]
+        ├──<x9 <= 2.80>──[000]
+            ├──<x9 <= 2.40>──[0000]
+                ├──<x9 <= 2.10>──[00000]
+                    ├──<x9 <= 1.90>──[*000000] (alpha = 47.02 | beta = 2.35)
+                    ├──<x9 > 1.90>──[*000001] (alpha = -405.80 | beta = -39.81)
+                ├──<x9 > 2.10>──[*00001] (alpha = -29.10 | beta = -14.16)
+            ├──<x9 > 2.40>──[*0001] (alpha = -55.44 | beta = -15.94)
+        ├──<x9 > 2.80>──[*001] (alpha = -94.49 | beta = -33.96)
+    ├──<x9 > 3.50>──[*01] (alpha = 33.37 | beta = -35.86)
+------------------------------------------------------
+Training complete. Duration: 5.68866sec
