@@ -41,7 +41,7 @@ class ModelSingleFeatureLinReg: public Model {
 	public:
 		ModelSingleFeatureLinReg(int feature);
 
-		double cumsum_feature, cumsum_target, cumsum_product, cumsum_squared_feature;
+		double cumsum_feature, cumsum_target, mean_feature, mean_target, cov, var;
 		int n;
 		int feature;
 		double alpha, beta;

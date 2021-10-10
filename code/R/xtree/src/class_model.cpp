@@ -67,8 +67,10 @@ ModelSingleFeatureLinReg::ModelSingleFeatureLinReg(int feature) : Model() {
 	this->n = 0;
 	this->cumsum_feature = 0;
 	this->cumsum_target = 0;
-	this->cumsum_product = 0;
-	this->cumsum_squared_feature = 0;
+	this->mean_feature = 0;
+	this->mean_target = 0;
+	this->cov = 0;
+	this->var = 0;
 }
 
 void ModelSingleFeatureLinReg::update(Data* data, int row, char setdiff) {
@@ -76,28 +78,36 @@ void ModelSingleFeatureLinReg::update(Data* data, int row, char setdiff) {
 		this->n += 1;
 		this->cumsum_feature += data->elem(row, this->feature);
 		this->cumsum_target += data->elem(row, data->getTargetIndex());
-		this->cumsum_product += data->elem(row, this->feature) * data->elem(row, data->getTargetIndex()); 
-		this->cumsum_squared_feature += pow(data->elem(row, this->feature), 2);
-
+		this->mean_feature += this->cumsum_feature / this->n;
+		this->mean_target += this->cumsum_target / this->n;
+		this->cov += (data->elem(row, this->feature) - this->mean_feature) * (data->elem(row, data->getTargetIndex()) - this->mean_target);
+		this->var += pow((data->elem(row, this->feature) - this->mean_feature), 2);
+		
 		this->computeCoefficients();
 	} else {
 		this->n -= 1;
 		this->cumsum_feature -= data->elem(row, this->feature);
 		this->cumsum_target -= data->elem(row, data->getTargetIndex());
-		this->cumsum_product -= data->elem(row, this->feature) * data->elem(row, data->getTargetIndex()); 
-		this->cumsum_squared_feature -= pow(data->elem(row, this->feature), 2);
-
+		this->mean_feature -= this->cumsum_feature / this->n;
+		this->mean_target -= this->cumsum_target / this->n;
+		this->cov -= (data->elem(row, this->feature) - this->mean_feature) * (data->elem(row, data->getTargetIndex()) - this->mean_target);
+		this->var -= pow((data->elem(row, this->feature) - this->mean_feature), 2);
+		
 		this->computeCoefficients();
 	}
 }
 
 void ModelSingleFeatureLinReg::computeCoefficients() {
-	this->beta = ((this->n * this->cumsum_product) - cumsum_feature - cumsum_target) / ((this->n * this->cumsum_squared_feature) - pow(this->cumsum_feature, 2));
-	this->alpha = (this->cumsum_target / this->n) - (this->beta * (this->cumsum_feature / this->n));	
+	if (this->var == 0) {
+		this->beta = 0;
+	} else {
+		this->beta = this->cov / this->var;
+	}
+	this->alpha = this->mean_target - (this->beta * this->mean_feature);
 }
 
 double ModelSingleFeatureLinReg::predictSingle(Data* data, int row) {
-	return this->alpha + (data->elem(row, this->feature) * this->beta);
+	return (this->alpha + (data->elem(row, this->feature) * this->beta));
 }
 
 std::string ModelSingleFeatureLinReg::generateModelInfo() {

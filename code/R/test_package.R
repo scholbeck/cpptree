@@ -17,7 +17,7 @@ tree = xtree(df,
              formula = "x6",
              search_algo_type = "exhaustive",
              min_node_size = 20,
-             max_depth = 3,
+             max_depth = 30,
              target = 1)
 
 tree$print()

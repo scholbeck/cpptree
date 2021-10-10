@@ -32,9 +32,15 @@ std::vector<std::string> Objective::generateAggregateModelInfo() {
 	return aggr_model_info;
 }
 
-// OBJECTIVE SSE
-ObjectiveSSE::ObjectiveSSE(Data* data, Arguments* args) : Objective(data, args) {
+void Objective::freeInternalMemory() {
+	delete(this->factory);
+	for (int i = 0; i < this->models.size(); ++i) {
+		delete(this->models[i]);
+	}
 }
+
+// OBJECTIVE SSE
+ObjectiveSSE::ObjectiveSSE(Data* data, Arguments* args) : Objective(data, args) {}
 
 double ObjectiveSSE::compute(Model* mod, std::vector<int> observations) {
 	int n = observations.size();

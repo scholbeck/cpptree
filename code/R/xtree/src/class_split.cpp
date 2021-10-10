@@ -19,6 +19,25 @@ Split::Split(int max_splits) {
 	}
 }
 
+int Split::getNumberChildNodes() {
+	return (this->split_values.size() + 1);
+}
+
+void Split::setObjValues(std::vector<double> obj_values) {
+	this->obj_values = obj_values;
+}
+std::vector<double> Split::getObjValues() {
+	return this->obj_values;
+}
+
+void Split::setModelInfo(std::vector<std::string> model_info) {
+	this->model_info = model_info;
+}
+std::vector<std::string> Split::getModelInfo() {
+	return this->model_info;
+}
+
+
 void Split::sortSplitValues() {
 	std::sort(this->split_values.begin(), this->split_values.end());
 	this->split_values.erase(unique(this->split_values.begin(), this->split_values.end()), this->split_values.end()); // remove duplicate split values

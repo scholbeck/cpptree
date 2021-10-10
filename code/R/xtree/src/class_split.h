@@ -20,17 +20,23 @@ class Split {
 		int max_splits;
 		std::vector<double> split_values; // empty for categorical splits
 		std::vector<std::vector<int>> subset_level_sets; // empty for continuous splits
-		std::vector<std::vector<int>> split_obs;
-		
+		std::vector<std::vector<int>> split_obs; // one vector for each child node
+		std::vector<double> obj_values; // one value for each child node
+		std::vector<std::string> model_info; // one string for each child node
+
 		virtual std::string createDecisionRule(int child_ix) = 0;
 		virtual std::string getSplitType() = 0;
 		virtual void computePartitionings(Data* data, std::vector<int> observations) = 0;
-		
+
+		int	getNumberChildNodes();
 		int getSplitFeatureIndex();
 		std::vector<double> getSplitValues();
+		std::vector<double> getObjValues();
+		void setObjValues(std::vector<double> obj_values);
+		std::vector<std::string> getModelInfo();
+		void setModelInfo(std::vector<std::string> model_info);
 		void setLevelPartitionings(std::vector<std::vector<int>> level_sets);
 		std::vector<std::vector<int>> getLevelPartitionings();
-		int nsplits();
 		void setFeatureIndex(int feature_index);
 		void addSplitValue(double splitpoint);
 		void clear();

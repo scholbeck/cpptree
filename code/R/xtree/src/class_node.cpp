@@ -1,6 +1,7 @@
 #include <sstream>
 #include <iostream>
 #include <string>
+#include "class_split.h"
 #include "class_arguments.h"
 #include "class_node.h"
 #include "class_objective.h"
@@ -8,6 +9,7 @@
 #include "class_data.h"
 #include "class_aggregation.h"
 #include "class_splitgenerator.h"
+#include "class_splitter.h"
 #include "helper_functions.h"
 #include <iomanip>
 
@@ -88,65 +90,25 @@ void Node::setModelInfo(std::string model_info) {
 
 
 std::vector<Node*> Node::splitNode() {
+	Splitter* splitter = this->tree->getFactory()->createSplitter();
+	this->split = splitter->findBestSplit(this->tree->data, this->observations, this->id, this->tree->getArgs(), this->obj_val);
+	delete(splitter);
 
-	SplitGenerator* split_generator = this->tree->getFactory()->createSplitGenerator();
-	std::vector<Split*> splits = split_generator->generate(this->tree->data, this->observations, this->id, this->tree->getArgs());
-	delete(split_generator);
-	
-	AggregationAdditive aggreg;
-	Objective* obj = this->tree->getFactory()->createObjective();
-
-	double child_obj_val, opt_obj_val;
-	opt_obj_val = this->obj_val;
-
-	std::vector<double> opt_obj_values;
-	std::vector<std::string> opt_model_info;
-
-	int n_splits = splits.size();
-	int n_children = this->tree->getArgs()->getMaxChildren();
-	int optsplit_ix = -1;
-			
-	if (!splits.empty()) {
-		for (int i = 0; i < n_splits; ++i) {
-			if (i == 0) {
-				obj->update(splits[0], nullptr);
-			} else {
-				obj->update(splits[i], splits[i-1]);
-			}
-			child_obj_val = aggreg.compute(obj->node_obj_values);
-			if (child_obj_val < opt_obj_val) {
-				opt_obj_val = child_obj_val;
-				opt_obj_values = obj->node_obj_values;
-				optsplit_ix = i;
-				opt_model_info = obj->generateAggregateModelInfo();
-			}
-		}
-	}
 	std::vector<Node*> child_nodes;
-	child_nodes.reserve(n_children);
-	if (optsplit_ix != -1) {
+	if (this->split != nullptr) {
 	  	// if a split has been found, do:
-	  	this->split = splits[optsplit_ix];
-		this->tree->data->sorted_data->split(this->id, this->split->split_obs);
+	  	this->tree->data->sorted_data->split(this->id, this->split->split_obs);
 		// partition sorted features
-		for (int i = 0; i < n_children; ++i) {
+		for (int i = 0; i < (this->split->getNumberChildNodes()); ++i) {
 			Node* child = new Node(
 				this->id + std::to_string(i),
 				this->tree,
 				this->split->split_obs[i],
-				opt_obj_values[i],
-				this->createDecisionRule(this->split, i));
-			child->setModelInfo(opt_model_info[i]);	
+				this->split->obj_values[i],
+				this->createDecisionRule(this->split, i));	
 			child_nodes.push_back(child);
 		}
 	}
-	for (int i = 0; i < n_splits; i++) {
-	  if (i != optsplit_ix) {
-	    delete(splits[i]);
-	  }
-	}
-	delete(obj);
-
 	return child_nodes;
 }
 

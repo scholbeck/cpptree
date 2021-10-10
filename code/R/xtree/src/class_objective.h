@@ -26,7 +26,7 @@ class Objective {
 		// overridden by some inheriting classes
 		virtual std::vector<std::string> generateAggregateModelInfo();
 		
-		std::array<std::vector<int>, 2> computeSplitDifference(Split* split_upd, Split* split_prev);
+		void freeInternalMemory();
 };
 
 class ObjectiveSSE: public Objective {

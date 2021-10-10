@@ -1,5 +1,5 @@
-#ifndef RINTERFACE_H
-#define RINTERFACE_H
+#ifndef RADAPTER_H
+#define RADAPTER_H
 
 #include <Rcpp.h>
 #include "class_tree.h"

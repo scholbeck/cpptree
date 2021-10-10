@@ -12,8 +12,7 @@
 #include <random>
 
 
-SplitGenerator::SplitGenerator() {
-}
+SplitGenerator::SplitGenerator() {}
 
 bool SplitGenerator::checkMinNodeSize(Split* split, int min_node_size) {
 	bool geq_min_node_size = true;
@@ -30,11 +29,16 @@ bool SplitGenerator::checkMinNodeSize(Split* split, int min_node_size) {
 	return geq_min_node_size;
 }
 
-SplitGeneratorBinExh::SplitGeneratorBinExh() : SplitGenerator() {
-	//
-}
+// ---------------
+// SECOND INHERITANCE LEVEL
+// ---------------
+// BATCH SPLIT GENERATORS
 
-std::vector<Split*> SplitGeneratorBinExh::generate(Data* data, std::vector<int> observations, std::string ID, Arguments* args) {
+SplitGeneratorBatch::SplitGeneratorBatch() {}
+
+SplitGeneratorBatchBinExh::SplitGeneratorBatchBinExh() : SplitGeneratorBatch() {}
+
+std::vector<Split*> SplitGeneratorBatchBinExh::generate(Data* data, std::vector<int> observations, std::string ID, Arguments* args) {
 	
 	int n_rows = observations.size();
 	int n_min = args->getMinNodeSize();
@@ -90,11 +94,9 @@ std::vector<Split*> SplitGeneratorBinExh::generate(Data* data, std::vector<int> 
 }
 
 
-SplitGeneratorMultRand::SplitGeneratorMultRand() : SplitGenerator() {
-	//
-}
+SplitGeneratorBatchMultRand::SplitGeneratorBatchMultRand() : SplitGeneratorBatch() {}
 
-std::vector<Split*> SplitGeneratorMultRand::generate(Data* data, std::vector<int> observations, std::string ID, Arguments* args) {
+std::vector<Split*> SplitGeneratorBatchMultRand::generate(Data* data, std::vector<int> observations, std::string ID, Arguments* args) {
 
 	std::vector<Split*> splits;
 	int n_rows = data->nrows();
@@ -175,4 +177,17 @@ std::vector<Split*> SplitGeneratorMultRand::generate(Data* data, std::vector<int
 		}
 	}
 	return splits;
+}
+
+// ---------------
+// SECOND INHERITANCE LEVEL
+// ---------------
+// STREAM SPLIT GENERATORS
+SplitGeneratorStream::SplitGeneratorStream() {}
+
+SplitGeneratorStreamBayesianOptim::SplitGeneratorStreamBayesianOptim() : SplitGeneratorStream() {}
+
+Split* SplitGeneratorStreamBayesianOptim::generate(double prev_obj_value, Data* data, std::vector<int> observations, std::string ID, Arguments* args) {
+	Split* s;
+	return s;
 }

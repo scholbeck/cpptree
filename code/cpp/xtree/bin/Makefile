@@ -8,13 +8,13 @@ creditmult3:
 	./tree --filename ../../../../data/credit.csv --coltypes cnccncccccccncccccccc --target 20 --sep , --task classif --algorithm random --objective gini --minsize 10 --children 3 --maxdepth 10
 
 boston:
-	./tree --filename ../../../../data/bh.data --target 13 --sep , --task regr --algorithm exhaustive --objective sse --model linear --formula x3 --minsize 10 --children 2 --maxdepth 10
+	./tree --filename ../../../../data/bh.data --target 13 --sep , --task regr --algorithm exhaustive --objective sse --model linear --formula x6 --minsize 100 --children 2 --maxdepth 10
 
 bostonlinear:
 	./tree --filename ../../../../data/bh.data --target 13 --sep , --task regr --algorithm exhaustive --objective sse --model linear --minsize 10 --children 2 --maxdepth 10
 
 bostonmult3:
-	./tree --filename ../../../../data/bh.data --target 13 --sep , --task regr --algorithm random --objective sse --model mean --minsize 10 --children 3 --maxdepth 10
+	./tree --filename ../../../../data/bh.data --target 13 --sep , --task regr --algorithm random --objective sse --model linear --formula x6 --minsize 100 --children 3 --maxdepth 10
 
 bostonmult4:
 	./tree --filename ../../../../data/bh.data --target 13 --sep , --algorithm random --objective sse --model linear --formula x3 --minsize 10 --children 4 --maxdepth 10
@@ -53,4 +53,4 @@ gt2:
 	./tree --filename ../../../../data/gt_data1feature.csv --target 1 --sep , --task regr --algorithm exhaustive --objective sse --model mean --minsize 100 --children 2
 
 gt3:
-	./tree --filename ../../../../data/gt_2015.csv --target 1 --sep , --task regr --algorithm exhaustive --objective sse --model mean --minsize 10 --maxdepth 30 --children 2
+	./tree --filename ../../../../data/gt_2015.csv --target 1 --sep , --task regr --algorithm exhaustive --objective sse --model linear --formula x3 --minsize 10 --maxdepth 30 --children 2

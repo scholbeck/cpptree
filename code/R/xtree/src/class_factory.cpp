@@ -7,6 +7,7 @@
 #include "class_objective.h"
 #include "class_model.h"
 #include "class_splitgenerator.h"
+#include "class_splitter.h"
 
 Factory::Factory(Data* data, Arguments* args) {
 	this->data = data;
@@ -33,12 +34,30 @@ Model* Factory::createModel() {
 	return m;
 }
 
-SplitGenerator* Factory::createSplitGenerator() {
-	SplitGenerator* g;
+SplitGeneratorBatch* Factory::createSplitGeneratorBatch() {
+	SplitGeneratorBatch* g;
 	if ((this->args->getAlgorithm() == "exhaustive") && (this->args->getMaxChildren() == 2)) {
-		g = new SplitGeneratorBinExh();
+		g = new SplitGeneratorBatchBinExh();
 	} else if ((this->args->getAlgorithm() == "random") && (this->args->getMaxChildren() > 2)) {
-		g = new SplitGeneratorMultRand();
+		g = new SplitGeneratorBatchMultRand();
 	}
 	return g;
+}
+
+SplitGeneratorStream* Factory::createSplitGeneratorStream() {
+	SplitGeneratorStream* g;
+	if (this->args->getAlgorithm() == "bayesianoptim") {
+		g = new SplitGeneratorStreamBayesianOptim();
+	}
+	return g;
+}
+
+Splitter* Factory::createSplitter() {
+	Splitter* s;
+	if ((this->args->getAlgorithm() == "exhaustive") || (this->args->getAlgorithm() == "random")) {
+		s = new SplitterNaive();
+	} else if (this->args->getAlgorithm() == "bayesianoptim") {
+		s = new SplitterAdaptive();
+	}
+	return s;
 }

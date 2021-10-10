@@ -9,6 +9,7 @@
 #include "class_objective.h"
 #include "class_model.h"
 #include "class_splitgenerator.h"
+#include "class_splitter.h"
 
 class Objective;
 
@@ -22,7 +23,9 @@ class Factory {
 
     Objective* createObjective();
 	  Model* createModel();    
-    SplitGenerator* createSplitGenerator();
+    SplitGeneratorBatch* createSplitGeneratorBatch();
+    SplitGeneratorStream* createSplitGeneratorStream();
+    Splitter* createSplitter();
 
 };
 

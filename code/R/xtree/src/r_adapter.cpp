@@ -200,11 +200,11 @@ RAdapter::RAdapter(Rcpp::DataFrame r_data, Rcpp::StringVector coltypes,
 }
 
 
-void RInterface::print() {
+void RAdapter::print() {
   printTreeStructureToR(this->tree);
 }
 
-Rcpp::DataFrame RInterface::getTreeStructure() {
+Rcpp::DataFrame RAdapter::getTreeStructure() {
   Rcpp::StringVector id_vec, parent_split_vec, split_value_vec, split_type_vec, level_partitioning_vec, model_info_vec;
   Rcpp::IntegerVector is_leaf_vec, split_feature_vec;
   Split* split;
