@@ -1,20 +1,16 @@
-./tree --filename ../../../../data/seoulbike_8000.csv --coltypes nnnnnnnnn --target 2 --sep , --task regr --algorithm exhaustive --model linear --formula x6 --objective sse --minsize 100 --children 2 --maxdepth 5
+./tree --filename ../../../../data/bh.data --target 13 --sep , --task regr --algorithm exhaustive --objective sse --model linear --formula x6 --minsize 100 --children 2 --maxdepth 10
 ------------------------------------------------------
 TREE SUMMARY
-	nodes : 11
-	leaf nodes : 6
-	depth : 5
+	nodes : 7
+	leaf nodes : 4
+	depth : 3
 
 └──[0]
-    ├──<x8 <= 3.30>──[00]
-        ├──<x6 <= 24.50>──[000]
-            ├──<x6 <= 23.50>──[0000]
-                ├──<x6 <= 22.90>──[00000]
-                    ├──<x6 <= 22.40>──[*000000] (alpha = 50.61 | beta = 1.90)
-                    ├──<x6 > 22.40>──[*000001] (alpha = -1884784.88 | beta = 83033.36)
-                ├──<x6 > 22.90>──[*00001] (alpha = -1358003.73 | beta = 58507.71)
-            ├──<x6 > 23.50>──[*0001] (alpha = -512051.56 | beta = 21299.19)
-        ├──<x6 > 24.50>──[*001] (alpha = -213050.40 | beta = 8482.75)
-    ├──<x8 > 3.30>──[*01] (alpha = -666.65 | beta = 44.02)
+    ├──<x5 <= 0.67>──[00]
+        ├──<x13 <= 14.09>──[000]
+            ├──<x13 <= 9.64>──[*0000] (alpha = -270.10 | beta = 4.24)
+            ├──<x13 > 9.64>──[*0001] (alpha = 1188.39 | beta = 2.58)
+        ├──<x13 > 14.09>──[*001] (alpha = 2434.33 | beta = 0.54)
+    ├──<x5 > 0.67>──[*01] (alpha = -224629.91 | beta = 331.79)
 ------------------------------------------------------
-Training complete. Duration: 2.79624sec
+Training complete. Duration: 0.026741sec
