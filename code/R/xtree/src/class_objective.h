@@ -6,15 +6,15 @@
 #include "class_factory.h"
 #include <vector>
 
-class Factory;
-
 class Objective {
 	public:
     	Objective(Data* data, Arguments* args);
-		virtual ~Objective() {}
-
+		virtual ~Objective() {
+			for (int i = 0; i < models.size(); ++i) {
+				delete (models[i]);
+			}
+		}
 		Arguments* args;
-		Factory* factory;
 		Data* data;
 		std::vector<Model*> models;
 		std::vector<double> node_obj_values;
@@ -25,8 +25,6 @@ class Objective {
 		virtual void update(Split* split_upd, Split* split_prev) = 0;
 		// overridden by some inheriting classes
 		virtual std::vector<std::string> generateAggregateModelInfo();
-		
-		void freeInternalMemory();
 };
 
 class ObjectiveSSE: public Objective {

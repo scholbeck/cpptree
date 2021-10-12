@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include "class_data.h"
 #include "class_split.h"
+#include "class_splitdifference.h"
 #include "iostream"
 #include "helper_functions.h"
 #include <algorithm>
@@ -20,7 +21,7 @@ Split::Split(int max_splits) {
 }
 
 int Split::getNumberChildNodes() {
-	return (this->split_values.size() + 1);
+	return (this->split_obs.size());
 }
 
 void Split::setObjValues(std::vector<double> obj_values) {
@@ -111,12 +112,11 @@ std::string SplitNum::createDecisionRule(int child_ix) {
 void SplitNum::computePartitionings(Data* data, std::vector<int> observations) {
 	int n_splits = this->split_values.size();
 	int n_obs = observations.size();
-	int row;
 	
-	// split values need to be sorted asc.
+	// split values need to be sorted in ascending order
 	bool rightmost_node = true;
 	for (auto it = observations.begin(); it != observations.end(); ++it) {
-		for (int j = 0; j < n_splits; j++) {
+		for (int j = 0; j < n_splits; ++j) {
 			if (data->elem(*it, this->getSplitFeatureIndex()) <= this->split_values[j]) {
 				this->split_obs[j].push_back(*it);
 				rightmost_node = false;
@@ -169,37 +169,3 @@ void SplitCateg::computePartitionings(Data* data, std::vector<int> observations)
 		}
 	}
 }
-
-SplitDifference::SplitDifference() {}
-
-void SplitDifference::computeSplitDifference(Split* split_upd, Split* split_prev) {
-	int n_splits = split_upd->split_obs.size();
-	for (int i = 0; i < n_splits; ++i) {
-		std::vector<int> emptyvec;
-		this->additional_obs.push_back(emptyvec);
-		this->removed_obs.push_back(emptyvec);
-	}
-
-	if (split_prev == nullptr) {
-		// initial split
-		for (int i = 0; i < n_splits; ++i) {
-			// additional obs = all obs
-			this->additional_obs[i] = split_upd->split_obs[i];
-			// removed obs = none
-		}
-	} else {
-		for (int i = 0; i < n_splits; ++i) {
-			// additional obs
-			std::set_difference(
-				split_upd->split_obs[i].begin(), split_upd->split_obs[i].end(), split_prev->split_obs[i].begin(), split_prev->split_obs[i].end(),
-				std::inserter(
-					this->additional_obs[i], this->additional_obs[i].begin()));
-			// removed obs
-			std::set_difference(
-				split_prev->split_obs[i].begin(), split_prev->split_obs[i].end(), split_upd->split_obs[i].begin(), split_upd->split_obs[i].end(),
-				std::inserter(
-					this->removed_obs[i], this->removed_obs[i].begin()));
-		}
-	}
-}	
-

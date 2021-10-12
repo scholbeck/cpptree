@@ -102,6 +102,7 @@ Data* Reader::read(std::string filename, Arguments* args) {
 	new_row.clear();
 	}
 	data->createSortedData();
+	data->createObservationIDs();
 	return data;
 }
 

@@ -10,7 +10,7 @@ class Splitter {
   
   public:
     Splitter();
-    virtual Split* findBestSplit(Data* data, const std::vector<int> &observations, std::string ID, Arguments* args, double prev_obj) = 0;
+    virtual Split* findBestSplit(Data* data, std::vector<int> observations, std::string ID, Arguments* args, double prev_obj) = 0;
 };
 
 class SplitterNaive : public Splitter {
@@ -18,7 +18,7 @@ class SplitterNaive : public Splitter {
     public:
     
     SplitterNaive();
-    Split* findBestSplit(Data* data, const std::vector<int> &observations, std::string ID, Arguments* args, double prev_obj);
+    Split* findBestSplit(Data* data, std::vector<int> observations, std::string ID, Arguments* args, double prev_obj);
 };
 
 class SplitterAdaptive : public Splitter {
@@ -26,7 +26,7 @@ class SplitterAdaptive : public Splitter {
     public:
 
     SplitterAdaptive();
-    Split* findBestSplit(Data* data, const std::vector<int> &observations, std::string ID, Arguments* args, double prev_obj);
+    Split* findBestSplit(Data* data, std::vector<int> observations, std::string ID, Arguments* args, double prev_obj);
 };
 
 

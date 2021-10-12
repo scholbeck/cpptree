@@ -132,6 +132,7 @@ Data* convertData(Rcpp::DataFrame r_data, int target_index, Rcpp::StringVector c
     }
   }
   data->createSortedData();
+  data->createObservationIDs();
   return data;
 }
 
@@ -150,16 +151,16 @@ void printTreeSummaryToR(Tree* tree) {
   Rcpp::Rcout << "------------------------------------------------------\n";
 }
 
+
 void printSubTreeToR(Node* node) {
   int level = node->getId().length() - 1;
   std::ostringstream sstream;
-  sstream << std::setprecision(2) << std::fixed ; //<< node->getObjValue(); // obj printout with 2 decimal places
+  sstream << std::setprecision(2) << std::fixed ; // printout with 2 decimal places
   if (level == 0) {
-    Rcpp::Rcout << "└──[" << node->getId() << "]\n"; // << "] (" << node->getModel()->getShortSummary() << " | obj = " << sstream.str() << ")\n";
+    std::cout << "└──[" << node->getId() << "]\n";
   } else {
     if (node->isLeaf()) {
-      // Rcpp::Rcout << std::string((level * 4) , ' ') << "├──" << repeatString((((this->depth) - level) * 4) + depth * 2, "─") << "<" << node->getDecisionRule() << ">──[*" << node->getId() << "]\n" ;//<< "] (" << node->getModel()->getShortSummary() << " | obj = " << sstream.str() << ")\n";
-      Rcpp::Rcout << std::string((level * 4) , ' ') << "├──<" << node->getDecisionRule() << ">──[*" << node->getId() << "]\n" ;//<< "] (" << node->getModel()->getShortSummary() << " | obj = " << sstream.str() << ")\n";
+      Rcpp::Rcout << std::string((level * 4) , ' ') << "├──<" << node->getDecisionRule() << ">──[*" << node->getId() << "] (" << node->getModelInfo() << ")\n" ;//<< "] (" << node->getModel()->getShortSummary() << " | obj = " << sstream.str() << ")\n";
     } else {
       Rcpp::Rcout << std::string((level * 4) , ' ') << "├──<" << node->getDecisionRule() << ">──[" << node->getId() << "]\n" ;//<< "] (" << node->getModel()->getShortSummary() << " | obj = " << sstream.str() << ")\n";
     }
@@ -179,24 +180,25 @@ RAdapter::RAdapter(Rcpp::DataFrame r_data, Rcpp::StringVector coltypes,
                        Rcpp::List params) {
   
   Data* data = convertData(r_data, params["target"], coltypes);
-  Arguments* args = new Arguments();
-  args->setTargetIndex(params["target"]);
-  args->setMinNodeSize(params["min_node_size"]);
-  args->setAlgorithm(params["search_algo_type"]);
-  args->setMaxChildren(params["n_children"]);
-  args->setMaxDepth(params["max_depth"]);
-  args->setModel(params["model_type"]);
-  args->setObjective(params["objective_type"]);
-  Formula* formula = new Formula();
-  formula->setString(params["formula"]);
-  formula->processString();
-  args->setFormula(formula);
+  Arguments args = Arguments();
+  args.setTargetIndex(params["target"]);
+  args.setMinNodeSize(params["min_node_size"]);
+  args.setAlgorithm(params["search_algo_type"]);
+  args.setMaxChildren(params["n_children"]);
+  args.setMaxDepth(params["max_depth"]);
+  args.setModel(params["model_type"]);
+  args.setObjective(params["objective_type"]);
+  Formula formula = Formula();
+  formula.setString(params["formula"]);
+  formula.processString();
+  args.setFormula(&formula);
   
-  this->tree = new Tree(data, args);
+  this->tree = new Tree(data, &args);
   this->tree->grow();
   this->depth = this->tree->depth;
   this->node_cnt = this->tree->node_cnt;
   this->leafnode_cnt = this->tree->leafnode_cnt;
+  delete(data);
 }
 
 

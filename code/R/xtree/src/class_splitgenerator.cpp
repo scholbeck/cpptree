@@ -54,17 +54,18 @@ std::vector<Split*> SplitGeneratorBatchBinExh::generate(Data* data, std::vector<
 		}
 		SortedFeatureSubset* sorted_subset = data->sorted_data->getSortedFeatureSubset(ID, *it_col);
 		for (int i = (n_min - 1); i < (n_rows - n_min); ++i) {
-				if (sorted_subset->sorted_values[i].first == sorted_subset->sorted_values[i-1].first) {
-					continue;
-				}
-				SplitNum* current_split = new SplitNum(args->getMaxChildren() - 1);
-				current_split->addSplitValue(sorted_subset->sorted_values[i].first);
-				current_split->setFeatureIndex(*it_col);
-				current_split->computePartitionings(data, observations);
-				if (this->checkMinNodeSize(current_split, args->getMinNodeSize())) {
-					splits.push_back(current_split);
-				}
-				
+			if (sorted_subset->sorted_values[i].first == sorted_subset->sorted_values[i-1].first) {
+				continue;
+			}
+			SplitNum* current_split = new SplitNum(args->getMaxChildren() - 1);
+			current_split->addSplitValue(sorted_subset->sorted_values[i].first);
+			current_split->setFeatureIndex(*it_col);
+			current_split->computePartitionings(data, observations);
+			if (this->checkMinNodeSize(current_split, args->getMinNodeSize())) {
+				splits.push_back(current_split);
+			} else {
+				delete(current_split);
+			}
 		}
 	}
 	// categorical features

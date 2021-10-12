@@ -13,12 +13,13 @@
 #include "helper_functions.h"
 #include <iomanip>
 
-Node::Node(std::string id, Tree* tree, std::vector<int> observations, double obj_val, std::string decision_rule) {
+Node::Node(std::string id, Tree* tree, std::vector<int> observations, double obj_val, std::string decision_rule, std::string model_info) {
 	this->tree = tree;
 	this->observations = observations;
 	this->id = id;
 	this->obj_val = obj_val;
 	this->decision_rule = decision_rule;
+	this->model_info = model_info;
 	this->child_cnt = 0;
 	this->child_nodes.reserve(tree->getArgs()->getMaxChildren());
 	this->is_leaf = false;
@@ -34,13 +35,6 @@ std::string Node::getId() {
 	return id;
 }
 
-
-Model* Node::getModel() {
-	return this->mod;
-}
-void Node::setModel(Model* mod) {
-	this->mod = mod;
-}
 
 std::vector<Node*> Node::getChildNodes() {
 	return this->child_nodes;
@@ -84,8 +78,11 @@ Split* Node::getSplitData() {
 std::string Node::getModelInfo() {
 	return this->model_info;
 }
-void Node::setModelInfo(std::string model_info) {
-	this->model_info = model_info;
+std::string Node::generateNodeInfo() {
+	std::ostringstream sstream;
+	sstream << std::setprecision(2) << std::fixed; // printout with 2 decimal places
+	sstream << this->tree->getArgs()->getObjective() << " = " << this->obj_val << " | " << this->model_info;
+	return sstream.str();
 }
 
 
@@ -93,10 +90,9 @@ std::vector<Node*> Node::splitNode() {
 	Splitter* splitter = this->tree->getFactory()->createSplitter();
 	this->split = splitter->findBestSplit(this->tree->data, this->observations, this->id, this->tree->getArgs(), this->obj_val);
 	delete(splitter);
-
 	std::vector<Node*> child_nodes;
 	if (this->split != nullptr) {
-	  	// if a split has been found, do:
+		// if a split has been found, do:
 	  	this->tree->data->sorted_data->split(this->id, this->split->split_obs);
 		// partition sorted features
 		for (int i = 0; i < (this->split->getNumberChildNodes()); ++i) {
@@ -105,7 +101,8 @@ std::vector<Node*> Node::splitNode() {
 				this->tree,
 				this->split->split_obs[i],
 				this->split->obj_values[i],
-				this->createDecisionRule(this->split, i));	
+				this->split->createDecisionRule(i),
+				this->split->getModelInfo()[i]);
 			child_nodes.push_back(child);
 		}
 	}

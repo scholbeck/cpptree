@@ -16,8 +16,7 @@ Tree::Tree(Data* data, Arguments* args) : factory(new Factory(data, args))  {
 	this->data = data;
 	this->leafnode_cnt = 0;
 	this->args = args;
-	this->root = new Node("0", this, convertDoubleToIntVector(data->col(0)), -1, "root");
-	this->root->split = nullptr;
+	this->root = nullptr;
 }
 
 void Tree::addNode(Node* node) {
@@ -49,22 +48,17 @@ Arguments* Tree::getArgs() {
 int Tree::grow() {
 	Objective* obj = this->factory->createObjective();
 	Model* root_model = this->factory->createModel();
+	std::vector<int> root_obs = this->data->getObservationIDs();
 	if (root_model != nullptr) {
-		root_model->updateSet(this->data, this->root->observations, '+');
+		root_model->update(this->data, root_obs, '+');
 	}
-	this->root->obj_val = obj->compute(root_model, root->observations);
+	this->root = new Node("0", this, root_obs, -1, "root", "");
+	this->root->split = nullptr;
+	this->root->obj_val = obj->compute(root_model, root_obs);
 	int ret = this->root->recursiveSplit();
 	this->gatherTreeInformation();
 	
 	return ret;
-}
-
-void Tree::freeNodeMemory() {
-	while (this->nodes.empty() == false) {
-		//delete(this->nodes.back()->getModel());
-		free(this->nodes.back());
-		this->nodes.pop_back();
-	}
 }
 
 void Tree::summary() {
@@ -98,8 +92,7 @@ void Tree::printSubTree(Node* node) {
 		std::cout << "└──[" << node->getId() << "]\n"; // << "] (" << node->getModel()->getShortSummary() << " | obj = " << sstream.str() << ")\n";
 	} else {
 		if (node->isLeaf()) {
-			// std::cout << std::string((level * 4) , ' ') << "├──" << repeatString((((this->depth) - level) * 4) + depth * 2, "─") << "<" << node->getDecisionRule() << ">──[*" << node->getId() << "]\n" ;//<< "] (" << node->getModel()->getShortSummary() << " | obj = " << sstream.str() << ")\n";
-			std::cout << std::string((level * 4) , ' ') << "├──<" << node->getDecisionRule() << ">──[*" << node->getId() << "] (" << node->getModelInfo() << ")\n" ;//<< "] (" << node->getModel()->getShortSummary() << " | obj = " << sstream.str() << ")\n";
+			std::cout << std::string((level * 4) , ' ') << "├──<" << node->getDecisionRule() << ">──[*" << node->getId() << "] (" << node->generateNodeInfo() << ")\n" ;//<< "] (" << node->getModel()->getShortSummary() << " | obj = " << sstream.str() << ")\n";
 		} else {
 			std::cout << std::string((level * 4) , ' ') << "├──<" << node->getDecisionRule() << ">──[" << node->getId() << "]\n" ;//<< "] (" << node->getModel()->getShortSummary() << " | obj = " << sstream.str() << ")\n";
 		}

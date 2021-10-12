@@ -40,8 +40,7 @@ int main(int argc, char *argv[]) {
 		tree.summary();
 		std::cout << "Training complete. Duration: " << duration << "sec\n";
 	}
-	tree.freeNodeMemory();
-
+	
 	return EXIT_SUCCESS;
 }
 

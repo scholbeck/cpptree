@@ -7,6 +7,7 @@
 #include <map>
 #include <array>
 #include "class_split.h"
+#include "class_sorteddata.h"
 
 class SortedData;
 
@@ -17,6 +18,7 @@ class Data {
     
 		std::vector<std::vector<double>> rows; // each row is a vector containg all col values
 		std::vector<int> features;
+		std::vector<int> observations;
 		int target_index;
 		std::vector<std::string> coltypes;
 		std::map<int, std::map<std::string, int>> categ_encodings;
@@ -58,44 +60,10 @@ class Data {
 		std::vector<std::vector<int>> splitBinaryObs(double split_value, int col_index);
 		int getNLevels(int col);
 		void sortFeatures();
-		void createSortedData();	
+		void createSortedData();
+		void createObservationIDs();
+		std::vector<int> getObservationIDs();
 };
 
-
-
-class SortedFeatureSubset {
-
-	public:
-		SortedFeatureSubset(size_t size);
-		std::string ID;
-		std::vector<std::pair<double, int>> sorted_values;
-		// first pair element: sorted asc feature values
-		// second pair element: corresponding row IDs
-};
-
-class SortedFeature {
-
-	public:
-		SortedFeature();
-		int index;
-		std::map<std::string, SortedFeatureSubset*> subsets;
-		// maps node ID, e.g., "0010101", to SortedFeatureSubset
-
-		void splitSubset(std::string ID, std::vector<std::vector<int>> subset_obs);
-		SortedFeatureSubset* getSubset(std::string ID);
-};
-
-class SortedData {
-  
-	public:
-		SortedData();
-		
-		std::map<int, SortedFeature*> sorted_features;
-		// maps feature index to SortedFeature objects
-
-		void sort(Data* data);
-		void split(std::string ID, std::vector<std::vector<int>> subset_obs);
-		SortedFeatureSubset* getSortedFeatureSubset(std::string ID, int feature);
-};
 
 #endif 

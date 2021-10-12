@@ -9,17 +9,19 @@
 #include "class_model.h"
 #include "class_arguments.h"
 #include "class_factory.h"
+#include "class_splitdifference.h"
 #include "helper_functions.h"
 #include <cmath>
 #include <algorithm>
 
-Objective::Objective(Data* data, Arguments* args) : factory(new Factory(data, args)) {	
+Objective::Objective(Data* data, Arguments* args) {	
 	this->args = args;
 	this->data = data;
 	this->n_nodes = args->getMaxChildren();
+	Factory factory = Factory(data, args);
 	for (int i = 0; i < n_nodes; ++i) {
 		this->node_obj_values.push_back(0);
-		this->models.push_back(this->factory->createModel());
+		this->models.push_back(factory.createModel());
 	}
 }
 
@@ -32,13 +34,6 @@ std::vector<std::string> Objective::generateAggregateModelInfo() {
 	return aggr_model_info;
 }
 
-void Objective::freeInternalMemory() {
-	delete(this->factory);
-	for (int i = 0; i < this->models.size(); ++i) {
-		delete(this->models[i]);
-	}
-}
-
 // OBJECTIVE SSE
 ObjectiveSSE::ObjectiveSSE(Data* data, Arguments* args) : Objective(data, args) {}
 
@@ -46,44 +41,28 @@ double ObjectiveSSE::compute(Model* mod, std::vector<int> observations) {
 	int n = observations.size();
 	double cumsum = 0;
 	for (int i = 0; i < n; ++i) {
-		cumsum += pow((this->data->elem(observations[i], this->data->getTargetIndex()) - mod->predictSingle(data, observations[i])), 2);
+		cumsum += pow(((this->data->elem(observations[i], this->data->getTargetIndex())) - (mod->predictSingle(data, observations[i]))), 2);
 	}
 	return cumsum;
 }
 
 void ObjectiveSSE::update(Split* split_upd, Split* split_prev) {
-
 	SplitDifference split_diff;
 	split_diff.computeSplitDifference(split_upd, split_prev);
 	int n_nodes = split_upd->split_obs.size();
-
-	for (int j = 0; j < n_nodes; j++) {
+	for (int j = 0; j < n_nodes; ++j) {
 		if (!split_diff.additional_obs[j].empty()) {
-			double value = 0;
-			for (int i = 0; i < split_diff.additional_obs[j].size(); ++i) {
-				this->models[j]->update(data, split_diff.additional_obs[j][i], '+');
-				value = pow(
-					((this->data->elem(
-						split_diff.additional_obs[j][i], this->data->getTargetIndex())) - (this->models[j]->predictSingle(data, split_diff.additional_obs[j][i]))), 2);
-				if (std::isnan(value)) {
-					value = 0;
-				}
-				this->node_obj_values[j] += value;
-			}
+			this->models[j]->update(data, split_diff.additional_obs[j], '+');
 		}
 		if (!split_diff.removed_obs[j].empty()) {
-			double value = 0;
-			for (int i = 0; i < split_diff.removed_obs[j].size(); ++i) {
-				this->models[j]->update(data, split_diff.removed_obs[j][i], '-');
-				value = pow(
-					((this->data->elem(
-						split_diff.removed_obs[j][i], this->data->getTargetIndex())) - (this->models[j]->predictSingle(data, split_diff.removed_obs[j][i]))), 2);
-				if (std::isnan(value)) {
-					value = 0;
-				}
-				this->node_obj_values[j] -= value;
-			}
+			this->models[j]->update(data, split_diff.removed_obs[j], '-');
 		}
+		double cumsum = 0;
+		int n = split_upd->split_obs[j].size();
+		for (int i = 0; i < n; ++i) {
+			cumsum += pow(((this->data->elem(split_upd->split_obs[j][i], this->data->getTargetIndex())) - (this->models[j]->predictSingle(data, split_upd->split_obs[j][i]))), 2);
+		}
+		this->node_obj_values[j] = cumsum;
 	}
 }
 
@@ -103,18 +82,29 @@ ObjectiveGini::ObjectiveGini(Data* data, Arguments* args) : Objective(data, args
 
 
 double ObjectiveGini::compute(Model* mod, std::vector<int> observations) {
-	std::vector<double> target_obs = this->data->col(this->data->getTargetIndex());
-	int n_obs = this->data->nrows();
+	int n_obs = observations.size();
 	std::map<std::string, int> levels = this->data->getCategEncodings().at(this->data->getTargetIndex());
-	double gini;
-	int l, cnt;
+	// create mapping from each level to count integer
+	std::map<int, int> class_counts;
 	for (auto it = levels.begin(); it != levels.end(); ++it) {
-		l = it->second;
-		cnt = std::count(target_obs.begin(), target_obs.end(), l);
-		gini += pow(((double) cnt), 2);
+		class_counts.insert(std::pair<int, int>(it->second, 0));
 	}
-	gini = 1 - (pow((1 / n_obs), 2) * gini);
-	return gini;
+	// compute class counts
+	for (int i = 0; i < n_obs; ++i) {
+		for (auto it = levels.begin(); it != levels.end(); ++it) {
+			if (this->data->elem(observations[i], this->data->getTargetIndex()) == it->second) {
+				class_counts.at(it->second) += 1;
+				break;
+			}
+		}
+	}
+	// compute Gini impurity
+	double value = 0;
+	for (auto it = levels.begin(); it != levels.end(); ++it) {
+		value += pow(class_counts.at(it->second), 2);
+	}
+	value = 1 - (pow((1 / (double) n_obs), 2) * value);
+	return value;
 }
 
 void ObjectiveGini::update(Split* split_upd, Split* split_prev) {

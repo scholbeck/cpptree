@@ -17,7 +17,7 @@ class Factory {
   
   public:
     Factory(Data* data, Arguments* args);
-    
+    ~Factory() {};
     Data* data;
     Arguments* args;
 

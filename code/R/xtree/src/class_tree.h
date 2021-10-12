@@ -11,7 +11,12 @@ class Tree {
   
   public:
     Tree(Data* data, Arguments* args);
-    
+    ~Tree() {
+      while (this->nodes.empty() == false) {
+		    delete(this->nodes.back());
+		    this->nodes.pop_back();
+	    }
+    }
     Arguments* args;
     Factory* factory;
     Data* data;
@@ -26,7 +31,6 @@ class Tree {
     Arguments* getArgs();
     int grow();
     void summary();
-    void freeNodeMemory();
     void print();
     void printSubTree(Node* node);
     void sortNodesAsc();
