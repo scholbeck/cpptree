@@ -196,7 +196,7 @@ int Arguments::processArguments(int argc, char** argv)
             this->setColTypes(std::string(optarg));
             break;
         case 2200:
-            this->formula = std::make_unique<Formula>();
+            this->formula = std::unique_ptr<Formula>(new Formula());
             this->formula->setString(std::string(optarg));
             this->formula->processString();
             break;

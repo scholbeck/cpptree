@@ -55,7 +55,7 @@ std::unique_ptr<SplitGeneratorStream> Factory::createSplitGeneratorStream() {
 std::unique_ptr<Splitter> Factory::createSplitter() {
 	std::unique_ptr<Splitter> s;
 	if ((this->args->getAlgorithm() == "exhaustive") || (this->args->getAlgorithm() == "random")) {
-		s = std::unique_ptr<SplitterNaive>(new (SplitterNaive());
+		s = std::unique_ptr<SplitterNaive>(new SplitterNaive());
 	} else if (this->args->getAlgorithm() == "bayesianoptim") {
 		s = std::unique_ptr<SplitterAdaptive>(new SplitterAdaptive());
 	}

@@ -533,7 +533,7 @@ int Data::getNLevels(int col) {
 }
 
 void Data::createSortedData() {
-	this->sorted_data = std::make_unique<SortedData>();
+	this->sorted_data = std::unique_ptr<SortedData>(new SortedData());
 	this->sorted_data->sort(this); 
 }
 

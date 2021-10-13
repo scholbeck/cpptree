@@ -57,7 +57,7 @@ std::vector<std::unique_ptr<Split>> SplitGeneratorBatchBinExh::generate(Data* da
 			if (sorted_subset->sorted_values[i].first == sorted_subset->sorted_values[i-1].first) {
 				continue;
 			}
-			std::unique_ptr<Split> current_split = std::make_unique<SplitNum>(args->getMaxChildren() - 1);
+			std::unique_ptr<Split> current_split = std::unique_ptr<SplitNum>(new SplitNum(args->getMaxChildren() - 1));
 			current_split->addSplitValue(sorted_subset->sorted_values[i].first);
 			current_split->setFeatureIndex(*it_col);
 			current_split->computePartitionings(data, observations);
@@ -79,7 +79,7 @@ std::vector<std::unique_ptr<Split>> SplitGeneratorBatchBinExh::generate(Data* da
 		for (int i = 0; i < n_permuts; i++) {
 			std::map<std::string, int> levels = data->getCategEncodings().at(*it_col);
 			for (int p = 0; p < n_permuts; p++) {
-				std::unique_ptr<Split> current_split = std::make_unique<SplitCateg>(args->getMaxChildren() - 1, levels);
+				std::unique_ptr<Split> current_split = std::unique_ptr<SplitCateg>(new SplitCateg(args->getMaxChildren() - 1, levels));
 				current_split->setFeatureIndex(*it_col);
 				current_split->setLevelPartitionings(level_permuts[p]);
 				current_split->computePartitionings(data, observations);
@@ -130,7 +130,7 @@ std::vector<std::unique_ptr<Split>> SplitGeneratorBatchMultRand::generate(Data* 
 		for (int i = 0; i < n_permuts; i++) {
 			std::map<std::string, int> levels = data->getCategEncodings().at(col);
 			for (int p = 0; p < n_permuts; p++) {
-				std::unique_ptr<Split> current_split = std::make_unique<SplitCateg>(args->getMaxChildren()-1, levels);
+				std::unique_ptr<Split> current_split = std::unique_ptr<SplitCateg>(new SplitCateg(args->getMaxChildren()-1, levels));
 				current_split->setFeatureIndex(col);
 				current_split->setLevelPartitionings(level_permuts[p]);
 				current_split->computePartitionings(data, observations);
@@ -156,7 +156,7 @@ std::vector<std::unique_ptr<Split>> SplitGeneratorBatchMultRand::generate(Data* 
 		std::uniform_int_distribution<> distr_row(0, n_unique_values - 1); // define the range
 		int R = 100;
 		for (int r = 0; r < R; r++) {
-			std::unique_ptr<Split> current_split = std::make_unique<SplitNum>(args->getMaxChildren() - 1);
+			std::unique_ptr<Split> current_split = std::unique_ptr<SplitNum>(new SplitNum(args->getMaxChildren() - 1));
 			current_split->setFeatureIndex(col);
 			std::vector<int> rnd_obs_vec;
 			for (int i = 0; i < args->getMaxChildren() - 1; i++) {

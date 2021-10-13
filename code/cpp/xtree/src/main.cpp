@@ -16,8 +16,8 @@
 
 int main(int argc, char *argv[]) {
 	
-	std::unique_ptr<Arguments> args = std::make_unique<Arguments>();
-	std::unique_ptr<Reader> reader = std::make_unique<Reader>();
+	std::unique_ptr<Arguments> args = std::unique_ptr<Arguments>(new Arguments());
+	std::unique_ptr<Reader> reader = std::unique_ptr<Reader>(new Reader());
 	
 	int arg_status = 0;
 	if ((arg_status = args->processArguments(argc, argv)) == -1) {

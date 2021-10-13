@@ -4,6 +4,7 @@
 #include "class_factory.h"
 #include "class_aggregation.h"
 #include "helper_functions.h"
+#include <memory>
 
 Splitter::Splitter() {}
 

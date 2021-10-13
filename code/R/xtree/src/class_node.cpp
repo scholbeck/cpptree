@@ -93,7 +93,7 @@ int Node::recursiveSplit() {
 		return 0;
 	}
 
-	std::unique_ptr<Splitter> splitter = this->tree->getFactory()->createSplitter();
+	std::unique_ptr<Splitter> splitter = std::unique_ptr<Splitter> (this->tree->getFactory()->createSplitter());
 	this->split = splitter->findBestSplit(this->tree->data, this->observations, this->id, this->tree->getArgs(), this->obj_val);
 	
 	if (this->split != nullptr) {
@@ -101,13 +101,14 @@ int Node::recursiveSplit() {
 	  	this->tree->data->sorted_data->split(this->id, this->split->split_obs);
 		// partition sorted features
 		for (int i = 0; i < (this->split->getNumberChildNodes()); ++i) {
-			std::unique_ptr<Node> child = std::make_unique<Node>(
-				this->id + std::to_string(i),
-				this->tree,
-				this->split->split_obs[i],
-				this->split->obj_values[i],
-				this->split->createDecisionRule(i),
-				this->split->getModelInfo()[i]);
+			std::unique_ptr<Node> child = std::unique_ptr<Node>(
+				new Node(
+					this->id + std::to_string(i),
+					this->tree,
+					this->split->split_obs[i],
+					this->split->obj_values[i],
+					this->split->createDecisionRule(i),
+					this->split->getModelInfo()[i]));
 			this->child_nodes.push_back(child.get());
 			this->tree->addNode(std::move(child));
 		}

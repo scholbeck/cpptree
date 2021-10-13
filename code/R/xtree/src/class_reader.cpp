@@ -75,7 +75,7 @@ std::unique_ptr<Data> Reader::read(std::string filename, Arguments* args) {
 	}
 	int n_rows = rows_strings.size();
   	int n_cols = rows_strings[0].size();
-	std::unique_ptr<Data> data = std::make_unique<Data>();
+	std::unique_ptr<Data> data = std::unique_ptr<Data>(new Data());
 	data->setColTypes(types);
   	std::vector<double> new_row;
 	for (int i = 0; i < n_rows; i++) {

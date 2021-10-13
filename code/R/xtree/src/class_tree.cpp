@@ -51,7 +51,7 @@ int Tree::grow() {
 	if (root_model != nullptr) {
 		root_model->update(this->data, root_obs, '+');
 	}
-	std::unique_ptr<Node> r = std::make_unique<Node>("0", this, root_obs, -1, "root", "");
+	std::unique_ptr<Node> r = std::unique_ptr<Node>(new Node("0", this, root_obs, -1, "root", ""));
 	r->split = nullptr;
 	r->obj_val = obj->compute(root_model.get(), root_obs);
 	this->addNode(std::move(r));

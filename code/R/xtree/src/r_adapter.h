@@ -7,13 +7,11 @@
 class RAdapter {
     
   public:
-    Tree* tree;
+    std::unique_ptr<Tree> tree;
     int depth, node_cnt, leafnode_cnt;
     
     RAdapter(Rcpp::DataFrame r_data, Rcpp::StringVector coltypes, Rcpp::List params);
-    ~RAdapter() {
-      delete tree;
-    }
+    ~RAdapter() {}
       
     void print();
     Rcpp::DataFrame getTreeStructure();

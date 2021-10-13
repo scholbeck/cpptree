@@ -80,10 +80,10 @@ std::set<std::string> detectLevelsFromColumn(std::vector<std::string> col) {
   return levels;
 }
 
-Data* convertData(Rcpp::DataFrame r_data, int target_index, Rcpp::StringVector coltypes) {
+std::unique_ptr<Data> convertData(Rcpp::DataFrame r_data, int target_index, Rcpp::StringVector coltypes) {
   int n_rows = r_data.nrows();
   int n_cols = r_data.size();
-  Data* data = new Data();
+  std::unique_ptr<Data> data = std::unique_ptr<Data>(new Data());
   data->init(n_rows, n_cols + 1);
   // + 1 for ID column
   data->replaceCol(0, initVectorSeqDouble(0, n_rows - 1));
@@ -173,38 +173,41 @@ void printSubTreeToR(Node* node) {
 }
 
 void printTreeStructureToR(Tree* tree) {
-  printSubTreeToR(tree->nodes[0]);
+  printSubTreeToR(tree->nodes[0].get());
 }
 
 RAdapter::RAdapter(Rcpp::DataFrame r_data, Rcpp::StringVector coltypes,
                        Rcpp::List params) {
   
-  Data* data = convertData(r_data, params["target"], coltypes);
-  Arguments args = Arguments();
-  args.setTargetIndex(params["target"]);
-  args.setMinNodeSize(params["min_node_size"]);
-  args.setAlgorithm(params["search_algo_type"]);
-  args.setMaxChildren(params["n_children"]);
-  args.setMaxDepth(params["max_depth"]);
-  args.setModel(params["model_type"]);
-  args.setObjective(params["objective_type"]);
-  Formula formula = Formula();
-  formula.setString(params["formula"]);
-  formula.processString();
-  args.setFormula(&formula);
+  std::unique_ptr<Data> data = convertData(r_data, params["target"], coltypes);
   
-  this->tree = new Tree(data, &args);
+  std::unique_ptr<Arguments> args = std::unique_ptr<Arguments>(new Arguments());
+  args->setTargetIndex(params["target"]);
+  args->setMinNodeSize(params["min_node_size"]);
+  args->setAlgorithm(params["search_algo_type"]);
+  args->setMaxChildren(params["n_children"]);
+  args->setMaxDepth(params["max_depth"]);
+  args->setModel(params["model_type"]);
+  args->setObjective(params["objective_type"]);
+  
+  std::unique_ptr<Formula> formula = std::unique_ptr<Formula>(new Formula());
+  formula->setString(params["formula"]);
+  formula->processString();
+  
+  args->setFormula(std::move(formula));
+  
+  this->tree = std::unique_ptr<Tree>(new Tree(data.get(), args.get()));
   this->tree->grow();
   this->depth = this->tree->depth;
   this->node_cnt = this->tree->node_cnt;
   this->leafnode_cnt = this->tree->leafnode_cnt;
-  delete(data);
 }
 
 
 void RAdapter::print() {
-  printTreeStructureToR(this->tree);
+  printTreeStructureToR(this->tree.get());
 }
+
 
 Rcpp::DataFrame RAdapter::getTreeStructure() {
   Rcpp::StringVector id_vec, parent_split_vec, split_value_vec, split_type_vec, level_partitioning_vec, model_info_vec;
