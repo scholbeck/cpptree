@@ -5,13 +5,15 @@
 #include <stdlib.h>
 #include <string>
 #include <vector>
+#include <memory>
 #include "class_formula.h"
 
 class Arguments {
   
   public:
     Arguments();
-    
+    ~Arguments() {}
+	
     std::string filename;
     int target;
     int max_children;
@@ -24,7 +26,7 @@ class Arguments {
 	std::string print;
 	std::vector<std::string> coltypes;
     char sep;
-    Formula* formula;
+    std::unique_ptr<Formula> formula; // Arguments object is responsible for life time of Formula object
 
     std::string getFilename();
     void setFilename(std::string);
@@ -63,7 +65,7 @@ class Arguments {
 	void setColTypes(std::string coltypes);
 
 	Formula* getFormula();
-	void setFormula(Formula* formula);
+	void setFormula(std::unique_ptr<Formula> formula);
 
 	int processArguments(int argc, char** argv);
 	void checkArgs();

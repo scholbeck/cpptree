@@ -25,7 +25,7 @@ class SplitGeneratorBatch : public SplitGenerator {
 	public: SplitGeneratorBatch();
 	virtual ~SplitGeneratorBatch() {}
 
-	virtual std::vector<Split*> generate(Data* data, std::vector<int> observations, std::string ID, Arguments* args) = 0;
+	virtual std::vector<std::unique_ptr<Split>> generate(Data* data, std::vector<int> observations, std::string ID, Arguments* args) = 0;
 	// returns batch of split pointers
 };
 
@@ -33,7 +33,7 @@ class SplitGeneratorStream : public SplitGenerator {
 	public: SplitGeneratorStream();
 	virtual ~SplitGeneratorStream() {}
 
-	virtual Split* generate(double prev_obj_value, Data* data, std::vector<int> observations, std::string ID, Arguments* args) = 0;
+	virtual std::unique_ptr<Split> generate(double prev_obj_value, Data* data, std::vector<int> observations, std::string ID, Arguments* args) = 0;
 	// returns single split pointer
 };
 
@@ -45,14 +45,14 @@ class SplitGeneratorStream : public SplitGenerator {
 class SplitGeneratorBatchBinExh: public SplitGeneratorBatch {
 	public:
 		SplitGeneratorBatchBinExh();
-		std::vector<Split*> generate(Data* data, std::vector<int> observations, std::string ID, Arguments* args);
+		std::vector<std::unique_ptr<Split>> generate(Data* data, std::vector<int> observations, std::string ID, Arguments* args);
 };
 
 
 class SplitGeneratorBatchMultRand: public SplitGeneratorBatch {
 	public:
 		SplitGeneratorBatchMultRand();
-		std::vector<Split*> generate(Data* data, std::vector<int> observations, std::string ID, Arguments* args);
+		std::vector<std::unique_ptr<Split>> generate(Data* data, std::vector<int> observations, std::string ID, Arguments* args);
 };
 
 // ---------------
@@ -63,7 +63,7 @@ class SplitGeneratorBatchMultRand: public SplitGeneratorBatch {
 class SplitGeneratorStreamBayesianOptim: public SplitGeneratorStream {
 	public:
 		SplitGeneratorStreamBayesianOptim();
-		Split* generate(double prev_obj_value, Data* data, std::vector<int> observations, std::string ID, Arguments* args);
+		std::unique_ptr<Split> generate(double prev_obj_value, Data* data, std::vector<int> observations, std::string ID, Arguments* args);
 };
 
 

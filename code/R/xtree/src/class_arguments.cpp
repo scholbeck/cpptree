@@ -5,6 +5,7 @@
 #include "class_arguments.h"
 #include "class_formula.h"
 #include <vector>
+#include <memory>
 
 Arguments::Arguments() {
   this->min_node_size = 0;
@@ -109,10 +110,10 @@ void Arguments::setColTypes(std::string coltypes) {
 }
 
 Formula* Arguments::getFormula() {
-  return this->formula;
+  return this->formula.get();
 }
-void Arguments::setFormula(Formula* formula) {
-  this->formula = formula;
+void Arguments::setFormula(std::unique_ptr<Formula> formula) {
+  this->formula = std::move(formula);
 }
 
 void Arguments::checkArgs() {
@@ -195,7 +196,7 @@ int Arguments::processArguments(int argc, char** argv)
             this->setColTypes(std::string(optarg));
             break;
         case 2200:
-            this->formula = new Formula();
+            this->formula = std::make_unique<Formula>();
             this->formula->setString(std::string(optarg));
             this->formula->processString();
             break;

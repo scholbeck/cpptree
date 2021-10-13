@@ -6,6 +6,7 @@
 #include <vector>
 #include <map>
 #include <array>
+#include <memory>
 #include "class_split.h"
 #include "class_sorteddata.h"
 
@@ -15,6 +16,7 @@ class Data {
   
 	public:
 		Data();
+		~Data() {}
     
 		std::vector<std::vector<double>> rows; // each row is a vector containg all col values
 		std::vector<int> features;
@@ -22,7 +24,7 @@ class Data {
 		int target_index;
 		std::vector<std::string> coltypes;
 		std::map<int, std::map<std::string, int>> categ_encodings;
-		SortedData* sorted_data;
+		std::unique_ptr<SortedData> sorted_data; // Data object is responsible for life time of SortedData object
 
 		void load(std::string filename); // read data from disc
 		void setTargetIndex(int target);

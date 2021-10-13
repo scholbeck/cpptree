@@ -7,6 +7,7 @@ class Aggregation {
   
   public:
     Aggregation();
+    ~Aggregation() {}
     virtual double compute(std::vector<double> childnode_obj) = 0;
 };
 

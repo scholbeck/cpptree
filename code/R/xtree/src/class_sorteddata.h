@@ -12,6 +12,8 @@ class SortedFeatureSubset {
 
 	public:
 		SortedFeatureSubset(size_t size);
+		~SortedFeatureSubset() {}
+
 		std::string ID;
 		std::vector<std::pair<double, int>> sorted_values;
 		// first pair element: sorted asc feature values
@@ -22,6 +24,8 @@ class SortedFeature {
 
 	public:
 		SortedFeature();
+		~SortedFeature() {}
+
 		int index;
 		std::map<std::string, SortedFeatureSubset*> subsets;
 		// maps node ID, e.g., "0010101", to SortedFeatureSubset
@@ -34,7 +38,8 @@ class SortedData {
   
 	public:
 		SortedData();
-		
+		~SortedData() {}
+
 		std::map<int, SortedFeature*> sorted_features;
 		// maps feature index to SortedFeature objects
 

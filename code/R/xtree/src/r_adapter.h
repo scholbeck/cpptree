@@ -15,7 +15,6 @@ class RAdapter {
       delete tree;
     }
       
-    void grow();
     void print();
     Rcpp::DataFrame getTreeStructure();
 };

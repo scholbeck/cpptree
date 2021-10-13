@@ -9,14 +9,11 @@
 class Objective {
 	public:
     	Objective(Data* data, Arguments* args);
-		virtual ~Objective() {
-			for (int i = 0; i < models.size(); ++i) {
-				delete (models[i]);
-			}
-		}
+		virtual ~Objective() {}
+		
 		Arguments* args;
 		Data* data;
-		std::vector<Model*> models;
+		std::vector<std::unique_ptr<Model>> models; // Objective object is responsible for life time of Model objects
 		std::vector<double> node_obj_values;
 		int n_nodes;
 

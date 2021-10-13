@@ -16,15 +16,15 @@
 
 int main(int argc, char *argv[]) {
 	
-	Arguments* args = new Arguments();
-	Reader reader;
+	std::unique_ptr<Arguments> args = std::make_unique<Arguments>();
+	std::unique_ptr<Reader> reader = std::make_unique<Reader>();
 	
 	int arg_status = 0;
 	if ((arg_status = args->processArguments(argc, argv)) == -1) {
 		return EXIT_FAILURE;
 	}
     args->checkArgs();
-	Data* data = reader.read(args->getFilename(), args);
+	std::unique_ptr<Data> data = reader->read(args->getFilename(), args.get());
 	data->setTargetIndex(args->getTargetIndex() + 1);
     if (data->selfCheck() == false) {
         std::cout << "Specified wrong target index. Aborting..\n";
@@ -32,7 +32,7 @@ int main(int argc, char *argv[]) {
     }
     std::clock_t start;
     double duration;
-    Tree tree = Tree(data, args);
+    Tree tree = Tree(data.get(), args.get());
     start = std::clock();
     int ret = tree.grow();
 	duration = (std::clock() - start) / (double) CLOCKS_PER_SEC;

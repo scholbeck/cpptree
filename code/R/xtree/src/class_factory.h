@@ -10,6 +10,7 @@
 #include "class_model.h"
 #include "class_splitgenerator.h"
 #include "class_splitter.h"
+#include <memory>
 
 class Objective;
 
@@ -21,11 +22,11 @@ class Factory {
     Data* data;
     Arguments* args;
 
-    Objective* createObjective();
-	  Model* createModel();    
-    SplitGeneratorBatch* createSplitGeneratorBatch();
-    SplitGeneratorStream* createSplitGeneratorStream();
-    Splitter* createSplitter();
+    std::unique_ptr<Objective> createObjective();
+	  std::unique_ptr<Model> createModel();    
+    std::unique_ptr<SplitGeneratorBatch> createSplitGeneratorBatch();
+    std::unique_ptr<SplitGeneratorStream> createSplitGeneratorStream();
+    std::unique_ptr<Splitter> createSplitter();
 
 };
 

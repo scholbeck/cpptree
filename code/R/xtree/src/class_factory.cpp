@@ -14,50 +14,50 @@ Factory::Factory(Data* data, Arguments* args) {
 	this->args = args;
 }
 
-Objective* Factory::createObjective() {
-	Objective* obj;
+std::unique_ptr<Objective> Factory::createObjective() {
+	std::unique_ptr<Objective> obj;
 	if (this->args->getObjective() == "sse") {
-		obj = new ObjectiveSSE(this->data, this->args);
+		obj = std::make_unique<ObjectiveSSE>(this->data, this->args);
 	} else if (this->args->getObjective() == "gini") {
-		obj = new ObjectiveGini(this->data, this->args);
+		obj = std::make_unique<ObjectiveGini>(this->data, this->args);
 	}
 	return obj;
 }
 
-Model* Factory::createModel() {
-	Model* m = nullptr;
+std::unique_ptr<Model> Factory::createModel() {
+	std::unique_ptr<Model> m;
 	if ((this->args->getModel() == "mean") && (this->args->getObjective() == "sse")) {
-		m = new ModelAverage();
+		m = std::make_unique<ModelAverage>();
 	} else if ((this->args->getModel() == "linear") && (this->args->getObjective() == "sse")) {
-		m = new ModelSingleFeatureLinReg(this->args->getFormula()->getFeatures()[0]);
+		m = std::make_unique<ModelSingleFeatureLinReg>(this->args->getFormula()->getFeatures()[0]);
 	} else if ((this->args->getModel() == "") && (this->args->getObjective() == "gini")) {}
 	return m;
 }
 
-SplitGeneratorBatch* Factory::createSplitGeneratorBatch() {
-	SplitGeneratorBatch* g;
+std::unique_ptr<SplitGeneratorBatch> Factory::createSplitGeneratorBatch() {
+	std::unique_ptr<SplitGeneratorBatch> g;
 	if ((this->args->getAlgorithm() == "exhaustive") && (this->args->getMaxChildren() == 2)) {
-		g = new SplitGeneratorBatchBinExh();
+		g = std::make_unique<SplitGeneratorBatchBinExh>();
 	} else if ((this->args->getAlgorithm() == "random") && (this->args->getMaxChildren() > 2)) {
-		g = new SplitGeneratorBatchMultRand();
+		g = std::make_unique<SplitGeneratorBatchMultRand>();
 	}
 	return g;
 }
 
-SplitGeneratorStream* Factory::createSplitGeneratorStream() {
-	SplitGeneratorStream* g;
+std::unique_ptr<SplitGeneratorStream> Factory::createSplitGeneratorStream() {
+	std::unique_ptr<SplitGeneratorStream> g;
 	if (this->args->getAlgorithm() == "bayesianoptim") {
-		g = new SplitGeneratorStreamBayesianOptim();
+		g = std::make_unique<SplitGeneratorStreamBayesianOptim>();
 	}
 	return g;
 }
 
-Splitter* Factory::createSplitter() {
-	Splitter* s;
+std::unique_ptr<Splitter> Factory::createSplitter() {
+	std::unique_ptr<Splitter> s;
 	if ((this->args->getAlgorithm() == "exhaustive") || (this->args->getAlgorithm() == "random")) {
-		s = new SplitterNaive();
+		s = std::make_unique<SplitterNaive>();
 	} else if (this->args->getAlgorithm() == "bayesianoptim") {
-		s = new SplitterAdaptive();
+		s = std::make_unique<SplitterAdaptive>();
 	}
 	return s;
 }

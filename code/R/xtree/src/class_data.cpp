@@ -8,6 +8,7 @@
 #include <map>
 #include <ctime>
 #include <algorithm>
+#include <memory>
 
 Data::Data() {}
 
@@ -175,7 +176,7 @@ void Data::summary() {
 	
 	std::cout << "\n";
 	std::cout << "\tcategorical encodings :\n";
-	/*
+	
 	for (int j = 1; j < this->ncols(); j++) {
 		if (types[j] == "categ") {
 			std::cout << "\t\tcolumn " << j << " : \n";
@@ -185,7 +186,7 @@ void Data::summary() {
 			}
 		}
 	}
-	 */
+	 
 }
 
 void Data::setColTypes(std::vector<std::string> types) {
@@ -532,8 +533,8 @@ int Data::getNLevels(int col) {
 }
 
 void Data::createSortedData() {
-	this->sorted_data = new SortedData();
-	this->sorted_data->sort(this);
+	this->sorted_data = std::make_unique<SortedData>();
+	this->sorted_data->sort(this); 
 }
 
 void Data::createObservationIDs() {

@@ -10,6 +10,7 @@ class Model {
 		
 		Model();
 		~Model() {};
+		
 		// methods to be overwritten by inheriting classes
 		virtual void update(Data* data, std::vector<int> rows, char setdiff) = 0;
 		virtual double predictSingle(Data* data, int row) = 0;

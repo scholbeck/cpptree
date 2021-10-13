@@ -11,7 +11,9 @@
 #include "class_splitgenerator.h"
 #include "class_splitter.h"
 #include "helper_functions.h"
+#include "class_tree.h"
 #include <iomanip>
+#include <memory>
 
 Node::Node(std::string id, Tree* tree, std::vector<int> observations, double obj_val, std::string decision_rule, std::string model_info) {
 	this->tree = tree;
@@ -23,7 +25,6 @@ Node::Node(std::string id, Tree* tree, std::vector<int> observations, double obj
 	this->child_cnt = 0;
 	this->child_nodes.reserve(tree->getArgs()->getMaxChildren());
 	this->is_leaf = false;
-	this->tree->addNode(this);
 	this->split= nullptr;
 }
 
@@ -72,7 +73,7 @@ std::string Node::createDecisionRule(Split* s, int child_ix) {
 }
 
 Split* Node::getSplitData() {
-  return this->split;
+  return this->split.get();
 }
   
 std::string Node::getModelInfo() {
@@ -86,35 +87,32 @@ std::string Node::generateNodeInfo() {
 }
 
 
-std::vector<Node*> Node::splitNode() {
-	Splitter* splitter = this->tree->getFactory()->createSplitter();
+int Node::recursiveSplit() {
+	if ((int) (this->getId().length() -1) == this->tree->getArgs()->getMaxDepth()) {
+		this->is_leaf = true;
+		return 0;
+	}
+
+	std::unique_ptr<Splitter> splitter = this->tree->getFactory()->createSplitter();
 	this->split = splitter->findBestSplit(this->tree->data, this->observations, this->id, this->tree->getArgs(), this->obj_val);
-	delete(splitter);
-	std::vector<Node*> child_nodes;
+	
 	if (this->split != nullptr) {
 		// if a split has been found, do:
 	  	this->tree->data->sorted_data->split(this->id, this->split->split_obs);
 		// partition sorted features
 		for (int i = 0; i < (this->split->getNumberChildNodes()); ++i) {
-			Node* child = new Node(
+			std::unique_ptr<Node> child = std::make_unique<Node>(
 				this->id + std::to_string(i),
 				this->tree,
 				this->split->split_obs[i],
 				this->split->obj_values[i],
 				this->split->createDecisionRule(i),
 				this->split->getModelInfo()[i]);
-			child_nodes.push_back(child);
+			this->child_nodes.push_back(child.get());
+			this->tree->addNode(std::move(child));
 		}
 	}
-	return child_nodes;
-}
-
-int Node::recursiveSplit() {
-	if ((int) (this->getId().length() -1) == this->tree->getArgs()->getMaxDepth()) {
-		this->is_leaf = true;
-		return 0;
-	}
-	this->child_nodes = this->splitNode();
+	
 	int n_child_nodes = 0; 
 	int ret = 0;
 	if (!child_nodes.empty()) {

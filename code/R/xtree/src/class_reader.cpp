@@ -56,7 +56,7 @@ std::vector<std::string> parseLine(std::string line, char sep) {
 	return word_vec;
 }
 
-Data* Reader::read(std::string filename, Arguments* args) {
+std::unique_ptr<Data> Reader::read(std::string filename, Arguments* args) {
 	
 	char sep = args->getSep();
 	std::vector<std::vector<std::string>> rows_strings;
@@ -75,31 +75,31 @@ Data* Reader::read(std::string filename, Arguments* args) {
 	}
 	int n_rows = rows_strings.size();
   	int n_cols = rows_strings[0].size();
-	Data* data = new Data();
+	std::unique_ptr<Data> data = std::make_unique<Data>();
 	data->setColTypes(types);
   	std::vector<double> new_row;
 	for (int i = 0; i < n_rows; i++) {
-  	new_row.push_back(i);
-  	for (int j = 0; j < n_cols; j++) {
-  		if (types[j + 1] == "num") {
-  			  new_row.push_back(std::stod(rows_strings[i][j]));
-  		} else if (types[j + 1] == "categ") {
-    			std::set<std::string> levels = detectLevels(rows_strings, j);
-    			std::map<std::string, int> m;
-    			int l = 0;
-    			for (auto it = levels.begin(); it != levels.end(); ++it) {
-    				m.insert(std::pair<std::string, int> (*it, l));
-    				l++;
-    			}
-    			// create mapping for each categ feature j and for all its feature levels to integer 0, 1, 2, etc.
-    			data->addCategEncoding(j + 1, m);
-    			// add mapping to data object
-    			new_row.push_back(m.at(rows_strings[i][j]));
-    			// add mapped integer to data
-  		}
-	  }
-	data->addRow(new_row);
-	new_row.clear();
+		new_row.push_back(i);
+		for (int j = 0; j < n_cols; j++) {
+			if (types[j + 1] == "num") {
+				new_row.push_back(std::stod(rows_strings[i][j]));
+			} else if (types[j + 1] == "categ") {
+					std::set<std::string> levels = detectLevels(rows_strings, j);
+					std::map<std::string, int> m;
+					int l = 0;
+					for (auto it = levels.begin(); it != levels.end(); ++it) {
+						m.insert(std::pair<std::string, int> (*it, l));
+						l++;
+					}
+					// create mapping for each categ feature j and for all its feature levels to integer 0, 1, 2, etc.
+					data->addCategEncoding(j + 1, m);
+					// add mapping to data object
+					new_row.push_back(m.at(rows_strings[i][j]));
+					// add mapped integer to data
+			}
+		}
+		data->addRow(new_row);
+		new_row.clear();
 	}
 	data->createSortedData();
 	data->createObservationIDs();

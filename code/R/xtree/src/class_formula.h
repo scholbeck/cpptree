@@ -8,7 +8,8 @@ class Formula {
 	
   public:
     Formula();
-
+    ~Formula() {}
+    
     std::string formula_string;
     std::vector<int> features;
 

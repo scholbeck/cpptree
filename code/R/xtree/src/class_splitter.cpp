@@ -9,16 +9,16 @@ Splitter::Splitter() {}
 
 SplitterNaive::SplitterNaive() {}
 
-Split* SplitterNaive::findBestSplit(Data* data, std::vector<int> observations, std::string ID, Arguments* args, double prev_obj) {
+std::unique_ptr<Split> SplitterNaive::findBestSplit(Data* data, std::vector<int> observations, std::string ID, Arguments* args, double prev_obj) {
     
 	Factory factory = Factory(data, args);
-    SplitGeneratorBatch* split_generator = factory.createSplitGeneratorBatch();
-	std::vector<Split*> splits = split_generator->generate(data, observations, ID, args);
+   	std::unique_ptr<SplitGeneratorBatch> split_generator = factory.createSplitGeneratorBatch();
+	std::vector<std::unique_ptr<Split>> splits = split_generator->generate(data, observations, ID, args);
+	// all splits inside this vector of smart pointers go out of scope (and are deleted) when the function returns
 	int n_splits = splits.size();
-	delete(split_generator);
 	
 	AggregationAdditive aggreg;
-	Objective* obj = factory.createObjective();
+	std::unique_ptr<Objective> obj = factory.createObjective();
 
 	double child_obj_val, opt_obj_val_aggreg;
 	opt_obj_val_aggreg = prev_obj;
@@ -28,9 +28,9 @@ Split* SplitterNaive::findBestSplit(Data* data, std::vector<int> observations, s
 
 	int optsplit_ix = -1;
 	if (!splits.empty()) {
-		obj->update(splits[0], nullptr);
+		obj->update(splits[0].get(), nullptr);
 		for (int i = 1; i < n_splits; ++i) {
-			obj->update(splits[i], splits[i-1]);
+			obj->update(splits[i].get(), splits[i-1].get());
 			child_obj_val = aggreg.compute(obj->node_obj_values);
 			if (child_obj_val < opt_obj_val_aggreg) {
 				optsplit_ix = i;
@@ -40,16 +40,11 @@ Split* SplitterNaive::findBestSplit(Data* data, std::vector<int> observations, s
 			}
 		}
 	}
-    for (int i = 0; i < n_splits; i++) {
-	  if (i != optsplit_ix) {
-	    delete(splits[i]);
-	  }
-	}
-	delete(obj);
 
-	Split* return_split = nullptr;
+	std::unique_ptr<Split> return_split;
 	if (optsplit_ix != -1) {
-		return_split = splits[optsplit_ix];
+		return_split = std::move(splits[optsplit_ix]);
+		// transfer ownership of smart pointer from above vector to this new smart pointer which is returned
 		return_split->setObjValues(opt_obj_values);
 		return_split->setModelInfo(opt_model_info);
 	}
@@ -60,9 +55,9 @@ Split* SplitterNaive::findBestSplit(Data* data, std::vector<int> observations, s
 
 SplitterAdaptive::SplitterAdaptive() {}
 
-Split* SplitterAdaptive::findBestSplit(Data* data, std::vector<int> observations, std::string ID, Arguments* args, double prev_obj) {
+std::unique_ptr<Split> SplitterAdaptive::findBestSplit(Data* data, std::vector<int> observations, std::string ID, Arguments* args, double prev_obj) {
 	// implementation of adaptive split search
-	Split* s;
+	std::unique_ptr<Split> s;
 	return s;
 }
 

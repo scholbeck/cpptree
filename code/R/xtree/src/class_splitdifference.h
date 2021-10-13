@@ -6,6 +6,7 @@ class SplitDifference {
 		
 	public:
 		SplitDifference();
+		~SplitDifference() {}
 		
 		std::vector<std::vector<int>> additional_obs;
 		std::vector<std::vector<int>> removed_obs;

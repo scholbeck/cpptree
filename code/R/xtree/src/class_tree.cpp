@@ -16,11 +16,10 @@ Tree::Tree(Data* data, Arguments* args) : factory(new Factory(data, args))  {
 	this->data = data;
 	this->leafnode_cnt = 0;
 	this->args = args;
-	this->root = nullptr;
 }
 
-void Tree::addNode(Node* node) {
-	this->nodes.push_back(node);
+void Tree::addNode(std::unique_ptr<Node> node) {
+	this->nodes.push_back(std::move(node)); // smart pointer has to be moved instead of copied
 	this->node_cnt++;
 }
 
@@ -46,23 +45,23 @@ Arguments* Tree::getArgs() {
 }
 
 int Tree::grow() {
-	Objective* obj = this->factory->createObjective();
-	Model* root_model = this->factory->createModel();
+	std::unique_ptr<Objective> obj = this->factory->createObjective();
+	std::unique_ptr<Model> root_model = this->factory->createModel();
 	std::vector<int> root_obs = this->data->getObservationIDs();
 	if (root_model != nullptr) {
 		root_model->update(this->data, root_obs, '+');
 	}
-	this->root = new Node("0", this, root_obs, -1, "root", "");
-	this->root->split = nullptr;
-	this->root->obj_val = obj->compute(root_model, root_obs);
-	int ret = this->root->recursiveSplit();
+	std::unique_ptr<Node> r = std::make_unique<Node>("0", this, root_obs, -1, "root", "");
+	r->split = nullptr;
+	r->obj_val = obj->compute(root_model.get(), root_obs);
+	this->addNode(std::move(r));
+	int ret = this->nodes[0]->recursiveSplit();
 	this->gatherTreeInformation();
 	
 	return ret;
 }
 
 void Tree::summary() {
-	//this->root->getData()->summary();
 	std::cout << "------------------------------------------------------\n";
 	std::cout << "TREE SUMMARY\n";
 	std::cout << "\tnodes : " << this->node_cnt << "\n";
@@ -105,7 +104,7 @@ void Tree::printSubTree(Node* node) {
 }
 
 void Tree::print() {
-	printSubTree(this->nodes[0]);
+	printSubTree(this->nodes[0].get());
 }
 
 // ├──

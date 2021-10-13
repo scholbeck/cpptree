@@ -10,7 +10,8 @@ class Reader {
   
   public:
     Reader();
-    Data* read(std::string filename, Arguments* args);
+    ~Reader() {}
+    std::unique_ptr<Data> read(std::string filename, Arguments* args);
     std::vector<std::string> detectColTypes(std::vector<std::string> vec);
 };
 

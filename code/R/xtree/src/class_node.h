@@ -1,7 +1,6 @@
 #ifndef NODE_H
 #define NODE_H
 
-#include "class_tree.h"
 #include "class_arguments.h"
 #include "class_data.h"
 #include "class_objective.h"
@@ -14,12 +13,11 @@ class Node {
 	
   public:
     Node(std::string id, Tree* tree, std::vector<int> observations, double obj_val, std::string decision_rule, std::string model_info);
-    ~Node() {
-      delete(this->split);
-    }
+    ~Node() {}
+    
     std::string id;
     std::vector<int> observations;
-    Split* split;
+    std::unique_ptr<Split> split; // Node object is responsible for object life time of Split object
     std::string decision_rule; // rule that was used to to get from parent to this object
     std::string model_info; // info on model
     Tree* tree;
@@ -35,7 +33,6 @@ class Node {
     Split* getSplitData();
     void summary();
     bool isLeaf();
-    std::vector<Node*> splitNode();
     int recursiveSplit();
     std::vector<Node*> getChildNodes();
     void addChild(Node* child);
