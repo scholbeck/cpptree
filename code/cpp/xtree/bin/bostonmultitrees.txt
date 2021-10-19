@@ -1,0 +1,16 @@
+./tree --filename ../../../../data/bh.data --target 13 --sep , --task regr --algorithm random --objective sse --model linear --formula x1 --minsize 50 --children 3 --maxdepth 10
+------------------------------------------------------
+TREE SUMMARY
+	nodes : 7
+	leaf nodes : 5
+	depth : 2
+
+└──[0]
+    ├──<x3 <= 8.00>──[00]
+        ├──<x2 <= 1.00>──[*000] (sse = 5353.64 | alpha = 24.55 | beta = 13.02)
+        ├──<x2 ∈  ]1.00 , 25.00]>──[*001] (sse = 3833.87 | alpha = 23.00 | beta = 19.12)
+        ├──<x2 > 25.00>──[*002] (sse = 4211.34 | alpha = 31.36 | beta = -46.15)
+    ├──<x3 ∈  ]8.00 , 16.00]>──[*01] (sse = 923.55 | alpha = 21.43 | beta = -2.56)
+    ├──<x3 > 16.00>──[*02] (sse = 14995.43 | alpha = 17.89 | beta = -0.03)
+------------------------------------------------------
+Training complete. Duration: 0.017125sec

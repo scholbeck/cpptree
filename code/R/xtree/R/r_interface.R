@@ -27,11 +27,18 @@ convertCategEncodings = function(data) {
   return(encodings)
 }
 
-xtree = function(data, target, min_node_size, n_children, max_depth, objective_type, model_type = "", formula = "", search_algo_type) {
+cpptree = function(
+  data, target, min_node_size, n_children, max_depth, objective_type,
+  model_type = "", model_formula = "", search_algo_type) {
+  
   coltypes = convertColTypes(data)
-  params = list("n_children" = n_children, "objective_type" = objective_type, "model_type" = model_type, "formula" = formula, "search_algo_type" = search_algo_type,
-                "min_node_size" = min_node_size, "max_depth" = max_depth, "target" = target)
-  tree = ExtensibleTree$new(data, coltypes, params)
+  params = list(
+    "n_children" = n_children, "objective_type" = objective_type,
+    "model_type" = model_type, "formula" = model_formula,
+    "search_algo_type" = search_algo_type, "min_node_size" = min_node_size,
+    "max_depth" = max_depth, "target" = target)
+  
+  tree = CppTree$new(data, coltypes, params)
   return(tree)
 }
 

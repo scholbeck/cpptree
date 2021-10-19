@@ -142,12 +142,6 @@ void printTreeSummaryToR(Tree* tree) {
   Rcpp::Rcout << "\tnodes : " << tree->node_cnt << "\n";
   Rcpp::Rcout << "\tleaf nodes : " << tree->leafnode_cnt << "\n";
   Rcpp::Rcout << "\tdepth : " << tree->depth << "\n\n";
-  tree->print();
-  /*
-   for (int i = 0; i < tree->node_cnt; ++i) {
-   tree->nodes[i]->summary();
-   }
-   */
   Rcpp::Rcout << "------------------------------------------------------\n";
 }
 
@@ -155,12 +149,12 @@ void printTreeSummaryToR(Tree* tree) {
 void printSubTreeToR(Node* node) {
   int level = node->getId().length() - 1;
   std::ostringstream sstream;
-  sstream << std::setprecision(2) << std::fixed ; // printout with 2 decimal places
+  sstream << std::setprecision(2) << std::fixed ; //<< node->getObjValue(); // obj printout with 2 decimal places
   if (level == 0) {
-    std::cout << "└──[" << node->getId() << "]\n";
+    Rcpp::Rcout << "└──[" << node->getId() << "]\n"; // << "] (" << node->getModel()->getShortSummary() << " | obj = " << sstream.str() << ")\n";
   } else {
     if (node->isLeaf()) {
-      Rcpp::Rcout << std::string((level * 4) , ' ') << "├──<" << node->getDecisionRule() << ">──[*" << node->getId() << "] (" << node->getModelInfo() << ")\n" ;//<< "] (" << node->getModel()->getShortSummary() << " | obj = " << sstream.str() << ")\n";
+      Rcpp::Rcout << std::string((level * 4) , ' ') << "├──<" << node->getDecisionRule() << ">──[*" << node->getId() << "] (" << node->generateNodeInfo() << ")\n" ;//<< "] (" << node->getModel()->getShortSummary() << " | obj = " << sstream.str() << ")\n";
     } else {
       Rcpp::Rcout << std::string((level * 4) , ' ') << "├──<" << node->getDecisionRule() << ">──[" << node->getId() << "]\n" ;//<< "] (" << node->getModel()->getShortSummary() << " | obj = " << sstream.str() << ")\n";
     }
@@ -176,11 +170,11 @@ void printTreeStructureToR(Tree* tree) {
   printSubTreeToR(tree->nodes[0].get());
 }
 
-RAdapter::RAdapter(Rcpp::DataFrame r_data, Rcpp::StringVector coltypes,
-                       Rcpp::List params) {
+
+RAdapter::RAdapter(Rcpp::DataFrame r_data, Rcpp::StringVector coltypes, Rcpp::List params) {
   
   std::unique_ptr<Data> data = convertData(r_data, params["target"], coltypes);
-  
+
   std::unique_ptr<Arguments> args = std::unique_ptr<Arguments>(new Arguments());
   args->setTargetIndex(params["target"]);
   args->setMinNodeSize(params["min_node_size"]);
@@ -284,11 +278,12 @@ Rcpp::DataFrame RAdapter::getTreeStructure() {
 }
 
 
-RCPP_MODULE(xtree) {
+RCPP_MODULE(cpptree) {
   
-  Rcpp::class_<RAdapter>("ExtensibleTree")
+  Rcpp::class_<RAdapter>("CppTree")
   
   .constructor<Rcpp::DataFrame, Rcpp::StringVector, Rcpp::List>("Construct a tree object.")
+  
   .field("depth", &RAdapter::depth)
   .field("node_cnt", &RAdapter::node_cnt)
   .field("leafnode_cnt", &RAdapter::leafnode_cnt)
@@ -297,4 +292,4 @@ RCPP_MODULE(xtree) {
   ;
 }
 
-RCPP_EXPOSED_CLASS(ExtensibleTree)
+RCPP_EXPOSED_CLASS(CppTree)

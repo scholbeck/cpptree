@@ -11,14 +11,14 @@ Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
 
-RcppExport SEXP _rcpp_module_boot_xtree();
+RcppExport SEXP _rcpp_module_boot_cpptree();
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_rcpp_module_boot_xtree", (DL_FUNC) &_rcpp_module_boot_xtree, 0},
+    {"_rcpp_module_boot_cpptree", (DL_FUNC) &_rcpp_module_boot_cpptree, 0},
     {NULL, NULL, 0}
 };
 
-RcppExport void R_init_xtree(DllInfo *dll) {
+RcppExport void R_init_cpptree(DllInfo *dll) {
     R_registerRoutines(dll, NULL, CallEntries, NULL, NULL);
     R_useDynamicSymbols(dll, FALSE);
 }
