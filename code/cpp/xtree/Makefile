@@ -4,8 +4,8 @@ SRC_DIR := src
 OBJ_DIR := obj
 BIN_DIR := bin
 
-EXE := $(BIN_DIR)/tree
-LIB := $(BIN_DIR)/treelib.a
+EXE := $(BIN_DIR)/cpptree
+LIB := $(BIN_DIR)/cpptreelib.a
 SRC := $(wildcard $(SRC_DIR)/*.cpp)
 OBJ := $(SRC:$(SRC_DIR)/%.cpp=$(OBJ_DIR)/%.o)
 
@@ -19,7 +19,7 @@ all: $(EXE)
 $(EXE): $(LIB)
 	$(CXX) $(LDFLAGS) $^ $(LDLIBS) -o $@ 
 
-.PHONY: treelib
+.PHONY: cpptreelib
 treelib: $(LIB)
 
 $(LIB): $(OBJ) | $(BIN_DIR)
@@ -34,6 +34,6 @@ $(BIN_DIR) $(OBJ_DIR):
 .PHONY: clean
 clean:
 	@$(RM) -rv $(OBJ_DIR)
-	rm $(BIN_DIR)/tree $(BIN_DIR)/treelib.a
+	rm $(BIN_DIR)/cpptree $(BIN_DIR)/cpptreelib.a
 
 -include $(OBJ:.o=.d)

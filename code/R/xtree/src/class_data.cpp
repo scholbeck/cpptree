@@ -150,7 +150,7 @@ void Data::print() {
 	std::cout << "\n";
 	for (int i = 0; i < n_rows; ++i) {
 		for (int j = 0; j < n_cols; j++) {
-			std::cout << this->rows[i][j];
+			std::cout << this->rows[i][j] << " ";
 		}
 	std::cout << "\n";
 	}

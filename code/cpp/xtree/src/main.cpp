@@ -25,7 +25,7 @@ int main(int argc, char *argv[]) {
 	}
     args->checkArgs();
 	std::unique_ptr<Data> data = reader->read(args->getFilename(), args.get());
-	data->setTargetIndex(args->getTargetIndex() + 1);
+	data->setTargetIndex(args->getTargetIndex());
     if (data->selfCheck() == false) {
         std::cout << "Specified wrong target index. Aborting..\n";
         return EXIT_FAILURE;

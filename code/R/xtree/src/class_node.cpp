@@ -82,7 +82,7 @@ std::string Node::getModelInfo() {
 std::string Node::generateNodeInfo() {
 	std::ostringstream sstream;
 	sstream << std::setprecision(2) << std::fixed; // printout with 2 decimal places
-	sstream << this->tree->getArgs()->getObjective() << " = " << this->obj_val << " | " << this->model_info;
+	sstream << this->model_info;
 	return sstream.str();
 }
 

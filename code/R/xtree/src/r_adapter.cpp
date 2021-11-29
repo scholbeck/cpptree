@@ -87,7 +87,7 @@ std::unique_ptr<Data> convertData(Rcpp::DataFrame r_data, int target_index, Rcpp
   data->init(n_rows, n_cols + 1);
   // + 1 for ID column
   data->replaceCol(0, initVectorSeqDouble(0, n_rows - 1));
-  data->setTargetIndex(target_index);
+  data->setTargetIndex(target_index); // already supplied from 1 ... p
   std::vector<std::string> types, r_types_conv;
   r_types_conv = convertRcppStringVector(coltypes);
   types.reserve(n_cols + 1);
@@ -145,18 +145,17 @@ void printTreeSummaryToR(Tree* tree) {
   Rcpp::Rcout << "------------------------------------------------------\n";
 }
 
-
 void printSubTreeToR(Node* node) {
   int level = node->getId().length() - 1;
   std::ostringstream sstream;
-  sstream << std::setprecision(2) << std::fixed ; //<< node->getObjValue(); // obj printout with 2 decimal places
+  sstream << std::setprecision(2) << std::fixed ; // obj printout with 2 decimal places
   if (level == 0) {
-    Rcpp::Rcout << "└──[" << node->getId() << "]\n"; // << "] (" << node->getModel()->getShortSummary() << " | obj = " << sstream.str() << ")\n";
+    Rcpp::Rcout << "└──[" << node->getId() << "]\n"; 
   } else {
     if (node->isLeaf()) {
-      Rcpp::Rcout << std::string((level * 4) , ' ') << "├──<" << node->getDecisionRule() << ">──[*" << node->getId() << "] (" << node->generateNodeInfo() << ")\n" ;//<< "] (" << node->getModel()->getShortSummary() << " | obj = " << sstream.str() << ")\n";
+      Rcpp::Rcout << std::string((level * 4) , ' ') << "├──<" << node->getDecisionRule() << ">──[*" << node->getId() << "] (" << node->generateNodeInfo() << ")\n";
     } else {
-      Rcpp::Rcout << std::string((level * 4) , ' ') << "├──<" << node->getDecisionRule() << ">──[" << node->getId() << "]\n" ;//<< "] (" << node->getModel()->getShortSummary() << " | obj = " << sstream.str() << ")\n";
+      Rcpp::Rcout << std::string((level * 4) , ' ') << "├──<" << node->getDecisionRule() << ">──[" << node->getId() << "]\n";
     }
   }
   std::vector<Node*> child_nodes = node->getChildNodes();
@@ -170,13 +169,13 @@ void printTreeStructureToR(Tree* tree) {
   printSubTreeToR(tree->nodes[0].get());
 }
 
-
 RAdapter::RAdapter(Rcpp::DataFrame r_data, Rcpp::StringVector coltypes, Rcpp::List params) {
   
   std::unique_ptr<Data> data = convertData(r_data, params["target"], coltypes);
-
+  if (data->selfCheck() == false) {
+    throw std::invalid_argument("Specified invalid target index. Aborting..\n");
+  }
   std::unique_ptr<Arguments> args = std::unique_ptr<Arguments>(new Arguments());
-  args->setTargetIndex(params["target"]);
   args->setMinNodeSize(params["min_node_size"]);
   args->setAlgorithm(params["search_algo_type"]);
   args->setMaxChildren(params["n_children"]);
@@ -196,7 +195,6 @@ RAdapter::RAdapter(Rcpp::DataFrame r_data, Rcpp::StringVector coltypes, Rcpp::Li
   this->node_cnt = this->tree->node_cnt;
   this->leafnode_cnt = this->tree->leafnode_cnt;
 }
-
 
 void RAdapter::print() {
   printTreeStructureToR(this->tree.get());
