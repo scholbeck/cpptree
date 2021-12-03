@@ -7,6 +7,9 @@
 class RAdapter {
     
   public:
+    std::unique_ptr<Formula> formula;
+    std::unique_ptr<Arguments> args;
+    std::unique_ptr<Data> data;
     std::unique_ptr<Tree> tree;
     int depth, node_cnt, leafnode_cnt;
     

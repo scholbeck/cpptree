@@ -20,5 +20,10 @@ double quantileSortedVec(double quantile, std::vector<double> vec);
 long long int factorial(int n);
 std::vector<std::vector<int>> permuteIndices(int n, int k);
 std::vector<int> convertDoubleToIntVector(std::vector<double> vec);
+double recursiveMeanForward(double obs_additional, double mean_backward);
+double recursiveMeanBackward(double obs_removed, double mean_forward);
+std::vector<double> recursiveSumSquaresTotalForward(double obs_additional, double SST_backward, double M_backward);
+std::vector<double> recursiveSumSquaresTotalBackward(double obs_removed, double SST_forward, double M_forward);
+double recursiveCovarianceForward(double mean_x, double mean_y, double x_additional, double y_additional);
 
 #endif 

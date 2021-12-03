@@ -101,8 +101,46 @@ std::array<std::vector<int>, 2> diffSet(std::vector<int> set_a, std::vector<int>
 	std::set_difference(set_b.begin(), set_b.end(), set_a.begin(), set_a.end(),
 	std::inserter(diff[1], diff[1].begin()));
 	return diff;
-} 
+}
+/*
+double recursiveMeanForward(double obs_additional, double mean_backward) {
+	double mean_forward;
+	mean_forward = ((n-1) / n) * mean_backward + (1 / n) * obs_additional; 
+	mean_forward = (n / (n-1)) * (mean_backward - (1 / n) * obs_additional);
+	return mean_forward;
+}
 
+double recursiveMeanBackward(double obs_removed, double mean_forward) {
+	double mean_backward;
+	mean_backward = (n / (n-1)) * (mean_forward - (1 / n) * obs_removed);
+	return mean_backward;
+}
+
+std::vector<double> recursiveSumSquaresTotalForward(double obs_additional, double SST_backward, double M_backward) {
+	std::vector<double> return_vec(2);
+	double SST_forward, M_forward;
+	M_forward = M_backward + (1 / n) * (obs_additional - M_backward);
+	SST_forward = SST_backward + ((obs_additional - M_backward) * (obs_additional - M_forward));
+	return_vec[0] = M_forward;
+	return_vec[1] = SST_forward;
+	return return_vec;
+}
+
+std::vector<double> recursiveSumSquaresTotalBackward(double obs_removed, double SST_forward, double M_forward) {
+	std::vector<double> return_vec(2);
+	double SST_backward, M_backward;
+	M_backward = (1 / (1 - (1 / n))) * (M_forward - (1 / n) * obs_removed)
+	SST_backward = SST_forward - ((obs_removed - M_backward) * (obs_removed - M_forward));
+	return_vec[0] = M_backward;
+	return_vec[1] = SST_backward;
+	return return_vec;
+}
+
+double recursiveCovarianceForward(double cov_backward, double mean_x, double mean_y_backward, double x_additional, double y_additional) {
+	double cov_forward = cov_backward + ((x_additional - mean_x) * (y_additional - mean_y_backward));
+	return cov_forward;
+}
+*/
 /*
 std::array<std::vector<int>, 2> diffSet(std::vector<int> set_a, std::vector<int> set_b) {
 	std::array<std::vector<int>, 2> diff;

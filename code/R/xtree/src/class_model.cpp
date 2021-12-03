@@ -62,44 +62,40 @@ ModelSingleFeatureLinReg::ModelSingleFeatureLinReg(int feature) : Model() {
 	this->alpha = 0;
 	this->beta = 0;
 	this->n = 0;
-	this->cumsum_feature = 0;
-	this->cumsum_target = 0;
-	this->mean_feature = 0;
-	this->mean_target = 0;
-	this->cov = 0;
-	this->var = 0;
+	this->mean_x = 0;
+	this->mean_y = 0;
+	this->ss_cov = 0;
+	this->ss_var = 0;
 }
 
 void ModelSingleFeatureLinReg::update(Data* data, std::vector<int> rows, char setdiff) {
 	int n_update = rows.size();
 	if (setdiff == '+') {
-		this->n += n_update;
 		for (int i = 0; i < n_update; ++i) {
-			this->cumsum_feature += data->elem(rows[i], this->feature);
-			this->cumsum_target += data->elem(rows[i], data->getTargetIndex());
-		}
-		this->mean_feature = this->cumsum_feature / this->n;
-		this->mean_target = this->cumsum_target / this->n;
-		for (int i = 0; i < n_update; ++i) {
-			this->cov += (data->elem(rows[i], this->feature) - this->mean_feature) * (data->elem(rows[i], data->getTargetIndex()) - this->mean_target);
-			this->var += pow((data->elem(rows[i], this->feature) - this->mean_feature), 2);
+			this->n += 1;
+			double mean_x_prev = this->mean_x;
+
+			this->mean_x = this->mean_x + ((data->elem(rows[i], this->feature) - this->mean_x) / n);
+			this->mean_y = this->mean_y + ((data->elem(rows[i], data->getTargetIndex()) - this->mean_y) / n);
+
+			this->ss_var = this->ss_var + ((data->elem(rows[i], this->feature) - mean_x_prev) * ((data->elem(rows[i], this->feature) - this->mean_x)));
+			this->ss_cov = this->ss_cov + ((data->elem(rows[i], this->feature) - mean_x_prev) * ((data->elem(rows[i], data->getTargetIndex()) - this->mean_y)));
 		}
 	}
 	if (setdiff == '-') {
-		this->n -= n_update;
 		for (int i = 0; i < n_update; ++i) {
-			this->cumsum_feature -= data->elem(rows[i], this->feature);
-			this->cumsum_target -= data->elem(rows[i], data->getTargetIndex());
-		}
-		this->mean_feature = this->cumsum_feature / this->n;
-		this->mean_target = this->cumsum_target / this->n;
-		for (int i = 0; i < n_update; ++i) {
-			this->cov -= (data->elem(rows[i], this->feature) - this->mean_feature) * (data->elem(rows[i], data->getTargetIndex()) - this->mean_target);
-			this->var -= pow((data->elem(rows[i], this->feature) - this->mean_feature), 2);
+			this->n -= 1;
+			double mean_x_prev = this->mean_x;
+			
+			this->mean_x = (n / (n - 1)) * (this->mean_x - (data->elem(rows[i], this->feature)));
+			this->mean_y = (n / (n - 1)) * (this->mean_y - (data->elem(rows[i], data->getTargetIndex())));
+
+			this->ss_var = this->ss_var - ((data->elem(rows[i], this->feature) - mean_x_prev) * ((data->elem(rows[i], this->feature) - this->mean_x)));
+			this->ss_cov = this->ss_cov - ((data->elem(rows[i], this->feature) - mean_x_prev) * ((data->elem(rows[i], data->getTargetIndex()) - this->mean_y)));
 		}
 	}
-	this->beta = this->cov / this->var;
-	this->alpha = this->mean_target - (this->beta * this->mean_feature);
+	this->beta = this->ss_cov / this->ss_var;
+	this->alpha = this->mean_y - (this->beta * this->mean_x);
 }
 
 double ModelSingleFeatureLinReg::predictSingle(Data* data, int row) {

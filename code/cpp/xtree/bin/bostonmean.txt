@@ -22,4 +22,4 @@ TREE SUMMARY
         ├──<x6 <= 7.42>──[*010] (mean y = 32.11)
         ├──<x6 > 7.42>──[*011] (mean y = 45.10)
 ------------------------------------------------------
-Training complete. Duration: 0.0589sec
+Training complete. Duration: 0.175991sec

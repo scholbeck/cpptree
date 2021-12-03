@@ -9,7 +9,7 @@ LIB := $(BIN_DIR)/cpptreelib.a
 SRC := $(wildcard $(SRC_DIR)/*.cpp)
 OBJ := $(SRC:$(SRC_DIR)/%.cpp=$(OBJ_DIR)/%.o)
 
-CPPFLAGS := -O3 -Iinclude -MMD -MP
+CPPFLAGS := -O3 -Iinclude -MMD -MP -pg
 LDFLAGS  := -Llib
 LDLIBS   := 
 
@@ -17,7 +17,7 @@ LDLIBS   :=
 all: $(EXE)
 
 $(EXE): $(LIB)
-	$(CXX) $(LDFLAGS) $^ $(LDLIBS) -o $@ 
+	$(CXX) $(LDFLAGS) $^ $(LDLIBS) -pg -o $@ 
 
 .PHONY: cpptreelib
 treelib: $(LIB)
@@ -26,7 +26,7 @@ $(LIB): $(OBJ) | $(BIN_DIR)
 	ar rvs $@ $^
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp | $(OBJ_DIR)
-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c $< -o $@ 
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c -pg $< -o $@
 
 $(BIN_DIR) $(OBJ_DIR):
 	mkdir -p $@

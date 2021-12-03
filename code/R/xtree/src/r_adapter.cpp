@@ -171,11 +171,11 @@ void printTreeStructureToR(Tree* tree) {
 
 RAdapter::RAdapter(Rcpp::DataFrame r_data, Rcpp::StringVector coltypes, Rcpp::List params) {
   
-  std::unique_ptr<Data> data = convertData(r_data, params["target"], coltypes);
+  this->data = convertData(r_data, params["target"], coltypes);
   if (data->selfCheck() == false) {
     throw std::invalid_argument("Specified invalid target index. Aborting..\n");
   }
-  std::unique_ptr<Arguments> args = std::unique_ptr<Arguments>(new Arguments());
+  this->args = std::unique_ptr<Arguments>(new Arguments());
   args->setMinNodeSize(params["min_node_size"]);
   args->setAlgorithm(params["search_algo_type"]);
   args->setMaxChildren(params["n_children"]);
@@ -183,7 +183,7 @@ RAdapter::RAdapter(Rcpp::DataFrame r_data, Rcpp::StringVector coltypes, Rcpp::Li
   args->setModel(params["model_type"]);
   args->setObjective(params["objective_type"]);
   
-  std::unique_ptr<Formula> formula = std::unique_ptr<Formula>(new Formula());
+  this->formula = std::unique_ptr<Formula>(new Formula());
   formula->setString(params["formula"]);
   formula->processString();
   
@@ -199,8 +199,7 @@ RAdapter::RAdapter(Rcpp::DataFrame r_data, Rcpp::StringVector coltypes, Rcpp::Li
 void RAdapter::print() {
   printTreeStructureToR(this->tree.get());
 }
-
-
+  
 Rcpp::DataFrame RAdapter::getTreeStructure() {
   Rcpp::StringVector id_vec, parent_split_vec, split_value_vec, split_type_vec, level_partitioning_vec, model_info_vec;
   Rcpp::IntegerVector is_leaf_vec, split_feature_vec;

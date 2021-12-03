@@ -1,5 +1,8 @@
+bench:
+	./cpptree --filename ../../../../data/10000obs.csv --coltypes nnnnnn --target 1 --sep , --task regr --algorithm exhaustive --model mean --objective sse --minsize 30 --children 2 --maxdepth 30
+
 bike:
-	./cpptree --filename ../../../../data/seoulbike_8000.csv --coltypes nnnnnnnnn --target 2 --sep , --task regr --algorithm exhaustive --model linear --formula x6 --objective sse --minsize 50 --children 2 --maxdepth 10
+	./cpptree --filename ../../../../data/seoulbike_8000.csv --coltypes nnnnnnnnn --target 2 --sep , --task regr --algorithm exhaustive --model linear --formula x6 --objective sse --minsize 2 --children 2 --maxdepth 30
 
 boston:
 	./cpptree --filename ../../../../data/bh.data --target 14 --sep , --task regr --algorithm exhaustive --objective sse --model mean --minsize 30 --children 2 --maxdepth 4 | tee bostonmean.txt
