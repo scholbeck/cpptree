@@ -1,6 +1,6 @@
 # cpptree - An Extensible C++ Library for Decision Trees
 
-This repository contains a pre-alpha version of a cpptree - a C++ library for decision trees.
+This repository contains a pre-alpha version of cpptree - a C++ library for decision trees.
 
 The source code is based on the C++ 11 standard and has no dependencies except for the C++ Standard Library.
 A modular software design allows for an implementation of a large variety of decision tree algorithms via simple software extensions.
