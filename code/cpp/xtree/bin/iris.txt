@@ -14,4 +14,4 @@ TREE SUMMARY
         ├──<x4 <= 1.70>──[*010] (gini = 0.17)
         ├──<x4 > 1.70>──[*011] (gini = 0.04)
 ------------------------------------------------------
-Training complete. Duration: 0.004001sec
+Training complete. Duration: 0.00789sec

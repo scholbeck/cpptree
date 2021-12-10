@@ -13,7 +13,7 @@ tree = cpptree(
   model_type = "linear",
   model_formula = "x6",
   search_algo_type = "exhaustive",
-  min_node_size = 20,
+  min_node_size = 30,
   max_depth = 3,
   target = 14)
 
@@ -52,7 +52,7 @@ tree = cpptree(
   objective_type = "sse",
   model_type = "mean",
   search_algo_type = "exhaustive",
-  min_node_size = 20,
+  min_node_size = 30,
   max_depth = 3,
   target = 14)
 
@@ -81,7 +81,9 @@ p = ggparty(partyobj,
                   size = 7,
                   ids = "terminal")
 
-p 
+p
+
+
 ggsave(p, filename = "ggparty_mean.png", width = 20, height = 10)
 library(rpart)
 library(rpart.plot)

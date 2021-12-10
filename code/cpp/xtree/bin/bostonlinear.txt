@@ -10,4 +10,4 @@ TREE SUMMARY
         ├──<x1 <= 2.16>──[*010] (alpha = -55.99 | beta = 12.66)
         ├──<x1 > 2.16>──[*011] (alpha = -7.25 | beta = 4.12)
 ------------------------------------------------------
-Training complete. Duration: 0.147844sec
+Training complete. Duration: 0.144sec
