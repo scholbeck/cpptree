@@ -9,6 +9,7 @@
 #include "class_factory.h"
 #include "helper_functions.h"
 #include <iomanip>
+#include <sstream>
 
 Tree::Tree(Data* data, Arguments* args) : factory(new Factory(data, args))  {
 	this->node_cnt = 0;
