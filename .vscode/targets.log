@@ -8,7 +8,7 @@ make: *** No rule to make target 'all'.  Stop.
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Fri Aug 27 17:37:28 2021
+# Make data base, printed on Fri Dec 10 17:07:43 2021
 
 # Variables
 
@@ -45,13 +45,13 @@ CURDIR := /home/scholbeck/C_Projects/treelib
 # makefile
 SHELL = /bin/sh
 # environment
-SNAP_DATA = /var/snap/code/72
+SNAP_DATA = /var/snap/code/83
 # environment
 GDM_LANG = en_US
 # environment
 VSCODE_NLS_CONFIG = {"locale":"en-us","availableLanguages":{},"_languagePackSupport":true}
 # environment
-JOURNAL_STREAM = 9:48494
+JOURNAL_STREAM = 9:50701
 # environment
 XDG_CONFIG_DIRS = /etc/xdg/xdg-ubuntu:/etc/xdg
 # environment
@@ -77,9 +77,9 @@ DBUS_SESSION_BUS_ADDRESS = unix:path=/run/user/1000/bus
 # environment
 VSCODE_VERBOSE_LOGGING = true
 # environment
-_ = /snap/code/72/usr/share/code/code
+_ = /snap/code/83/usr/share/code/code
 # environment
-MANAGERPID = 1678
+MANAGERPID = 2188
 # environment
 LESSOPEN = | /usr/bin/lesspipe %s
 # environment
@@ -89,7 +89,7 @@ VSCODE_CWD = /home/scholbeck
 # environment
 XDG_SESSION_PATH = /org/freedesktop/DisplayManager/Session0
 # environment
-GSETTINGS_SCHEMA_DIR = /snap/code/72/usr/share/glib-2.0/schemas
+GSETTINGS_SCHEMA_DIR = /snap/code/83/usr/share/glib-2.0/schemas
 # default
 MAKE_HOST := x86_64-pc-linux-gnu
 # environment
@@ -97,15 +97,15 @@ PATH = /home/scholbeck/bin:/home/scholbeck/bin:/usr/local/sbin:/usr/local/bin:/u
 # environment
 GPG_AGENT_INFO = /run/user/1000/gnupg/S.gpg-agent:0:1
 # environment
-SESSION_MANAGER = local/christian-ThinkPad-T480s:@/tmp/.ICE-unix/1885,unix/christian-ThinkPad-T480s:/tmp/.ICE-unix/1885
+SESSION_MANAGER = local/christian-ThinkPad-T480s:@/tmp/.ICE-unix/2393,unix/christian-ThinkPad-T480s:/tmp/.ICE-unix/2393
 # environment
 XDG_RUNTIME_DIR = /run/user/1000
 # environment
 GDK_PIXBUF_MODULE_FILE = /home/scholbeck/snap/code/common/.cache/gdk-pixbuf-loaders.cache
 # environment
-SNAP = /snap/code/72
+SNAP = /snap/code/83
 # environment
-SNAP_VERSION = 3866c355
+SNAP_VERSION = 7db1a2b8
 # environment
 XDG_MENU_PREFIX = gnome-
 # environment
@@ -115,9 +115,9 @@ DISABLE_WAYLAND = 1
 # environment
 VSCODE_CRASH_REPORTER_START_OPTIONS = {"companyName":"Microsoft","productName":"VSCode","submitURL":"appcenter://code?aid=fba07a4d-84bd-4fc8-a125-9640fc8ce171&uid=d4c92552-81de-44ef-b0ac-f4c985dec6d5&iid=d4c92552-81de-44ef-b0ac-f4c985dec6d5&sid=d4c92552-81de-44ef-b0ac-f4c985dec6d5","uploadToServer":true}
 # environment
-INVOCATION_ID = 5a08bd8b56f740a78867c5184b5ef144
+INVOCATION_ID = 9f58e3271dd84f3ca8ed44009ad929e5
 # environment
-GDK_PIXBUF_MODULEDIR = /snap/code/72/usr/lib/x86_64-linux-gnu/gdk-pixbuf-2.0/2.10.0/loaders
+GDK_PIXBUF_MODULEDIR = /snap/code/83/usr/lib/x86_64-linux-gnu/gdk-pixbuf-2.0/2.10.0/loaders
 # default
 .FEATURES := target-specific order-only second-expansion else-if shortest-stem undefine oneshell archives jobserver output-sync check-symlink load
 # environment
@@ -129,7 +129,7 @@ XDG_SESSION_DESKTOP = ubuntu
 # environment
 SSH_AUTH_SOCK = /run/user/1000/keyring/ssh
 # environment
-GIO_LAUNCHED_DESKTOP_FILE_PID = 3060
+GIO_LAUNCHED_DESKTOP_FILE_PID = 9545
 # automatic
 %F = $(notdir $%)
 # environment
@@ -143,7 +143,7 @@ PWD = /home/scholbeck/C_Projects/treelib
 # default
 .LOADED := 
 # environment
-SSH_AGENT_PID = 1836
+SSH_AGENT_PID = 2332
 # environment
 ORIGINAL_XDG_CURRENT_DESKTOP = ubuntu:GNOME
 # environment
@@ -157,7 +157,7 @@ LESSCLOSE = /usr/bin/lesspipe %s %s
 # environment
 VSCODE_CLI = 1
 # environment
-VSCODE_CODE_CACHE_PATH = /home/scholbeck/.config/Code/CachedData/3866c3553be8b268c8a7f8c0482c0c0177aa8bfa
+VSCODE_CODE_CACHE_PATH = /home/scholbeck/.config/Code/CachedData/7db1a2b88f7557e0a43fec75b6ba7e50b3e9f77e
 # environment
 LOGNAME = scholbeck
 # environment
@@ -189,19 +189,19 @@ MAKECMDGOALS := all
 # environment
 QT_IM_MODULE = ibus
 # environment
-SNAP_USER_DATA = /home/scholbeck/snap/code/72
+SNAP_USER_DATA = /home/scholbeck/snap/code/83
 # environment
 SHLVL = 0
 # environment
 GNOME_SHELL_SESSION_MODE = ubuntu
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-9b97a529-8577-486d-bd5c-1251a7ae3437.sock
+VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-ad11e6ab-53a6-48e5-838c-eba723db9acc.sock
 # default
 MAKE_VERSION := 4.2.1
 # environment
 USER = scholbeck
 # environment
-SNAP_REVISION = 72
+SNAP_REVISION = 83
 # environment
 LC_MONETARY = de_DE.UTF-8
 # makefile
@@ -223,7 +223,7 @@ LANGUAGE = en_US
 # environment
 XDG_SEAT_PATH = /org/freedesktop/DisplayManager/Seat0
 # environment
-VSCODE_IPC_HOOK = /run/user/1000/vscode-14c041f9-1.59.1-main.sock
+VSCODE_IPC_HOOK = /run/user/1000/vscode-14c041f9-1.63.0-main.sock
 # environment
 BAMF_DESKTOP_FILE_HINT = /var/lib/snapd/desktop/applications/code_code.desktop
 # makefile
@@ -252,8 +252,6 @@ MAKEFILES :=
 SNAP_COOKIE = V1nge5Gce1baW0AHPwZl8M5BBlxAJEXY3TvUYP_DyZGLlJRAAgtV
 # environment
 LC_NUMERIC = de_DE.UTF-8
-# environment
-VSCODE_BROWSER_CODE_LOADING = bypassHeatCheck
 # automatic
 <F = $(notdir $<)
 # environment
@@ -285,9 +283,10 @@ LC_ADDRESS = de_DE.UTF-8
 # environment
 LANG = C
 # environment
-VSCODE_PID = 3114
+VSCODE_PID = 9591
 # variable set hash-table stats:
-# Load=137/1024=13%, Rehash=0, Collisions=20/159=13%
+ 
+# Load=136/1024=13%, Rehash=0, Collisions=20/158=13%
 
 # Pattern-specific Variable Values
 
@@ -295,14 +294,13 @@ VSCODE_PID = 3114
 
 # Directories
 
-# . (device 66310, inode 6162272): 8 files, no impossibilities.
+# . (device 66310, inode 7344070): 8 files, no impossibilities.
 
 # 8 files, no impossibilities in 1 directories.
 
 # Implicit Rules
 
 # No implicit rules.
- 
 
 # Files
 
@@ -348,12 +346,12 @@ GNUmakefile:
 
 # No general ('VPATH' variable) search path.
 
-# strcache buffers: 1 (0) / strings = 16 / storage = 130 B / avg = 8 B
-# current buf: size = 8162 B / used = 130 B / count = 16 / avg = 8 B
+# strcache buffers: 1 (0) / strings = 16 / storage = 134 B / avg = 8 B
+# current buf: size = 8162 B / used = 134 B / count = 16 / avg = 8 B
 
 # strcache performance: lookups = 19 / hit rate = 15%
 # hash-table stats:
 # Load=16/8192=0%, Rehash=0, Collisions=1/19=5%
-# Finished Make data base on Fri Aug 27 17:37:28 2021
+# Finished Make data base on Fri Dec 10 17:07:43 2021
 
  
