@@ -5,7 +5,7 @@ convertColTypes = function(frame) {
   res = lapply(res, FUN = function(x) {
     if ((x == "numeric") || (x == "integer")) {
       return("num")
-    } else if ((x == "factor") || (x = "character") {
+    } else if ((x == "factor") || (x = "character")) {
       return("categ")
     }
   })

@@ -13,11 +13,12 @@ str(df)
 tree = cpptree(
   data = df,
   n_children = 2,
-  objective_type = "gini",
+  objective_type = "sse",
+  model_type = "mean",
   search_algo_type = "exhaustive",
   min_node_size = 30,
   max_depth = 3,
-  target = 1)
+  target = 4)
 
 tree
 
