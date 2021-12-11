@@ -6,23 +6,25 @@ library(ggparty)
 load_all()
 data("BostonHousing", package = "mlbench")
 df = BostonHousing
+
+df = read.csv("../../../data/mushroom.data", header = FALSE)
+df
+str(df)
 tree = cpptree(
   data = df,
   n_children = 2,
-  objective_type = "sse",
-  model_type = "linear",
-  model_formula = "x6",
+  objective_type = "gini",
   search_algo_type = "exhaustive",
   min_node_size = 30,
   max_depth = 3,
-  target = 14)
+  target = 1)
 
 tree
 
 tree$print()
 tree$getTreeStructure()
 
-partyobj = convertToParty(tree, BostonHousing)
+partyobj = convertToParty(tree, df)
 plot(partyobj)
 
 p = ggparty(partyobj,
