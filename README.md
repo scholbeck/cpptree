@@ -8,4 +8,4 @@ The library is written in C++ to achieve a high degree of computational performa
 
 Please get in touch if you want to collaborate. 
 
-© Full copyright owned by Christian Scholbeck.
+© Copyright protected.
