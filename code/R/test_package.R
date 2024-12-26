@@ -1,4 +1,5 @@
-setwd("xtree")
+getwd()
+setwd("code/R/cpptree")
 library(Rcpp)
 library(devtools)
 library(partykit)
@@ -7,8 +8,6 @@ load_all()
 data("BostonHousing", package = "mlbench")
 df = BostonHousing
 
-df = read.csv("../../../data/mushroom.data", header = FALSE)
-df
 str(df)
 tree = cpptree(
   data = df,
@@ -102,9 +101,9 @@ tree = cpptree(
   n_children = 3,
   objective_type = "sse",
   model_type = "linear",
-  model_formula = "x6",
+  model_formula = "x5",
   search_algo_type = "random",
-  min_node_size = 30,
+  min_node_size = 10,
   max_depth = 2,
   target = 14)
 
@@ -134,21 +133,3 @@ p = ggparty(partyobj,
 p 
 ggsave(p, filename = "ggpartymult.png", width = 20, height = 10)
 
-
-# 
-# 
-# library(ranger)
-# library(partykit)
-# library(mgcv)
-# mod = ranger(medv ~ ., data = BostonHousing, importance = "permutation")
-# sort(mod$variable.importance, decreasing = TRUE)
-# 
-# BostonHousing$prediction = predict(mod, data = BostonHousing)$predictions
-# 
-# model_node = function(y, x, start = NULL, weights = NULL, offset = NULL, ...) {
-#   # gam(y ~ 0 + s(x), start = start, ...)
-#   lm(y ~ x)
-# }
-# 
-# library(microbenchmark)
-# pid_tree = microbenchmark(mob(prediction ~ . | crim, data = BostonHousing, fit = model_node))
