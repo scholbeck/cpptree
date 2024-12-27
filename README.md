@@ -16,11 +16,12 @@ Compile the application first by running `make` from a terminal in `code/cpp`. G
 
 ### R API
 
-Simply go to `code/R` and open `test_package.R`, which provides code examples on how to access the R API, including a conversion of the found tree structure to `partykit` package format for visualizations.
+Simply go to `code/R` and open `test_package.R`, which provides code examples on how to access the R API, including converting the tree structure to `partykit` package format for visualizations.
 
-![cpptree_r_api](https://github.com/user-attachments/assets/e03a78c9-6447-41c5-b396-90ca3d1a0567)
+<img src="https://github.com/user-attachments/assets/e03a78c9-6447-41c5-b396-90ca3d1a0567" alt="R API" width="500"/>
 
-![cpptree_ggparty_export](https://github.com/user-attachments/assets/38b24272-6268-46f7-a12a-bf07c2218cc1)
+<img src="https://github.com/user-attachments/assets/38b24272-6268-46f7-a12a-bf07c2218cc1" alt="R API" width="500"/>
+
 
 
 ![ggparty_mean](https://github.com/user-attachments/assets/bf0d2dd8-404e-47c8-9d53-f2b5ce18a961)
