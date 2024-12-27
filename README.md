@@ -20,7 +20,7 @@ Simply go to `code/R` and open `test_package.R`, which provides code examples on
 
 <img src="https://github.com/user-attachments/assets/e03a78c9-6447-41c5-b396-90ca3d1a0567" alt="R API" width="500"/>
 
-<img src="https://github.com/user-attachments/assets/38b24272-6268-46f7-a12a-bf07c2218cc1" alt="R API" width="500"/>
+<img src="https://github.com/user-attachments/assets/38b24272-6268-46f7-a12a-bf07c2218cc1" alt="R API continue" width="500"/>
 
 
 
